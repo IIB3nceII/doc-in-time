@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply m-0 p-0 bg-primary dark:bg-secondary transition-colors duration-500;
+    @apply m-0 p-0 bg-white transition-colors duration-500 dark:bg-slate-900 dark:text-secondary;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Poppins", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
       "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -22,10 +22,10 @@
   }
 
   h2 {
-    @apply text-2xl font-semibold text-primary-2;
+    @apply text-2xl font-semibold text-primary-2 dark:text-secondary;
   }
 
   p {
-    @apply text-secondary;
+    @apply text-secondary dark:text-secondary;
   }
 }

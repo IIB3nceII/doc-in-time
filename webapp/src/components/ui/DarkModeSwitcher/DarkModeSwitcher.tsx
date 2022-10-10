@@ -6,10 +6,12 @@ const DarkModeSwitcher = () => {
 
   useEffect(() => {
     if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.remove("light");
       document.documentElement.classList.add("dark");
       setCurrentTheme("dark");
     } else {
       document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
       setCurrentTheme("light");
     }
   }, []);
@@ -17,11 +19,13 @@ const DarkModeSwitcher = () => {
   const changeTheme = () => {
     if (currentTheme === "light") {
       localStorage.theme = "dark";
+      document.documentElement.classList.remove("light");
       document.documentElement.classList.add("dark");
       setCurrentTheme("dark");
     } else {
       localStorage.theme = "light";
       document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
       setCurrentTheme("light");
     }
   };
