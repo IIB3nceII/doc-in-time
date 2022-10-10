@@ -29,3 +29,9 @@
     @apply text-secondary dark:text-secondary;
   }
 }
+
+@layer components {
+  .icon {
+    @apply h-8 w-8 text-primary;
+  }
+}

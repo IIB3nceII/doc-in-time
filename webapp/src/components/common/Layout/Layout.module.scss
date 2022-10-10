@@ -1,0 +1,12 @@
+.root {
+  height: 100vh;
+
+  > main {
+    @apply h-full mx-auto overflow-y-scroll;
+    max-width: 2460px;
+  }
+
+  .mobileNav {
+    @apply sticky bottom-0;
+  }
+}
