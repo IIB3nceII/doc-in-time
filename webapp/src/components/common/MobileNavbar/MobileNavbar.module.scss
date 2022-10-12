@@ -1,7 +1,3 @@
 .root {
-  @apply sticky bottom-0;
-
-  @media (min-width: 640px) {
-    @apply hidden;
-  }
+  @apply sticky bottom-0 md:hidden;
 }

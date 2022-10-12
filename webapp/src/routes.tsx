@@ -13,11 +13,9 @@ const AppRoutes: FC = () => {
     }
   }, []);
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}></Route>
       </Routes>
-    </BrowserRouter>
   );
 };
 
