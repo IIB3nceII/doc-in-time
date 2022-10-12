@@ -1,15 +1,3 @@
 .root {
   @apply sticky top-0 flex justify-between items-center h-16 px-4 space-x-4 bg-white dark:text-secondary;
-
-  .search{
-    @apply flex flex-1 items-center p-2 border rounded-full shadow-sm;
-
-    > input {
-      @apply flex-1 bg-transparent outline-none;
-    }
-
-    .searchIcon {
-      @apply h-6 w-6 text-gray-400;
-    }
-  }
 }

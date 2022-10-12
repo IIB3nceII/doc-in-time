@@ -1,18 +1,28 @@
-import React from "react";
+import React, { FC, useState } from "react";
 import s from "./Navbar.module.scss";
-import { HiOutlineUserCircle, HiOutlineBell, HiOutlineSearch } from "react-icons/hi";
+import { HiOutlineBell, HiOutlineSearch } from "react-icons/hi";
+import { SearchArea } from "../../ui";
 
-const Navbar = () => {
+const Navbar: FC = () => {
+  /**
+   * True if the searchArea showing.
+   * @state
+   */
+  const [isSearchAreaOpen, setIsSearchAreaOpen] = useState<boolean>(true);
+
   return (
-    <div className={s.root}>
-      <HiOutlineUserCircle className="icon" />
-      <form className={s.search}>
-        <input type="text" placeholder="Search..." />
-        <HiOutlineSearch className={s.searchIcon} />
-        <button type="submit" hidden />
-      </form>
-      <HiOutlineBell className="icon" />
-    </div>
+    <>
+      <div className={s.root}>
+        <div className="icon-container">
+          <HiOutlineSearch />
+        </div>
+        <div className="icon-container">
+          <HiOutlineBell />
+        </div>
+      </div>
+
+      {isSearchAreaOpen && <SearchArea />}
+    </>
   );
 };
 
