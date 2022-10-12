@@ -1,15 +1,46 @@
-import React from "react";
+import React, { FC, useState, useTransition } from "react";
 import s from "./SearchArea.module.scss";
-import { HiOutlineSearch } from "react-icons/hi";
+import { HiOutlineSearch, HiOutlineX } from "react-icons/hi";
+import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
+import { connect } from "react-redux";
+import { IRootState } from "../../../shared/store";
 
-const SearchArea = () => {
+interface ISearchAreaProps extends StateProps, DispatchProps {}
+
+const SearchArea: FC<ISearchAreaProps> = ({ setIsSearchAreaOpen }) => {
+  const [_, startTransition] = useTransition();
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+
+  const handleSearchInputChange = (input: string) => {
+    startTransition(() => {
+      setSearchKeyword(input);
+    });
+  };
+
+  const handleSearch = () => {
+    console.log("search");
+  };
+
   return (
-    <form className={s.search}>
-      <input type="text" placeholder="Search..." />
-      <HiOutlineSearch className={s.searchIcon} />
-      <button type="submit" hidden />
-    </form>
+    <div className={s.container} onClick={() => setIsSearchAreaOpen(false)}>
+      <div className={s.searchContainer} onClick={(e) => e.stopPropagation()}>
+        <div className={s.search}>
+          <HiOutlineX className={s.icon} onClick={() => setSearchKeyword("")} />
+          <input type="text" placeholder="Search..." value={searchKeyword} onChange={(e) => handleSearchInputChange(e.target.value)} />
+          <HiOutlineSearch className={s.icon} onClick={() => handleSearch()} />
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default SearchArea;
+const mapStateToProps = ({ ui }: IRootState) => ({
+  ui,
+});
+
+const mapDispatchToProps = { setIsSearchAreaOpen };
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchArea);

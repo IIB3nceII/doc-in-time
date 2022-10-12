@@ -1,11 +1,19 @@
 .container {
-  @apply flex flex-1 items-center p-2 border rounded-full shadow-sm;
+  @apply flex justify-center fixed top-0 left-0 h-[100vh] w-[100vw] bg-slate-200 bg-opacity-95 z-50;
 
-  > input {
-    @apply flex-1 bg-transparent outline-none;
-  }
+  .searchContainer {
+    @apply flex flex-col items-center h-fit w-full mx-32 mt-24;
 
-  .searchIcon {
-    @apply h-6 w-6 text-gray-400;
+    .search {
+      @apply flex items-center space-x-4 h-16 w-full px-8 bg-white border rounded-full shadow-sm;
+
+      > input {
+        @apply flex-1 bg-transparent outline-none;
+      }
+
+      .icon {
+        @apply h-6 w-6 text-gray-400 cursor-pointer;
+      }
+    }
   }
 }

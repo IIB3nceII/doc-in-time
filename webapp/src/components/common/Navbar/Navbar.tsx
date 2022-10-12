@@ -15,6 +15,7 @@ const Navbar: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSearchAreaOpe
         <div className="icon-container">
           <HiOutlineSearch onClick={() => setIsSearchAreaOpen(true)} />
         </div>
+        <span>LOGO</span>
         <div className="icon-container">
           <HiOutlineBell />
         </div>
