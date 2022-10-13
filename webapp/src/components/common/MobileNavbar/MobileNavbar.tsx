@@ -10,35 +10,35 @@ const MobileNavbar = () => {
         <Link to="/">
           <li className={s.active}>
             <HiOutlineHome className={s.icon} />
-            <span>item</span>
+            <p>item</p>
           </li>
         </Link>
 
         <Link to="/">
           <li>
             <HiOutlineUsers className={s.icon} />
-            <span>item</span>
+            <p>item</p>
           </li>
         </Link>
 
         <Link to="/">
           <li>
             <HiOutlineCalendar className={s.icon} />
-            <span>item</span>
+            <p>item</p>
           </li>
         </Link>
 
         <Link to="/">
           <li>
             <HiOutlineIdentification className={s.icon} />
-            <span>item</span>
+            <p>item</p>
           </li>
         </Link>
 
         <Link to="/">
           <li>
             <HiOutlineCog className={s.icon} />
-            <span>item</span>
+            <p>item</p>
           </li>
         </Link>
       </ul>

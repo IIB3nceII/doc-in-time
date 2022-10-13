@@ -1,12 +1,27 @@
 import React from "react";
 import s from "./Footer.module.scss";
 import { Link } from "react-router-dom";
+import { DarkModeSwitcher } from "../../ui";
 
 const Footer = () => {
   return (
     <footer className={s.container}>
       <ul className={s.card}>
-        <li>theme</li>
+        <li>
+          <Link to="#">placeholder</Link>
+        </li>
+        <li>
+          <Link to="#">placeholder</Link>
+        </li>
+        <li>
+          <Link to="#">placeholder</Link>
+        </li>
+        <li>
+          <Link to="#">placeholder</Link>
+        </li>
+        <li>
+          <Link to="#">placeholder</Link>
+        </li>
       </ul>
 
       <span></span>
