@@ -1,5 +1,5 @@
 .container {
-  @apply relative;
+  @apply relative transition-all duration-200 ease-in-out;
 
   > ul {
     @apply absolute bg-white rounded-lg shadow-lg translate-y-4 z-50;
