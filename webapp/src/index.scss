@@ -24,10 +24,6 @@
   h2 {
     @apply text-2xl font-semibold text-primary-2 dark:text-secondary;
   }
-
-  p {
-    @apply text-secondary dark:text-secondary;
-  }
 }
 
 @layer components {

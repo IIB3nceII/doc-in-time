@@ -1,7 +1,7 @@
 import React from "react";
 import s from "./MobileNavbar.module.scss";
 import { Link } from "react-router-dom";
-import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineViewBoards } from "react-icons/hi";
+import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
 
 const MobileNavbar = () => {
   return (
@@ -37,7 +37,7 @@ const MobileNavbar = () => {
 
         <Link to="/">
           <li>
-            <HiOutlineViewBoards className={s.icon} />
+            <HiOutlineCog className={s.icon} />
             <span>item</span>
           </li>
         </Link>
