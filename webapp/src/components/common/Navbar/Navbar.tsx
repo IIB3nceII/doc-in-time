@@ -5,13 +5,11 @@ import { SearchArea } from "../../ui";
 import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface INavbarProps extends StateProps, DispatchProps {}
 
 const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSearchAreaOpen }) => {
-  const navigate = useNavigate();
-
   return (
     <>
       <div className={s.root}>
@@ -19,14 +17,26 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
           <HiOutlineBell />
         </div>
         <div className={s.navigationContainer}>
-          <span className="font-extrabold">LOGO</span>
+          <Link to="/">
+            <span className="font-extrabold">LOGO</span>
+          </Link>
           <nav>
             <ul>
-              <li onClick={() => navigate("/")}>item</li>
-              <li onClick={() => navigate("/")}>item</li>
-              <li onClick={() => navigate("/")}>item</li>
-              <li onClick={() => navigate("/")}>item</li>
-              <li onClick={() => navigate("/")}>item</li>
+              <Link to="#">
+                <li>item</li>
+              </Link>
+              <Link to="#">
+                <li>item</li>
+              </Link>
+              <Link to="#">
+                <li>item</li>
+              </Link>
+              <Link to="#">
+                <li>item</li>
+              </Link>
+              <Link to="#">
+                <li>item</li>
+              </Link>
             </ul>
           </nav>
         </div>

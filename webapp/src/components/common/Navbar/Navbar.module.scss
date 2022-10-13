@@ -1,5 +1,5 @@
 .root {
-  @apply sticky top-0 flex justify-between items-center h-16 px-4 space-x-4 bg-white dark:text-secondary;
+  @apply sticky top-0 flex justify-between items-center h-16 px-4 space-x-4 bg-white shadow-sm dark:text-secondary;
 
   .navigationContainer {
     @apply flex flex-nowrap space-x-8 h-fit;
@@ -10,7 +10,7 @@
       > ul {
         @apply flex space-x-4 list-none;
 
-        > li {
+        li {
           @apply text-primary-3 transition-all duration-100 cursor-pointer hover:underline;
         }
       }
