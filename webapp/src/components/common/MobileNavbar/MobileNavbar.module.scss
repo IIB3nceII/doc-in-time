@@ -1,3 +1,19 @@
 .root {
-  @apply sticky bottom-0 md:hidden;
+  @apply flex justify-center items-center sticky bottom-0 h-20 border-t-2 border-slate-100 md:hidden;
+
+  > ul {
+    @apply flex justify-between h-full w-full mx-8 list-none;
+
+    li {
+      @apply flex flex-col justify-center items-center h-full px-4 text-lg font-semibold cursor-pointer;
+
+      .icon {
+        @apply h-8 w-8;
+      }
+    }
+
+    .active {
+      @apply border-t-2 border-blue;
+    }
+  }
 }
