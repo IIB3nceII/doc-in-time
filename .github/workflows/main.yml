@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-          with:
+        with:
             ref: 'develop'
       - name: Install dependencies
         run: npm i
