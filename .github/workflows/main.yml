@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@develop
+        uses: actions/checkout@v2
+          with:
+            ref: 'develop'
       - name: Install dependencies
         run: npm i
       - name: Build dependencies
