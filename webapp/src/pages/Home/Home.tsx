@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Footer } from "../../components/common";
 import { Contact, Hero, Introduction } from "../../components/ui";
 import s from "./Home.module.scss";
 
@@ -8,6 +9,7 @@ const Home: FC = () => {
       <Hero />
       <Introduction />
       <Contact />
+      <Footer />
     </div>
   );
 };

@@ -12,7 +12,7 @@ interface INavbarProps extends StateProps, DispatchProps {}
 const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSearchAreaOpen }) => {
   return (
     <>
-      <div className={s.root}>
+      <header className={s.root}>
         <div className="md:hidden">
           <Tooltip text="Notifications">
             <div className="icon-container">
@@ -71,7 +71,7 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
             </div>
           </Tooltip>
         </div>
-      </div>
+      </header>
 
       {isSearchAreaOpen && <SearchArea />}
     </>
