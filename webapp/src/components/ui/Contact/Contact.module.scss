@@ -1,0 +1,19 @@
+.container {
+  @apply flex justify-between items-center my-8;
+
+  .content {
+    @apply flex flex-col;
+
+    > h2 {
+      @apply text-4xl text-blue md:text-[64px] md:mb-4;
+    }
+
+    > span {
+      @apply font-semibold dark:text-white;
+    }
+  }
+
+  >img{
+    @apply w-[24vw];
+  }
+}

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Hero, Introduction } from "../../components/ui";
+import { Contact, Hero, Introduction } from "../../components/ui";
 import s from "./Home.module.scss";
 
 const Home: FC = () => {
@@ -7,6 +7,7 @@ const Home: FC = () => {
     <div>
       <Hero />
       <Introduction />
+      <Contact />
     </div>
   );
 };

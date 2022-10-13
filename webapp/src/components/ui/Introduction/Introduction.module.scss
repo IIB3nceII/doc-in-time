@@ -1,15 +1,15 @@
 .container {
-  @apply flex flex-col items-center space-y-8 -mx-4 p-8 text-white bg-darkblue;
+  @apply flex flex-col items-center space-y-8 h-fit -mx-4 p-8 text-white bg-darkblue;
 
   .mainTitle {
     @apply text-4xl font-extrabold;
   }
 
   .gridContainer {
-    @apply grid grid-rows-3 gap-24 lg:grid-cols-3;
+    @apply grid  gap-24 h-fit lg:grid-cols-3;
 
     .card {
-      @apply flex flex-col justify-center items-center space-y-2 py-8 px-16 border-2 border-slate-50 rounded-lg transition-all delay-100 cursor-pointer hover:border-slate-300 hover:bg-slate-300 hover:shadow-lg hover:-translate-y-2 hover:text-darkblue;
+      @apply flex flex-col justify-center items-center space-y-2 py-8 px-16 border-2 border-slate-50 rounded-lg transition-all delay-100 hover:border-white hover:bg-white hover:shadow-lg hover:-translate-y-2 hover:text-darkblue;
 
       > h3 {
         @apply text-2xl font-bold;
