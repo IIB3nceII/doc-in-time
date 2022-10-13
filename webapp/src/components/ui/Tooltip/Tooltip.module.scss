@@ -1,0 +1,15 @@
+.container {
+  @apply flex flex-col relative;
+
+  .tooltip{
+    @apply absolute -left-4 w-fit p-2 text-white text-xs whitespace-nowrap bg-slate-600 opacity-90 rounded-md transition-all delay-1000 ease-in-out;
+  }
+
+  .tooltipBottom{
+    @apply translate-y-12;
+  }
+
+  .tooltipTop{
+    @apply -translate-y-12;
+  }
+}

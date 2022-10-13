@@ -1,7 +1,7 @@
 import React, { FC, memo } from "react";
 import s from "./Navbar.module.scss";
 import { HiOutlineBell, HiOutlineSearch, HiOutlineUserCircle } from "react-icons/hi";
-import { SearchArea } from "../../ui";
+import { SearchArea, Tooltip } from "../../ui";
 import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
@@ -13,9 +13,11 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
   return (
     <>
       <div className={s.root}>
-        <div className="icon-container md:hidden">
-          <HiOutlineBell />
-        </div>
+        <Tooltip text="Notifications">
+          <div className="icon-container md:hidden">
+            <HiOutlineBell />
+          </div>
+        </Tooltip>
         <div className={s.navigationContainer}>
           <Link to="/">
             <span className="font-extrabold">LOGO</span>
@@ -47,17 +49,24 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
             <HiOutlineSearch />
           </div>
 
-          <div className="icon-container">
-            <HiOutlineUserCircle />
-          </div>
-          <div className="icon-container">
-            <HiOutlineBell />
-          </div>
+          <Tooltip text="Profile">
+            <div className="icon-container">
+              <HiOutlineUserCircle />
+            </div>
+          </Tooltip>
+
+          <Tooltip text="Notifications">
+            <div className="icon-container">
+              <HiOutlineBell />
+            </div>
+          </Tooltip>
         </div>
 
-        <div className="icon-container md:hidden">
-          <HiOutlineSearch onClick={() => setIsSearchAreaOpen(true)} />
-        </div>
+        <Tooltip text="Search">
+          <div className="icon-container md:hidden">
+            <HiOutlineSearch onClick={() => setIsSearchAreaOpen(true)} />
+          </div>
+        </Tooltip>
       </div>
 
       {isSearchAreaOpen && <SearchArea />}
