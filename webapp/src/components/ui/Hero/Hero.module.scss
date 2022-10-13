@@ -1,0 +1,17 @@
+.container {
+  @apply flex flex-col justify-between items-start space-y-8 mt-8 md:min-h-[80vh] md:flex-row;
+
+  > h1 {
+    @apply leading-[8rem] text-[8rem] md:leading-[11rem] md:text-[11rem] lg:self-center dark:text-white;
+
+    > span {
+      background-image: linear-gradient(60deg, var(--blue), var(--light-green));
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  > img {
+    @apply w-[50vw] self-center md:self-start;
+  }
+}

@@ -23,6 +23,7 @@
       "@shared/*": ["shared/*"],
       "@config": ["config"],
       "@config/*": ["config/*"],
+      "@components": ["components"],
       "@components/*": ["components/*"],
       "@assets/*": ["assets/*"]
     }
