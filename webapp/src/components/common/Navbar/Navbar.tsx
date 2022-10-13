@@ -13,11 +13,13 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
   return (
     <>
       <div className={s.root}>
-        <Tooltip text="Notifications">
-          <div className="icon-container md:hidden">
-            <HiOutlineBell />
-          </div>
-        </Tooltip>
+        <div className="md:hidden">
+          <Tooltip text="Notifications">
+            <div className="icon-container">
+              <HiOutlineBell />
+            </div>
+          </Tooltip>
+        </div>
         <div className={s.navigationContainer}>
           <Link to="/">
             <span className="font-extrabold">LOGO</span>
@@ -62,11 +64,13 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
           </Tooltip>
         </div>
 
-        <Tooltip text="Search">
-          <div className="icon-container md:hidden">
-            <HiOutlineSearch onClick={() => setIsSearchAreaOpen(true)} />
-          </div>
-        </Tooltip>
+        <div className="md:hidden">
+          <Tooltip text="Search">
+            <div className="icon-container">
+              <HiOutlineSearch onClick={() => setIsSearchAreaOpen(true)} />
+            </div>
+          </Tooltip>
+        </div>
       </div>
 
       {isSearchAreaOpen && <SearchArea />}
