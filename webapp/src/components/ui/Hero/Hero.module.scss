@@ -5,7 +5,7 @@
     @apply leading-[8rem] text-[8rem] md:leading-[11rem] md:text-[11rem] lg:self-center dark:text-white;
 
     > span {
-      background-image: linear-gradient(60deg, var(--blue), var(--light-green));
+      background-image: linear-gradient(60deg, var(--blue), var(--darkpink)); // var(--light-green)
       background-clip: text;
       color: transparent;
     }
