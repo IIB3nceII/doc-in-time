@@ -20,4 +20,6 @@ jobs:
       - name: Install dependencies
         run: cd webapp; npm i
       - name: Build dependencies
-        run: cd webapp; false npm run build
+        run: 
+          - cd webapp
+          - CI=false npm run build
