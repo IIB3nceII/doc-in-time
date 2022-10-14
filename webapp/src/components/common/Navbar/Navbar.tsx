@@ -45,7 +45,7 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
         <div className={s.sideNav}>
           <div className={s.search} onClick={() => setIsSearchAreaOpen(true)}>
             <p>Search...</p>
-            <HiOutlineSearch />
+            <HiOutlineSearch className={s.icon} />
           </div>
 
           <DarkModeSwitcher />

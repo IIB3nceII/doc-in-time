@@ -28,6 +28,10 @@
 
     .search {
       @apply flex flex-nowrap justify-center items-center space-x-4 py-2 px-4 text-blue font-bold border-4 rounded-full border-blue cursor-pointer;
+
+      .icon{
+        @apply text-xl;
+      }
     }
 
     .login {
