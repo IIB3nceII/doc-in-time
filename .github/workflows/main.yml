@@ -18,4 +18,4 @@ jobs:
       - name: Install dependencies
         run: cd webapp; npm i
       - name: Build dependencies
-        run: npm run build
+        run: cd webapp; npm run build
