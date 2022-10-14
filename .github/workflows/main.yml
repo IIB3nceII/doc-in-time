@@ -16,6 +16,6 @@ jobs:
         with:
             ref: 'develop'
       - name: Install dependencies
-        run: npm i
+        run: cd webapp; npm i
       - name: Build dependencies
         run: npm run build
