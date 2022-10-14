@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
   
 jobs:
-  build:
-    name: Build
+  build-and-deploy:
+    name: Build and deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -18,6 +18,12 @@ jobs:
         with:
             ref: 'develop'
       - name: Install dependencies
-        run: cd webapp; npm i
-      - name: Build dependencies
+        run: cd webapp; npm ci
+      - name: Build the project
         run: cd webapp; CI=false npm run build
+      - name: Deploy to firebase
+        uses: w9jds/firebase-action@master
+        with: 
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
