@@ -13,6 +13,7 @@ const App: FC<IAppProps> = ({ setUser }) => {
 
   useEffect(() => {
     setUser(user);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

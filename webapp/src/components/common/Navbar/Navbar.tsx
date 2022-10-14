@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 interface INavbarProps extends StateProps, DispatchProps {}
 
-const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSearchAreaOpen }) => {
+const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { account }, setIsSearchAreaOpen }) => {
   return (
     <>
       <header className={s.root}>
@@ -49,11 +49,17 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
 
           <DarkModeSwitcher />
 
-          <Tooltip text="Profile">
-            <div className="icon-container">
-              <HiOutlineUserCircle />
-            </div>
-          </Tooltip>
+          {account ? (
+            <Tooltip text="Profile">
+              <div className="icon-container">
+                <HiOutlineUserCircle />
+              </div>
+            </Tooltip>
+          ) : (
+            <Link to="/login">
+              <p className={s.login}>Log in</p>
+            </Link>
+          )}
         </div>
 
         <div className="md:hidden">
@@ -70,8 +76,9 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, setIsSear
   );
 };
 
-const mapStateToProps = ({ ui }: IRootState) => ({
+const mapStateToProps = ({ ui, auth }: IRootState) => ({
   ui,
+  auth,
 });
 
 const mapDispatchToProps = { setIsSearchAreaOpen };
