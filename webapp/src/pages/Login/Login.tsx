@@ -1,13 +1,12 @@
-import React from "react";
-import { FormInput } from "../../components/ui";
+import React, { useEffect, useState } from "react";
 import s from "./Login.module.scss";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Logo from "../../assets/images/logo.png";
 
 interface ILoginFormData {
-  firstName: string;
-  lastName: string;
+  email: string;
+  password: string;
 }
 
 const Login = () => {
@@ -18,21 +17,37 @@ const Login = () => {
     formState: { errors },
   } = useForm<ILoginFormData>();
 
-  const onLoginSubmit = handleSubmit((data) => console.log(data));
+  /* useEffect(() => {
+    return () => {
+      setValue("email", "");
+      setValue("password", "");
+    };
+  }, []); */
+
+  const onLoginSubmit = (data: any) => console.log(data);
 
   return (
     <div className={s.container}>
-        <img src={Logo} alt="logo" />
-        <form onSubmit={onLoginSubmit}>
-          <FormInput label="firstName" placeholder="placeholder..." />
-          <FormInput label="firstName" placeholder="placeholder..." />
-          <button type="submit">Log in</button>
-        </form>
-        <div className={s.options}>
-          <Link to="/register">Do not have an account yet?</Link>
-          <span className={s.divider}></span>
-          <Link to="/register">Forgot your password?</Link>
+      <img src={Logo} alt="logo" />
+      <form onSubmit={handleSubmit(onLoginSubmit)}>
+        <div className={s.formField}>
+          <label>Email</label>
+          <input type="email" {...register("email", { required: true })} aria-invalid={errors.email ? "true" : "false"} />
+          {errors.email?.type === "required" && <p>{errors.email?.message}</p>}
         </div>
+
+        <div className={s.formField}>
+          <label>Password</label>
+          <input type="password" {...register("password", { required: true })} aria-invalid={errors.password ? "true" : "false"} />
+          {errors.password?.type === "required" && <p>{errors.password?.message}</p>}
+        </div>
+        <button type="submit">Log in</button>
+      </form>
+      <div className={s.options}>
+        <Link to="/register">Do not have an account yet?</Link>
+        <span className={s.divider}></span>
+        <Link to="/register">Forgot your password?</Link>
+      </div>
     </div>
   );
 };

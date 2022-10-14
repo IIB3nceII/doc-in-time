@@ -4,4 +4,3 @@ export { default as Tooltip } from "./Tooltip";
 export { default as Hero } from "./Hero";
 export { default as Introduction } from "./Introduction";
 export { default as Contact } from "./Contact";
-export { default as FormInput } from "./FormInput";
