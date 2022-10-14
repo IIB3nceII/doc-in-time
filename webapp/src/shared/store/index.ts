@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { authReducer, AuthState } from "./reducers/auth.reducer";
 import { uiReducer, UIState } from "./reducers/ui.reducer";
 
 /**
@@ -7,6 +8,7 @@ import { uiReducer, UIState } from "./reducers/ui.reducer";
  */
 export interface IRootState {
   readonly ui: UIState;
+  readonly auth: AuthState;
 }
 
 /**
@@ -14,6 +16,7 @@ export interface IRootState {
  */
 const rootReducer = {
   ui: uiReducer,
+  auth: authReducer,
 };
 
 /**
