@@ -1,0 +1,27 @@
+.container {
+  @apply flex flex-col justify-center items-center space-y-4 mt-8 dark:text-white;
+
+  > img {
+    @apply w-24;
+  }
+
+  > form {
+    @apply flex flex-col w-96 space-y-4;
+
+    > button {
+      @apply py-2 px-4 text-white font-bold bg-blue rounded-md;
+    }
+  }
+
+  .options {
+    @apply flex space-x-4;
+
+    > a {
+      @apply text-slate-400 text-sm cursor-pointer hover:underline;
+    }
+
+    .divider {
+      @apply border-r-[1px] border-slate-200;
+    }
+  }
+}

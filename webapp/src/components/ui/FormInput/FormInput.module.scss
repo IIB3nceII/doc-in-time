@@ -1,0 +1,7 @@
+.container {
+  @apply flex flex-col justify-center items-start space-y-2 w-full;
+
+  > input {
+    @apply h-12 w-full rounded-md border-2 border-blue;
+  }
+}

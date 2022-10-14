@@ -1,6 +1,6 @@
 import React, { FC, memo } from "react";
 import s from "./Navbar.module.scss";
-import { HiOutlineSearch, HiOutlineUserCircle } from "react-icons/hi";
+import { HiOutlineSearch, HiOutlineUserCircle, HiOutlineLogin } from "react-icons/hi";
 import { DarkModeSwitcher, SearchArea, Tooltip } from "../../ui";
 import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
@@ -18,7 +18,7 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
         </div>
         <div className={s.navigationContainer}>
           <Link to="/">
-            <span className="font-extrabold">LOGO</span>
+            <p className="font-extrabold">LOGO</p>
           </Link>
           <nav>
             <ul>
@@ -63,11 +63,21 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
         </div>
 
         <div className="md:hidden">
-          <Tooltip text="Search">
-            <div className="icon-container">
-              <HiOutlineSearch onClick={() => setIsSearchAreaOpen(true)} />
-            </div>
-          </Tooltip>
+          {account ? (
+            <Tooltip text="Search">
+              <div className="icon-container">
+                <HiOutlineSearch onClick={() => setIsSearchAreaOpen(true)} />
+              </div>
+            </Tooltip>
+          ) : (
+            <Tooltip text="Log in">
+              <Link to="/login">
+                <div className="icon-container">
+                  <HiOutlineLogin />
+                </div>
+              </Link>
+            </Tooltip>
+          )}
         </div>
       </header>
 
