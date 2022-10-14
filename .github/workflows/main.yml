@@ -2,7 +2,7 @@ name: Build and deploy
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, "fix/'*'" ]
     
   workflow_dispatch:
   
@@ -18,4 +18,4 @@ jobs:
       - name: Install dependencies
         run: cd webapp; npm i
       - name: Build dependencies
-        run: cd webapp; npm run build
+        run: cd webapp; false npm run build
