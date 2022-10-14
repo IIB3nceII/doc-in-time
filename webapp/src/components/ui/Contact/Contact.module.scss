@@ -5,7 +5,7 @@
     @apply flex flex-col;
 
     > h2 {
-      @apply text-4xl text-blue md:text-[64px] md:mb-4;
+      @apply text-4xl text-blue md:text-[4rem] md:leading-[4rem] md:mb-4;
     }
 
     > span {
@@ -13,7 +13,7 @@
     }
   }
 
-  >img{
-    @apply w-[24vw];
+  > img {
+    width: 24vw;
   }
 }
