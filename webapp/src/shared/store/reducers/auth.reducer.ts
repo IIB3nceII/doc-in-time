@@ -1,4 +1,5 @@
 import { IUser } from "../../../models";
+import { AUTH_ACTION_TYPE } from "../actions/auth.action";
 
 /**
  * Defining the shape of the auth state.
@@ -39,6 +40,13 @@ export type AuthState = Readonly<typeof initialState>;
 
 export const authReducer = (state: IAuthState = initialState, action: any) => {
   switch (action.type) {
+    case AUTH_ACTION_TYPE.LOGIN:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loginSuccess: true,
+        account: action.payload,
+      };
     default:
       return { ...state };
   }
