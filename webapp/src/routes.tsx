@@ -1,6 +1,6 @@
-import React, { FC, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home } from "./pages";
+import { FC, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { Home, Login, PageNotFound } from "./pages";
 
 const AppRoutes: FC = () => {
   useEffect(() => {
@@ -13,9 +13,11 @@ const AppRoutes: FC = () => {
     }
   }, []);
   return (
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-      </Routes>
+    <Routes>
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/" element={<Home />}></Route>
+      <Route path="*" element={<PageNotFound />}></Route>
+    </Routes>
   );
 };
 
