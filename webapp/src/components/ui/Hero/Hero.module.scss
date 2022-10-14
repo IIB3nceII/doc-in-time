@@ -1,5 +1,5 @@
 .container {
-  @apply flex flex-col justify-between items-start space-y-8 my-8 md:min-h-[80vh] md:mb-0 md:flex-row;
+  @apply flex flex-col justify-between items-start space-y-8 my-8 md:min-h-[60vh] md:mb-0 md:flex-row;
 
   > h1 {
     @apply leading-[8rem] text-[8rem] md:leading-[10rem] md:text-[10rem] lg:self-center dark:text-white;
