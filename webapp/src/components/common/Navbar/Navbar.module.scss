@@ -2,7 +2,13 @@
   @apply sticky top-0 flex justify-between items-center h-16 px-4 space-x-4 bg-white shadow-sm z-50 dark:text-secondary;
 
   .navigationContainer {
-    @apply flex flex-nowrap space-x-8 h-fit;
+    @apply flex flex-nowrap items-center space-x-8 h-fit;
+
+    > a {
+      > img {
+        @apply w-12;
+      }
+    }
 
     > nav {
       @apply hidden md:flex;

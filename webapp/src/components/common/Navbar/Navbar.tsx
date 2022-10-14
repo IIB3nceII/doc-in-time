@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
 import { Link } from "react-router-dom";
+import Logo from "../../../assets/images/logo.png";
 
 interface INavbarProps extends StateProps, DispatchProps {}
 
@@ -18,7 +19,7 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
         </div>
         <div className={s.navigationContainer}>
           <Link to="/">
-            <p className="font-extrabold">LOGO</p>
+            <img src={Logo} alt="LOGO" />
           </Link>
           <nav>
             <ul>
