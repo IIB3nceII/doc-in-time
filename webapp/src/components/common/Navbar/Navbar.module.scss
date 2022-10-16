@@ -1,8 +1,8 @@
-.root {
-  @apply sticky top-0 flex justify-between items-center h-16 px-4 space-x-4 bg-white shadow-sm z-50 dark:text-secondary;
+header {
+  @apply sticky top-0 flex justify-between items-center h-16 px-4 space-x-4 bg-white shadow-sm z-50 dark:bg-slate-900;
 
   .navigationContainer {
-    @apply flex flex-nowrap items-center space-x-8 h-fit;
+    @apply flex flex-nowrap items-center space-x-8 h-fit dark:bg-slate-900;
 
     > a {
       > img {
@@ -11,12 +11,12 @@
     }
 
     > nav {
-      @apply hidden md:flex;
+      @apply hidden md:flex dark:bg-slate-900;
 
       > ul {
         @apply flex space-x-4 list-none;
 
-        li {
+        > li {
           @apply text-primary-3 transition-all duration-100 cursor-pointer hover:underline;
         }
       }
@@ -29,7 +29,7 @@
     .search {
       @apply flex flex-nowrap justify-center items-center space-x-4 py-2 px-4 text-blue font-bold border-4 rounded-full border-blue cursor-pointer;
 
-      .icon{
+      .icon {
         @apply text-xl;
       }
     }

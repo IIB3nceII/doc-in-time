@@ -13,7 +13,7 @@ interface INavbarProps extends StateProps, DispatchProps {}
 const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { account }, setIsSearchAreaOpen }) => {
   return (
     <>
-      <header className={s.root}>
+      <header className="dark:bg-slate-900 dark:border-b-[1px] dark:border-slate-700">
         <div className="md:hidden">
           <DarkModeSwitcher />
         </div>

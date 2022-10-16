@@ -12,7 +12,7 @@
       @apply flex flex-col space-y-2;
 
       > label {
-        @apply text-primary-2;
+        @apply text-primary-2 dark:text-white;
       }
 
       > input {

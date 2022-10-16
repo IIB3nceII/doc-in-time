@@ -28,22 +28,10 @@
   span {
     @apply dark:text-white;
   }
-
-  label {
-    @apply dark:text-white;
-  }
-
-  p {
-    @apply dark:text-white;
-  }
-
-  a {
-    @apply dark:text-white;
-  }
 }
 
 @layer components {
   .icon-container {
-    @apply flex justify-center items-center h-12 w-12 text-primary text-3xl cursor-pointer hover:rounded-full hover:bg-slate-50 active:bg-slate-100;
+    @apply flex justify-center items-center h-12 w-12 text-primary text-3xl cursor-pointer hover:rounded-full hover:bg-slate-50 active:bg-slate-100 dark:text-white dark:hover:bg-slate-400 dark:active:bg-slate-600;
   }
 }
