@@ -1,28 +1,36 @@
-import React, { useEffect, useState } from "react";
-import s from "./Login.module.scss";
+import React, { FC } from "react";
+import s from "./Register.module.scss";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Logo from "../../assets/images/logo.png";
+import { IRegisterFormData } from "src/react-app-env";
 
-interface ILoginFormData {
-  email: string;
-  password: string;
-}
-
-const Login = () => {
+const Register: FC = () => {
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILoginFormData>();
+  } = useForm<IRegisterFormData>();
 
-  const onLoginSubmit = (data: any) => console.log(data);
+  const onLoginSubmit = (data: IRegisterFormData) => console.log(data);
 
   return (
     <div className={s.container}>
       <img src={Logo} alt="logo" />
       <form onSubmit={handleSubmit(onLoginSubmit)}>
+        <div className={s.formField}>
+          <label>First Name</label>
+          <input type="text" {...register("firstName", { required: true })} aria-invalid={errors.firstName ? "true" : "false"} />
+          {errors.firstName?.type === "required" && <p>{errors.firstName?.message}</p>}
+        </div>
+
+        <div className={s.formField}>
+          <label>Last Name</label>
+          <input type="text" {...register("lastName", { required: true })} aria-invalid={errors.lastName ? "true" : "false"} />
+          {errors.lastName?.type === "required" && <p>{errors.lastName?.message}</p>}
+        </div>
+
         <div className={s.formField}>
           <label>Email</label>
           <input type="email" {...register("email", { required: true })} aria-invalid={errors.email ? "true" : "false"} />
@@ -45,4 +53,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
