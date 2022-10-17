@@ -1,11 +1,17 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import s from "./Register.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Logo from "../../assets/images/logo.png";
-import { IRegisterFormData } from "src/react-app-env";
+import { IRegisterFormData } from "src/models";
+import { IRootState } from "src/shared/store";
+import { connect } from "react-redux";
+import { registerUserWithEmail } from "../../shared/store/actions/auth.action";
 
-const Register: FC = () => {
+interface IRegisterProps extends StateProps, DispatchProps {}
+
+const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
+  const navigate = useNavigate();
   const {
     register,
     setValue,
@@ -13,7 +19,13 @@ const Register: FC = () => {
     formState: { errors },
   } = useForm<IRegisterFormData>();
 
-  const onLoginSubmit = (data: IRegisterFormData) => console.log(data);
+  useEffect(() => {
+    if (auth.account?.uid) {
+      navigate("/");
+    }
+  }, [auth]);
+
+  const onLoginSubmit = (data: IRegisterFormData): void => registerUserWithEmail(data);
 
   return (
     <div className={s.container}>
@@ -42,15 +54,20 @@ const Register: FC = () => {
           <input type="password" {...register("password", { required: true })} aria-invalid={errors.password ? "true" : "false"} />
           {errors.password?.type === "required" && <p>{errors.password?.message}</p>}
         </div>
-        <button type="submit">Log in</button>
+        <button type="submit">Register</button>
       </form>
-      <div className={s.options}>
-        <Link to="/register">Do not have an account yet?</Link>
-        <span className={s.divider}></span>
-        <Link to="/register">Forgot your password?</Link>
-      </div>
+      <div className={s.options}></div>
     </div>
   );
 };
 
-export default Register;
+const mapStateToProps = ({ auth }: IRootState) => ({
+  auth,
+});
+
+const mapDispatchToProps = { registerUserWithEmail };
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

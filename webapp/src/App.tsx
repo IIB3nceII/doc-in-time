@@ -9,12 +9,6 @@ import { connect } from "react-redux";
 interface IAppProps extends StateProps, DispatchProps {}
 
 const App: FC<IAppProps> = ({ setUser }) => {
-  const { user } = useSession();
-
-  useEffect(() => {
-    setUser(user);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Layout>

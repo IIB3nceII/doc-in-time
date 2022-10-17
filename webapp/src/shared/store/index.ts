@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import thunk from "redux-thunk";
 import { authReducer, AuthState } from "./reducers/auth.reducer";
 import { uiReducer, UIState } from "./reducers/ui.reducer";
 
@@ -22,6 +23,10 @@ const rootReducer = {
 /**
  * Creating a store object that is used to dispatch actions and update the state.
  */
-const store = configureStore<IRootState>({ reducer: rootReducer, devTools: process.env.NODE_ENV !== "production" });
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false, immutableCheck: false }).concat(thunk),
+  devTools: process.env.NODE_ENV !== "production",
+});
 
 export default store;
