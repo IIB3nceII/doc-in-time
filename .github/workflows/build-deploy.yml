@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
-            ref: 'fix/ci_build'
+            ref: 'develop'
       - name: Install dependencies
         run: cd webapp; npm ci
       - name: Build the project
