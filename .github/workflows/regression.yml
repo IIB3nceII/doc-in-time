@@ -1,0 +1,21 @@
+name: Regression
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+  workflow_dispatch:
+
+jobs:
+  regression:
+  name: Regression
+  runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@master
+      with:
+          ref: ${{ github.ref }}
+    - name: Install dependencies
+      run: cd webapp; npm ci
+    - name: Build the project
+      run: cd webapp; CI=false npm run build
