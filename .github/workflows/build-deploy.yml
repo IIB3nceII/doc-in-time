@@ -24,7 +24,7 @@ jobs:
       - name: Deploy to firebase
         uses: w9jds/firebase-action@master
         with: 
-          args: deploy --only hosting:webapp
+          args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: "webapp"
+          PROJECT_PATH: "./webapp"
