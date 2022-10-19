@@ -1,16 +1,19 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useState } from "react";
 import s from "./Navbar.module.scss";
 import { HiOutlineSearch, HiOutlineUserCircle, HiOutlineLogin } from "react-icons/hi";
 import { DarkModeSwitcher, SearchArea, Tooltip } from "../../ui";
 import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
+import { logOutUser } from "../../../shared/store/actions/auth.action";
 import { Link } from "react-router-dom";
 import Logo from "../../../assets/images/logo.png";
 
 interface INavbarProps extends StateProps, DispatchProps {}
 
-const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { account }, setIsSearchAreaOpen }) => {
+const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { account }, setIsSearchAreaOpen, logOutUser }) => {
+  const [isProfileOptionsOpen, setIsProfileOptionsOpen] = useState<boolean>(true);
+
   return (
     <>
       <header className="dark:bg-slate-900 dark:border-b-[1px] dark:border-slate-700">
@@ -51,11 +54,19 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
           <DarkModeSwitcher />
 
           {account ? (
-            <Tooltip text="Profile">
-              <div className="icon-container">
-                <HiOutlineUserCircle />
-              </div>
-            </Tooltip>
+            <div className={s.profile}>
+              <Tooltip text="Profile">
+                <div className="icon-container" onClick={() => setIsProfileOptionsOpen(!isProfileOptionsOpen)}>
+                  <HiOutlineUserCircle />
+                </div>
+              </Tooltip>
+              {isProfileOptionsOpen && (
+                <ul>
+                  <li>Edit Profile</li>
+                  <li onClick={() => logOutUser()}>Log out</li>
+                </ul>
+              )}
+            </div>
           ) : (
             <Link to="/login">
               <p className={s.login}>Log in</p>
@@ -92,7 +103,7 @@ const mapStateToProps = ({ ui, auth }: IRootState) => ({
   auth,
 });
 
-const mapDispatchToProps = { setIsSearchAreaOpen };
+const mapDispatchToProps = { setIsSearchAreaOpen, logOutUser };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

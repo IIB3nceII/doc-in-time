@@ -1,4 +1,3 @@
-import { User } from "firebase/auth";
 import { IUser } from "../../../models";
 import { AUTH_ACTION_TYPE } from "../actions/auth.action";
 
@@ -11,7 +10,7 @@ export interface IAuthState {
   isAuthenticated: boolean;
   loginSuccess: boolean;
   loginError: boolean;
-  account: User | null;
+  account: IUser | null;
   errorMessage: string;
   redirectMessage: string;
   token: string;
@@ -47,6 +46,7 @@ export const authReducer = (state: IAuthState = initialState, action: any) => {
         isAuthenticated: true,
         loginSuccess: true,
         account: action.payload,
+        loading: false,
       };
     case AUTH_ACTION_TYPE.REGISTER_SUCCESS:
       return {
@@ -54,12 +54,30 @@ export const authReducer = (state: IAuthState = initialState, action: any) => {
         isAuthenticated: true,
         loginSuccess: true,
         account: action.payload,
+        loading: false,
       };
     case AUTH_ACTION_TYPE.REGISTER_FAIL:
       return {
         ...state,
         loginError: true,
         errorMessage: action.payload,
+        loading: false,
+      };
+    case AUTH_ACTION_TYPE.LOGOUT_SUCCESS:
+      return {
+        ...state,
+        account: null,
+        token: "",
+        isAuthenticated: false,
+        loginSuccess: false,
+        loading: false,
+      };
+    case AUTH_ACTION_TYPE.LOGOUT_FAIL:
+      return {
+        ...state,
+        loginError: true,
+        errorMessage: action.payload,
+        loading: false,
       };
     default:
       return { ...state };

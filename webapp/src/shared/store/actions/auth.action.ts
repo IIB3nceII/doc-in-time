@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { IRegisterFormData } from "src/models";
 import { auth } from "src/utils/firebase/firebase.config";
 
@@ -11,6 +11,8 @@ export enum AUTH_ACTION_TYPE {
   REGISTER_SUCCESS = "REGISTER_SUCCESS",
   REGISTER_FAIL = "REGISTER_FAIL",
   LOGOUT = "LOGOUT",
+  LOGOUT_SUCCESS = "LOGOUT_SUCCESS",
+  LOGOUT_FAIL = "LOGOUT_FAIL",
 }
 
 /**
@@ -32,19 +34,34 @@ export const setUser = (user: User | null) => ({
  * @returns An object with a type and a payload.
  */
 export const registerUserWithEmail: (data: IRegisterFormData) => void = (data: IRegisterFormData) => async (dispatch: any) => {
-  const { email, password } = data;
+  const { firstName, lastName, email, password } = data;
 
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
     dispatch({
       type: AUTH_ACTION_TYPE.REGISTER_SUCCESS,
-      payload: user,
+      payload: { ...user, firstName, lastName },
     });
   } catch (err) {
     dispatch({
       type: AUTH_ACTION_TYPE.REGISTER_FAIL,
       payload: `Registration failed with error: ${err}`,
+    });
+  }
+};
+
+export const logOutUser: () => void = () => async (dispatch: any) => {
+  console.log("sadaasd");
+  try {
+    await signOut(auth);
+    dispatch({
+      type: AUTH_ACTION_TYPE.LOGOUT_SUCCESS,
+    });
+  } catch (err) {
+    dispatch({
+      type: AUTH_ACTION_TYPE.LOGOUT_FAIL,
+      payload: `Logout failed with error: ${err}`,
     });
   }
 };
