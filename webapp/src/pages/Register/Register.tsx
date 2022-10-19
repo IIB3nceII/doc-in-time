@@ -7,6 +7,7 @@ import { IRegisterFormData } from "src/models";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { registerUserWithEmail } from "../../shared/store/actions/auth.action";
+import LoadingDots from "../../components/ui/LoadingDots/LoadingDots";
 
 interface IRegisterProps extends StateProps, DispatchProps {}
 
@@ -21,7 +22,7 @@ const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
 
   useEffect(() => {
     if (auth.account?.uid) {
-      navigate("/");
+      navigate("/edit-profile");
     }
   }, [auth]);
 
@@ -54,7 +55,10 @@ const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
           <input type="password" {...register("password", { required: true })} aria-invalid={errors.password ? "true" : "false"} />
           {errors.password?.type === "required" && <p>{errors.password?.message}</p>}
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" disabled={auth.loading}>
+          Register
+          {auth.loading && <LoadingDots />}
+        </button>
       </form>
       <div className={s.options}></div>
     </div>

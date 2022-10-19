@@ -7,10 +7,11 @@ import { ILoginFormData } from "src/models";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { loginUserWithEmail } from "../../shared/store/actions/auth.action";
+import LoadingDots from "src/components/ui/LoadingDots/LoadingDots";
 
 interface ILoginProps extends StateProps, DispatchProps {}
 
-const Login: FC<ILoginProps> = ({ loginUserWithEmail }) => {
+const Login: FC<ILoginProps> = ({ auth, loginUserWithEmail }) => {
   const navigate = useNavigate();
   const {
     register,
@@ -44,7 +45,9 @@ const Login: FC<ILoginProps> = ({ loginUserWithEmail }) => {
           <input type="password" {...register("password", { required: true })} aria-invalid={errors.password ? "true" : "false"} />
           {errors.password?.type === "required" && <p>{errors.password?.message}</p>}
         </div>
-        <button type="submit">Log in</button>
+        <button type="submit" disabled={auth.loading}>
+          Log in{auth.loading && <LoadingDots />}
+        </button>
       </form>
       <div className={s.options}>
         <Link to="/register">Do not have an account yet?</Link>

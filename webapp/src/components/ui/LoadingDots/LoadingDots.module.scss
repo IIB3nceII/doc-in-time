@@ -1,0 +1,32 @@
+.root {
+  @apply flex justify-center space-x-4 h-full w-full absolute top-0 left-0 bg-slate-200 opacity-80 text-center items-center leading-7 rounded-md;
+
+  > span {
+    @apply bg-slate-700 rounded-full h-2 w-2;
+    animation-name: blink;
+    animation-duration: 1.4s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    margin: 0 2px;
+
+    &:nth-of-type(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-of-type(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
