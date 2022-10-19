@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import s from "./Login.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Logo from "../../assets/images/logo.png";
+import { ILoginFormData } from "src/models";
+import { IRootState } from "src/shared/store";
+import { connect } from "react-redux";
+import { loginUserWithEmail } from "../../shared/store/actions/auth.action";
 
-interface ILoginFormData {
-  email: string;
-  password: string;
-}
+interface ILoginProps extends StateProps, DispatchProps {}
 
-const Login = () => {
+const Login: FC<ILoginProps> = ({ loginUserWithEmail }) => {
+  const navigate = useNavigate();
   const {
     register,
     setValue,
@@ -17,7 +19,15 @@ const Login = () => {
     formState: { errors },
   } = useForm<ILoginFormData>();
 
-  const onLoginSubmit = (data: any) => console.log(data);
+  const onLoginSubmit = async (data: ILoginFormData) => {
+    try {
+      await loginUserWithEmail(data);
+
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className={s.container}>
@@ -45,4 +55,13 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapStateToProps = ({ auth }: IRootState) => ({
+  auth,
+});
+
+const mapDispatchToProps = { loginUserWithEmail };
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

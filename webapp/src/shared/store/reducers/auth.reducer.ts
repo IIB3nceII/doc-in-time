@@ -13,7 +13,6 @@ export interface IAuthState {
   account: IUser | null;
   errorMessage: string;
   redirectMessage: string;
-  token: string;
   logoutUrl: string;
 }
 
@@ -28,7 +27,6 @@ const initialState: IAuthState = {
   account: null,
   errorMessage: null as unknown as string,
   redirectMessage: null as unknown as string,
-  token: null as unknown as string,
   logoutUrl: null as unknown as string,
 };
 
@@ -43,10 +41,27 @@ export const authReducer = (state: IAuthState = initialState, action: any) => {
     case AUTH_ACTION_TYPE.LOGIN:
       return {
         ...state,
+        loading: true,
+      };
+    case AUTH_ACTION_TYPE.LOGIN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        account: action.payload,
         isAuthenticated: true,
         loginSuccess: true,
-        account: action.payload,
+      };
+    case AUTH_ACTION_TYPE.LOGIN_FAIL:
+      return {
+        ...state,
         loading: false,
+        loginError: true,
+        errorMessage: action.payload,
+      };
+    case AUTH_ACTION_TYPE.REGISTER:
+      return {
+        ...state,
+        loading: true,
       };
     case AUTH_ACTION_TYPE.REGISTER_SUCCESS:
       return {
@@ -63,11 +78,15 @@ export const authReducer = (state: IAuthState = initialState, action: any) => {
         errorMessage: action.payload,
         loading: false,
       };
+    case AUTH_ACTION_TYPE.LOGOUT:
+      return {
+        ...state,
+        loading: true,
+      };
     case AUTH_ACTION_TYPE.LOGOUT_SUCCESS:
       return {
         ...state,
         account: null,
-        token: "",
         isAuthenticated: false,
         loginSuccess: false,
         loading: false,

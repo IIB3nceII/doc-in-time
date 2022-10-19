@@ -12,7 +12,7 @@ import Logo from "../../../assets/images/logo.png";
 interface INavbarProps extends StateProps, DispatchProps {}
 
 const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { account }, setIsSearchAreaOpen, logOutUser }) => {
-  const [isProfileOptionsOpen, setIsProfileOptionsOpen] = useState<boolean>(true);
+  const [isProfileOptionsOpen, setIsProfileOptionsOpen] = useState<boolean>(false);
 
   return (
     <>
