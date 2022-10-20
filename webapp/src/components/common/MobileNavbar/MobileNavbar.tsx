@@ -5,7 +5,7 @@ import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentificati
 
 const MobileNavbar = () => {
   return (
-    <nav className={s.root}>
+    <nav className={`${s.root} dark:bg-slate-900 dark:text-white dark:border-slate-700`}>
       <ul>
         <Link to="/">
           <li className={s.active}>
