@@ -1,10 +1,13 @@
-import React from 'react';
-import s from './Calendar.module.scss'
+import React from "react";
+import { DatePicker } from "src/components/calendar";
+import s from "./Calendar.module.scss";
 
 const Calendar = () => {
   return (
-    <div>Calendar</div>
-  )
-}
+    <div>
+      <DatePicker />
+    </div>
+  );
+};
 
-export default Calendar
+export default Calendar;
