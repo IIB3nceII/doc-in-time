@@ -1,0 +1,9 @@
+.container {
+  @apply w-full mt-4;
+
+  tr{
+    td{
+      @apply text-center cursor-pointer;
+    }
+  }
+}
