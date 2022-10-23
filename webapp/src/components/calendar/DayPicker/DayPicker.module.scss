@@ -2,6 +2,10 @@
   @apply w-72 mt-4 text-sm;
 
   tr {
+    th {
+      @apply text-primary dark:text-white;
+    }
+
     td {
       @apply text-center cursor-pointer;
     }

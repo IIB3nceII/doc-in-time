@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IRegisterFormData } from "src/models";
+import { IRegisterFormData, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
 import { HiOutlinePlusSm } from "react-icons/hi";
@@ -24,8 +24,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<IRegisterFormData>();
-  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false);
+  } = useForm<ITimeSlotFormData>();
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(true);
 
   const handleCancelNewAppointment = (e: any) => {
     e.preventDefault();
@@ -71,16 +71,17 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>
             <form>
               <div className={s.formFields}>
-                <div className={s.formField}>
-                  <label>First Name</label>
-                  <input type="text" {...register("firstName", { required: true })} aria-invalid={errors.firstName ? "true" : "false"} />
-                  {errors.firstName?.type === "required" && <p>{errors.firstName?.message}</p>}
-                </div>
+                <input type="text" {...register("hour", { required: true })} aria-invalid={errors.hour ? "true" : "false"} />
+                {errors.hour?.type === "required" && <p>{errors.hour?.message}</p>}
 
-                <div className={s.formField}>
-                  <label>First Name</label>
-                  <input type="text" {...register("firstName", { required: true })} aria-invalid={errors.firstName ? "true" : "false"} />
-                  {errors.firstName?.type === "required" && <p>{errors.firstName?.message}</p>}
+                <span>:</span>
+
+                <input type="text" {...register("minutes", { required: true })} aria-invalid={errors.minutes ? "true" : "false"} />
+                {errors.minutes?.type === "required" && <p>{errors.minutes?.message}</p>}
+
+                <div className={s.radioGroup}>
+                  <button>AM</button>
+                  <button>PM</button>
                 </div>
               </div>
 

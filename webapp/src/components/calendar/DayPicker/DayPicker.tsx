@@ -57,7 +57,7 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay }) => {
       <thead>
         <tr className={s.columnHeaderContainer}>
           {DAYS.map((day, i) => (
-            <th key={i} className={s.columnHeader}>
+            <th key={i} className={`${s.columnHeader} text-primary dark:text-white`}>
               {day}
             </th>
           ))}
@@ -68,7 +68,7 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay }) => {
         {buildMonthView().map((item, i) => (
           <tr key={i}>
             {item.map((value, j) => (
-              <td key={j} onClick={() => setDay(value)}>
+              <td key={j} onClick={() => value !== " " && setDay(value)}>
                 <span
                   className={`${
                     +new Date().getDate() === value ? "text-white font-semibold bg-blue" : day === value ? "font-semibold bg-sky-200" : ""

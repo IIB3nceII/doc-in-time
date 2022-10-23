@@ -41,7 +41,7 @@
     width: 100vw;
 
     .modal-container {
-      @apply flex flex-col h-1/2 w-3/4 p-6 bg-white rounded-lg shadow-lg;
+      @apply flex flex-col h-fit w-3/4 p-6 bg-white rounded-lg shadow-lg md:w-96;
     }
   }
 }
