@@ -1,8 +1,8 @@
 .container {
-  @apply w-full mt-4;
+  @apply w-72 mt-4 text-sm;
 
-  tr{
-    td{
+  tr {
+    td {
       @apply text-center cursor-pointer;
     }
   }
