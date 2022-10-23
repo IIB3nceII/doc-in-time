@@ -1,26 +1,78 @@
 .container {
-  @apply flex flex-col w-full mt-4;
+  @apply flex flex-col w-full space-y-4 mt-4;
 
-  .timeSlot {
-    @apply flex relative;
-    height: 60px;
+  > button {
+    @apply self-end py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner;
 
-    > span {
-      @apply -mt-2 mr-2 text-sm text-slate-300 font-semibold transition-all duration-100;
-    }
+    // background: linear-gradient(60deg, var(--blue), var(--darkpink));
+  }
 
-    .appointment {
-      @apply flex items-center absolute left-14 w-3/4 p-4 text-white bg-blue rounded-md z-10;
-    }
+  .timeSlotsContainer {
+    @apply flex flex-col w-full;
 
-    .timeSlotsDividers {
-      @apply flex flex-col w-full;
+    .timeSlot {
+      @apply flex relative;
+      height: 60px;
 
       > span {
-        @apply w-full border-b-[1px] border-slate-300;
+        @apply -mt-2 mr-2 text-sm text-slate-300 font-semibold transition-all duration-100;
+      }
 
-        &:last-child {
-          @apply mt-7;
+      .appointment {
+        @apply flex items-center absolute left-14 w-3/4 p-4 text-white bg-blue rounded-md z-10;
+      }
+
+      .timeSlotsDividers {
+        @apply flex flex-col w-full;
+
+        > span {
+          @apply w-full border-b-[1px] border-slate-300;
+
+          &:last-child {
+            @apply mt-7;
+          }
+        }
+      }
+    }
+  }
+}
+
+.appointmentModal {
+  @apply flex justify-center items-center fixed top-0 left-0 bg-slate-200 bg-opacity-50 z-50;
+  height: 100vh;
+  width: 100vw;
+
+  .modalContainer {
+    @apply flex flex-col h-1/2 w-3/4 p-6 bg-white rounded-lg shadow-lg;
+
+    > form {
+      @apply flex flex-col justify-between h-full space-y-4;
+
+      .formFields {
+        @apply flex flex-col space-y-4;
+
+        .formField {
+          @apply flex flex-col space-y-2;
+
+          > label {
+            @apply text-primary-2 dark:text-white;
+          }
+
+          > input {
+            @apply h-12 px-2 rounded border-2 border-slate-400 outline-none transition-all duration-100 focus:border-blue focus:border-4;
+          }
+        }
+      }
+
+      .buttons {
+        @apply flex justify-between justify-self-end space-x-8;
+
+        > button {
+          @apply w-1/2 py-2 px-4 text-rose-500 font-bold rounded-lg border-4 border-rose-500 transition-all duration-100 active:scale-95;
+        }
+
+        > button[type="submit"] {
+          @apply text-white bg-blue border-none;
         }
       }
     }
