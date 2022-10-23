@@ -1,0 +1,28 @@
+.container {
+  @apply flex flex-col w-full mt-4;
+
+  .timeSlot {
+    @apply flex relative;
+    height: 60px;
+
+    > span {
+      @apply -mt-2 mr-2 text-sm text-slate-300 font-semibold transition-all duration-100;
+    }
+
+    .appointment {
+      @apply flex items-center absolute left-14 w-3/4 p-4 text-white bg-blue rounded-md z-10;
+    }
+
+    .timeSlotsDividers {
+      @apply flex flex-col w-full;
+
+      > span {
+        @apply w-full border-b-[1px] border-slate-300;
+
+        &:last-child {
+          @apply mt-7;
+        }
+      }
+    }
+  }
+}

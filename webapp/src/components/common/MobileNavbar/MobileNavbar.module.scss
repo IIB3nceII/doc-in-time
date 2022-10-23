@@ -1,5 +1,5 @@
 .root {
-  @apply flex justify-center items-center sticky bottom-0 h-20 bg-white border-t-[1px] border-slate-100 md:hidden;
+  @apply flex justify-center items-center sticky bottom-0 h-20 bg-white border-t-[1px] border-slate-100 z-50 md:hidden;
 
   > ul {
     @apply flex justify-between h-full w-full mx-8 list-none;

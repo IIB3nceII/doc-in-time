@@ -5,9 +5,11 @@ import s from "./DayPicker.module.scss";
 interface IDayPickerProps {
   year: number;
   month: string;
+  day: number;
+  setDay: (day: number) => void;
 }
 
-const DayPicker: FC<IDayPickerProps> = ({ year, month }) => {
+const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay }) => {
   const [numberOfDays, setNumberOfDays] = useState<number>(0);
 
   useEffect(() => {
@@ -66,8 +68,14 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month }) => {
         {buildMonthView().map((item, i) => (
           <tr key={i}>
             {item.map((value, j) => (
-              <td key={j}>
-                <span className={`${+new Date().getDate() === value ? "text-white font-semibold bg-blue" : ""} rounded-full m-2 p-1`}>{value}</span>
+              <td key={j} onClick={() => setDay(value)}>
+                <span
+                  className={`${
+                    +new Date().getDate() === value ? "text-white font-semibold bg-blue" : day === value ? "font-semibold bg-sky-200" : ""
+                  } rounded-full m-2 p-1`}
+                >
+                  {value}
+                </span>
               </td>
             ))}
           </tr>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { HiOutlineCheck, HiOutlineChevronDown } from "react-icons/hi";
@@ -6,29 +6,17 @@ import s from "./DatePicker.module.scss";
 import { MONTHS } from "src/utils/constants";
 import DayPicker from "../DayPicker";
 
-const DatePicker = () => {
-  const [years, setYears] = useState<number[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number>(years[0]);
-  const [months, setMonths] = useState<string[]>(MONTHS);
-  const [selectedMonth, setSelectedMonth] = useState<string>(MONTHS[new Date().getMonth()]);
+interface IDatePickerProps {
+  years: number[];
+  selectedYear: number;
+  setSelectedYear: (year: number) => void;
+  selectedMonth: string;
+  setSelectedMonth: (month: string) => void;
+  selectedDay: number;
+  setSelectedDay: (day: number) => void;
+}
 
-  useEffect(() => {
-    generateYears();
-  }, []);
-
-  const generateYears = (): void => {
-    const max = new Date().getFullYear();
-    const min = max - 50;
-    let yrs = [];
-
-    for (var i = max; i >= min; i--) {
-      yrs.push(i);
-    }
-
-    setYears(yrs);
-    setSelectedYear(yrs[0]);
-  };
-
+const DatePicker: FC<IDatePickerProps> = ({ years, selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDay, setSelectedDay }) => {
   return (
     <div className={s.container}>
       <div className={s.listboxContainer}>
@@ -80,7 +68,7 @@ const DatePicker = () => {
               </Listbox.Button>
               <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
                 <Listbox.Options className={s.listboxOptions}>
-                  {months.map((month, i) => (
+                  {MONTHS.map((month, i) => (
                     <Listbox.Option
                       key={i}
                       className={({ active }) =>
@@ -107,7 +95,7 @@ const DatePicker = () => {
         </div>
       </div>
 
-      {selectedYear && selectedMonth && <DayPicker year={selectedYear} month={String(selectedMonth)} />}
+      {selectedYear && selectedMonth && <DayPicker year={selectedYear} month={String(selectedMonth)} day={selectedDay} setDay={setSelectedDay} />}
     </div>
   );
 };
