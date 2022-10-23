@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { IRegisterFormData } from "src/models";
 import { HOURSFORMAT } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
+import { HiOutlinePlusSm } from "react-icons/hi";
 
 const dummyAppointment = {
   hour: 8,
@@ -34,7 +35,10 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
   return (
     <>
       <div className={s.container}>
-        <button onClick={() => setIsAppointmentModalOpen(true)}>Add New Appointment</button>
+        <button onClick={() => setIsAppointmentModalOpen(true)}>
+          <HiOutlinePlusSm className="h-5 w-5" />
+          &nbsp;Add
+        </button>
 
         <div className={s.timeSlotsContainer}>
           {HOURSFORMAT.map((time, i) => (
@@ -63,8 +67,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
         </div>
       </div>
       {isAppointmentModalOpen && (
-        <div className={s.appointmentModal} onClick={() => setIsAppointmentModalOpen(false)}>
-          <div className={s.modalContainer} onClick={(e) => e.stopPropagation()}>
+        <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
             <form>
               <div className={s.formFields}>
                 <div className={s.formField}>

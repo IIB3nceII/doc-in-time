@@ -2,7 +2,7 @@
   @apply flex flex-col w-full space-y-4 mt-4;
 
   > button {
-    @apply self-end py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner;
+    @apply flex justify-center items-center self-end py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner;
 
     // background: linear-gradient(60deg, var(--blue), var(--darkpink));
   }
@@ -37,44 +37,34 @@
   }
 }
 
-.appointmentModal {
-  @apply flex justify-center items-center fixed top-0 left-0 bg-slate-200 bg-opacity-50 z-50;
-  height: 100vh;
-  width: 100vw;
+form {
+  @apply flex flex-col justify-between h-full space-y-4;
 
-  .modalContainer {
-    @apply flex flex-col h-1/2 w-3/4 p-6 bg-white rounded-lg shadow-lg;
+  .formFields {
+    @apply flex flex-col space-y-4;
 
-    > form {
-      @apply flex flex-col justify-between h-full space-y-4;
+    .formField {
+      @apply flex flex-col space-y-2;
 
-      .formFields {
-        @apply flex flex-col space-y-4;
-
-        .formField {
-          @apply flex flex-col space-y-2;
-
-          > label {
-            @apply text-primary-2 dark:text-white;
-          }
-
-          > input {
-            @apply h-12 px-2 rounded border-2 border-slate-400 outline-none transition-all duration-100 focus:border-blue focus:border-4;
-          }
-        }
+      > label {
+        @apply text-primary-2 dark:text-white;
       }
 
-      .buttons {
-        @apply flex justify-between justify-self-end space-x-8;
-
-        > button {
-          @apply w-1/2 py-2 px-4 text-rose-500 font-bold rounded-lg border-4 border-rose-500 transition-all duration-100 active:scale-95;
-        }
-
-        > button[type="submit"] {
-          @apply text-white bg-blue border-none;
-        }
+      > input {
+        @apply h-12 px-2 rounded border-2 border-slate-400 outline-none transition-all duration-100 focus:border-blue focus:border-4;
       }
+    }
+  }
+
+  .buttons {
+    @apply flex justify-between justify-self-end space-x-8;
+
+    > button {
+      @apply w-full py-1 px-4 text-rose-500 font-bold rounded-lg border-4 border-rose-500 transition-all duration-100 active:scale-95;
+    }
+
+    > button[type="submit"] {
+      @apply text-white bg-blue border-none;
     }
   }
 }
