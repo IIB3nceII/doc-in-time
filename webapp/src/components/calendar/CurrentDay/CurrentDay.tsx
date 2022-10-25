@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IAppointmentSlot, IRegisterFormData, ITimeSlotFormData } from "src/models";
+import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
-import { HiOutlinePlusSm } from "react-icons/hi";
+import { HiOutlinePlusSm, HiOutlineClipboardList } from "react-icons/hi";
 import { addNewAppointment } from "src/utils/firebase/firestore";
 import getDocAppointments from "src/utils/firebase/firestore/get-doc-appointments";
 import { IRootState } from "src/shared/store";
@@ -39,29 +39,47 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
   const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[] | null>(null);
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false);
 
+  /**
+   * It serializeAppointments on mount.
+   * @lifecycleMethod
+   */
   useEffect(() => {
     serializeAppointments();
-  }, [auth]);
+  }, [auth, selectedYear, selectedMonth, , selectedDay]);
 
-  useEffect(() => {
-    console.log(appointmentSlots);
-  }, [appointmentSlots]);
-
+  /**
+   * It gets the appointments from the database and sets the state of the appointments.
+   */
   const serializeAppointments = async (): Promise<void> => {
     if (auth.account?.uid) {
       const appointments = await getDocAppointments(auth.account?.uid);
 
       if (appointments?.length) {
-        setAppointmentSlots(appointments);
+        const filtered = appointments.filter(
+          (appointment) =>
+            appointment.startDate.getFullYear() === selectedYear &&
+            MONTHS.findIndex((m) => m === selectedMonth) === appointment.startDate.getMonth() &&
+            appointment.startDate.getDate() === selectedDay
+        );
+
+        setAppointmentSlots(filtered);
       }
     }
   };
 
+  /**
+   * It closes the modal.
+   * @param {any} e - any - this is the event that is triggered when the user clicks the cancel button.
+   */
   const handleCancelNewAppointment = (e: any) => {
     e.preventDefault();
     setIsAppointmentModalOpen(false);
   };
 
+  /**
+   * It takes in a form data object, converts the start and end times to Date objects, and then add the appointment to the database.
+   * @param {ITimeSlotFormData} data - ITimeSlotFormData
+   */
   const onAddNewAppointment = async (data: ITimeSlotFormData): Promise<void> => {
     const { startHour, startMinutes, endHour, endMinutes } = data;
 
@@ -116,6 +134,36 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     }
   };
 
+  const renderAppointment = (time: string) => {
+    const arr: ReactNode[] = [];
+    if (appointmentSlots) {
+      const currentHour = appointmentSlots.filter((slot) => slot.startDate.getHours() === +time.split(":")[0]);
+
+      if (currentHour?.length) {
+        currentHour.forEach((item, i) => {
+          arr.push(
+            <div
+              key={i}
+              className={s.appointment}
+              style={{
+                top: item.startDate.getMinutes() + "px",
+                height:
+                  item.endDate.getHours() > item.startDate.getHours()
+                    ? item.endDate.getMinutes() - item.startDate.getMinutes() + (item.endDate.getHours() - item.startDate.getHours()) * 60 + "px"
+                    : item.endDate.getMinutes() - item.startDate.getMinutes() + "px",
+              }}
+            >
+              <HiOutlineClipboardList className="h-6 w-6" />
+              <p>Empty Slot</p>
+            </div>
+          );
+        });
+      }
+    }
+
+    return arr;
+  };
+
   return (
     <>
       <div className={s.container}>
@@ -128,20 +176,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
           {HOURSFORMAT.map((time, i) => (
             <div key={i} className={s.timeSlot}>
               <span>{time}</span>
-              {+time.split(":")[0] === dummyAppointment.hour && (
-                <div
-                  className={s.appointment}
-                  style={{
-                    top: dummyAppointment.minutes + "px",
-                    height:
-                      dummyAppointment.endHour > dummyAppointment.hour
-                        ? dummyAppointment.endMinutes - dummyAppointment.minutes + (dummyAppointment.endHour - dummyAppointment.hour) * 60 + "px"
-                        : dummyAppointment.endMinutes - dummyAppointment.minutes + "px",
-                  }}
-                >
-                  Erzsi neni nemvalto mutetje
-                </div>
-              )}
+              {renderAppointment(time)}
               <div className={s.timeSlotsDividers}>
                 <span></span>
                 <span></span>

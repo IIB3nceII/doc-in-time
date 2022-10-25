@@ -10,8 +10,8 @@ const getDocAppointments = async (userId: string): Promise<IAppointmentSlot[] | 
     querySnapShot.forEach((doc) => {
       appointments.push({
         userId: doc.data().userId,
-        startDate: new Date((doc.data().startDate as Timestamp).toDate().toDateString()),
-        endDate: new Date((doc.data().startDate as Timestamp).toDate().toDateString()),
+        startDate: new Date((doc.data().startDate as Timestamp).toDate()),
+        endDate: new Date((doc.data().startDate as Timestamp).toDate()),
       });
     });
 
