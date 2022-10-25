@@ -1,4 +1,6 @@
 export default interface ITimeSlotFormData {
-  hour: string;
-  minutes: string;
+  startHour: string;
+  startMinutes: string;
+  endHour: string;
+  endMinutes: string;
 }

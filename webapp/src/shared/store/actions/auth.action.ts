@@ -52,6 +52,11 @@ export const registerUserWithEmail: (data: IRegisterFormData) => void = (data: I
   }
 };
 
+/**
+ * It takes a user object, and dispatches an action to the reducer.
+ * @param {IUser} user - IUser - This is the user object that is returned from the Firebase.
+ * authentication API.
+ */
 export const setUserSession: (user: IUser) => void = (user: IUser) => async (dispatch: any) => {
   if (user) {
     localStorage.refreshToken = (user as any).stsTokenManager.refreshToken;
@@ -65,6 +70,10 @@ export const setUserSession: (user: IUser) => void = (user: IUser) => async (dis
   });
 };
 
+/**
+ * It takes in a data object, which is an interface that has an email and password property and then it dispatches an action to the reducer.
+ * @param {ILoginFormData} data - ILoginFormData - this is the data that is passed in from the form.
+ */
 export const loginUserWithEmail: (data: ILoginFormData) => void = (data: ILoginFormData) => async (dispatch: any) => {
   const { email, password } = data;
 
@@ -91,6 +100,10 @@ export const loginUserWithEmail: (data: ILoginFormData) => void = (data: ILoginF
   }
 };
 
+/**
+ * When the user logs out, we dispatch an action to log out, then we try to sign out with Firebase,
+ * and if it succeeds, we dispatch a success action, otherwise we dispatch a failure action.
+ */
 export const logOutUser: () => void = () => async (dispatch: any) => {
   dispatch({
     type: AUTH_ACTION_TYPE.LOGOUT,
