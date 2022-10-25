@@ -18,7 +18,7 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay }) => {
     buildMonthView();
   }, [month]);
 
-  const getDaysInCurrentMonth = (): void => {
+  const getDaysInCurrentMonth = () => {
     const num = new Date(year, MONTHS.indexOf(month) + 1, 0).getDate();
 
     if (num) {

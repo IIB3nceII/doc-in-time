@@ -24,12 +24,29 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<ITimeSlotFormData>();
+  } = useForm<ITimeSlotFormData>({
+    defaultValues: {
+      hour: "00",
+      minutes: "00",
+    },
+  });
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(true);
 
   const handleCancelNewAppointment = (e: any) => {
     e.preventDefault();
     setIsAppointmentModalOpen(false);
+  };
+
+  const onAddNewAppointment = (data: ITimeSlotFormData) => {
+    console.log(data);
+  };
+
+  const handleAppointmentChange = (name: string, value: string) => {
+    if (name === "hour" && value.length === 1) {
+      setValue("hour", `0${value}`);
+    } else if (name === "minutes" && value.length === 1) {
+      setValue("minutes", `0${value}`);
+    }
   };
 
   return (
@@ -69,20 +86,43 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
       {isAppointmentModalOpen && (
         <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-            <form>
+            <form onSubmit={handleSubmit(onAddNewAppointment)}>
               <div className={s.formFields}>
-                <input type="text" {...register("hour", { required: true })} aria-invalid={errors.hour ? "true" : "false"} />
+                <input
+                  type="number"
+                  min={0}
+                  minLength={0}
+                  maxLength={2}
+                  {...register("hour", {
+                    required: true,
+                    min: 0,
+                    max: 23,
+                    minLength: 0,
+                    maxLength: 2,
+                    onChange: (e) => handleAppointmentChange(e.target.name, e.target.value),
+                  })}
+                  aria-invalid={errors.hour ? "true" : "false"}
+                />
                 {errors.hour?.type === "required" && <p>{errors.hour?.message}</p>}
 
                 <span>:</span>
 
-                <input type="text" {...register("minutes", { required: true })} aria-invalid={errors.minutes ? "true" : "false"} />
+                <input
+                  type="number"
+                  min={0}
+                  minLength={0}
+                  maxLength={2}
+                  {...register("minutes", {
+                    required: true,
+                    min: 0,
+                    max: 59,
+                    minLength: 0,
+                    maxLength: 2,
+                    onChange: (e) => handleAppointmentChange(e.target.name, e.target.value),
+                  })}
+                  aria-invalid={errors.minutes ? "true" : "false"}
+                />
                 {errors.minutes?.type === "required" && <p>{errors.minutes?.message}</p>}
-
-                <div className={s.radioGroup}>
-                  <button>AM</button>
-                  <button>PM</button>
-                </div>
               </div>
 
               <div className={s.buttons}>

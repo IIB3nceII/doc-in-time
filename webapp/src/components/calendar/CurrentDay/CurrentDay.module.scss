@@ -41,7 +41,7 @@ form {
   @apply flex flex-col justify-between h-full space-y-4;
 
   .formFields {
-    @apply flex justify-between items-center w-full;
+    @apply flex justify-center items-center space-x-12 w-full;
 
       > input {
         @apply h-24 w-24 px-2 text-4xl rounded-lg border-2 border-slate-400 outline-none transition-all duration-100 focus:border-blue focus:border-4;
@@ -49,22 +49,6 @@ form {
 
       >span{
         @apply text-4xl font-bold;
-      }
-
-      .radioGroup{
-        @apply flex flex-col;
-
-        >button{
-          @apply py-1 px-2 bg-slate-200 text-slate-400;
-
-          &:first-child{
-            @apply rounded-t-md border-b border-b-slate-400;
-          }
-
-          &:last-child{
-            @apply rounded-b-md;
-          }
-        }
       }
   }
 

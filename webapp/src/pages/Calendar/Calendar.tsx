@@ -13,7 +13,7 @@ const Calendar = () => {
     generateYears();
   }, []);
 
-  const generateYears = (): void => {
+  const generateYears = () => {
     const max = new Date().getFullYear();
     const min = max - 50;
     let yrs = [];
