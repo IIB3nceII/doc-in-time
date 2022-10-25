@@ -1,10 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IRegisterFormData, ITimeSlotFormData } from "src/models";
+import { IAppointmentSlot, IRegisterFormData, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import { addNewAppointment } from "src/utils/firebase/firestore";
+import getDocAppointments from "src/utils/firebase/firestore/get-doc-appointments";
+import { IRootState } from "src/shared/store";
+import { connect } from "react-redux";
 
 const dummyAppointment = {
   hour: 8,
@@ -13,13 +16,13 @@ const dummyAppointment = {
   endMinutes: 25,
 };
 
-interface ICurrentDayProps {
+interface ICurrentDayProps extends StateProps, DispatchProps {
   selectedYear: number;
   selectedMonth: string;
   selectedDay: number;
 }
 
-const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selectedDay }) => {
+const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, selectedDay }) => {
   const {
     register,
     setValue,
@@ -33,7 +36,26 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
       endMinutes: "00",
     },
   });
-  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(true);
+  const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[] | null>(null);
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    serializeAppointments();
+  }, [auth]);
+
+  useEffect(() => {
+    console.log(appointmentSlots);
+  }, [appointmentSlots]);
+
+  const serializeAppointments = async (): Promise<void> => {
+    if (auth.account?.uid) {
+      const appointments = await getDocAppointments(auth.account?.uid);
+
+      if (appointments?.length) {
+        setAppointmentSlots(appointments);
+      }
+    }
+  };
 
   const handleCancelNewAppointment = (e: any) => {
     e.preventDefault();
@@ -59,7 +81,13 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
       +endMinutes
     );
 
-    await addNewAppointment({ startDate: start, endDate: end });
+    if (auth.account?.uid) {
+      await addNewAppointment({ userId: auth.account?.uid, startDate: start, endDate: end });
+    }
+
+    setIsAppointmentModalOpen(false);
+
+    serializeAppointments();
   };
 
   /**
@@ -214,4 +242,13 @@ const CurrentDay: FC<ICurrentDayProps> = ({ selectedYear, selectedMonth, selecte
   );
 };
 
-export default CurrentDay;
+const mapStateToProps = ({ auth }: IRootState) => ({
+  auth,
+});
+
+const mapDispatchToProps = {};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(CurrentDay);
