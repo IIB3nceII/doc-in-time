@@ -229,7 +229,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                               {({ active }) => (
                                 <button
                                   className={`${
-                                    active ? "bg-violet-500" : "text-primary"
+                                    active ? "bg-slate-100 text-primary" : "text-primary"
                                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                 >
                                   {active ? (
@@ -246,7 +246,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                               {({ active }) => (
                                 <button
                                   className={`${
-                                    active ? "bg-violet-500" : "text-primary"
+                                    active ? "bg-slate-100 text-primary" : "text-primary"
                                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                 >
                                   {active ? (
