@@ -4,7 +4,7 @@ import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
 import { HiOutlinePlusSm, HiOutlineClipboardList, HiOutlineDotsVertical, HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
-import { addNewAppointment, deleteDocAppointment, getDocAppointments } from "src/utils/firebase/firestore";
+import { addNewAppointment, deleteDocAppointment, editDocAppointment, getDocAppointments } from "src/utils/firebase/firestore";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
@@ -40,6 +40,10 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
    */
   const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[] | null>(null);
 
+  /**
+   * Setting the state of the current appointment.
+   * @state
+   */
   const [currentAppointmentSlot, setCurrentAppointmentSlot] = useState<IAppointmentSlot | null>(null);
 
   /**
@@ -54,6 +58,16 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
    */
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
+  /**
+   * Setting the state of the active edit.
+   * @state
+   */
+  const [isEditActive, setIsEditActive] = useState<boolean>(false);
+
+  /**
+   * Setting the state of the error message.
+   * @state
+   */
   const [customErrorMessage, setCustomErrorMessage] = useState<string | null>(null);
 
   /**
@@ -64,6 +78,16 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     serializeAppointments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth, selectedYear, selectedMonth, selectedDay]);
+
+  /**
+   * Sets isEditActive to false if isAppointmentModalOpen is false.
+   * @lifecycleMethod
+   */
+  useEffect(() => {
+    if (!isAppointmentModalOpen) {
+      setIsEditActive(false);
+    }
+  }, [isAppointmentModalOpen]);
 
   /**
    * It gets the appointments from the database and sets the state of the appointments.
@@ -94,6 +118,11 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
   const handleCancelNewAppointment = (e: any) => {
     e.preventDefault();
     setIsAppointmentModalOpen(false);
+
+    setValue("startHour", "00");
+    setValue("startMinutes", "00");
+    setValue("endHour", "00");
+    setValue("endMinutes", "00");
   };
 
   /**
@@ -134,8 +163,59 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     }
   };
 
-  const editAppointment = (appointment: IAppointmentSlot): void => {};
+  const onEditAppointment = async (data: ITimeSlotFormData): Promise<void> => {
+    const { startHour, startMinutes, endHour, endMinutes } = data;
 
+    if (startHour <= endHour) {
+      setCustomErrorMessage(null);
+
+      const start = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +startHour,
+        +startMinutes
+      );
+
+      const end = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +endHour,
+        +endMinutes
+      );
+
+      if (currentAppointmentSlot?.id) {
+        await editDocAppointment({ id: currentAppointmentSlot.id, startDate: start, endDate: end });
+      }
+
+      setIsAppointmentModalOpen(false);
+      setIsEditActive(false);
+      serializeAppointments();
+    } else {
+      setCustomErrorMessage(`End hour must be greater or equal to start hour.`);
+    }
+  };
+
+  const handleEditModalOpen = (item: IAppointmentSlot): void => {
+    setIsEditActive(true);
+    setCurrentAppointmentSlot(item);
+    setIsAppointmentModalOpen(true);
+    const startHourValue = item.startDate.getHours() < 10 ? `0${item.startDate.getHours()}` : `${item.startDate.getHours()}`;
+    const startMinutesValue = item.startDate.getMinutes() < 10 ? `0${item.startDate.getMinutes()}` : `${item.startDate.getMinutes()}`;
+    const endHourValue = item.endDate.getHours() < 10 ? `0${item.endDate.getHours()}` : `${item.endDate.getHours()}`;
+    const endMinutesValue = item.endDate.getMinutes() < 10 ? `0${item.endDate.getMinutes()}` : `${item.endDate.getMinutes()}`;
+
+    setValue("startHour", startHourValue);
+    setValue("startMinutes", startMinutesValue);
+    setValue("endHour", endHourValue);
+    setValue("endMinutes", endMinutesValue);
+  };
+
+  /**
+   * It takes an id as an argument, and if the currentAppointmentSlot is truthy, it calls the deleteDocAppointment function, which is imported from the firebase.
+   * @param {string} id - The id of the appointment to be deleted.
+   */
   const deleteAppointment = async (id: string): Promise<void> => {
     try {
       if (currentAppointmentSlot) {
@@ -260,6 +340,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                                   className={`${
                                     active ? "bg-slate-100 text-primary" : "text-primary"
                                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                  onClick={() => handleEditModalOpen(item)}
                                 >
                                   {active ? (
                                     <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
@@ -305,7 +386,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       {isAppointmentModalOpen && (
         <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-            <form onSubmit={handleSubmit(onAddNewAppointment)}>
+            <form onSubmit={handleSubmit(isEditActive ? onEditAppointment : onAddNewAppointment)}>
               <div className={s.formFields}>
                 <input
                   className={`${errors.startHour ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}

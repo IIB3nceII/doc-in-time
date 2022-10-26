@@ -1,6 +1,6 @@
 import { IAppointmentSlot } from "src/models";
 import { collection, addDoc } from "firebase/firestore";
-import { auth, db } from "../firebase.config";
+import { db } from "../firebase.config";
 
 const addNewAppointment = async ({ userId, startDate, endDate }: IAppointmentSlot): Promise<void> => {
   try {
