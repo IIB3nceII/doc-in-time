@@ -14,14 +14,24 @@ interface IDatePickerProps {
   setSelectedMonth: (month: string) => void;
   selectedDay: number;
   setSelectedDay: (day: number) => void;
+  isLoading?: boolean;
 }
 
-const DatePicker: FC<IDatePickerProps> = ({ years, selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDay, setSelectedDay }) => {
+const DatePicker: FC<IDatePickerProps> = ({
+  years,
+  selectedYear,
+  setSelectedYear,
+  selectedMonth,
+  setSelectedMonth,
+  selectedDay,
+  setSelectedDay,
+  isLoading,
+}) => {
   return (
     <div className={s.container}>
       <div className={s.listboxContainer}>
         <div className={s.listbox}>
-          <Listbox value={selectedYear} onChange={setSelectedYear}>
+          <Listbox value={selectedYear} onChange={setSelectedYear} disabled={isLoading}>
             <div className={s.listboxContainer}>
               <Listbox.Button className={s.listboxButton}>
                 <span className={s.selectedYear}>{selectedYear}</span>
@@ -58,7 +68,7 @@ const DatePicker: FC<IDatePickerProps> = ({ years, selectedYear, setSelectedYear
         </div>
 
         <div className={s.listbox}>
-          <Listbox value={selectedMonth} onChange={setSelectedMonth}>
+          <Listbox value={selectedMonth} onChange={setSelectedMonth} disabled={isLoading}>
             <div className={s.listboxContainer}>
               <Listbox.Button className={s.listboxButton}>
                 <span className={s.selectedYear}>{selectedMonth}</span>
@@ -96,7 +106,9 @@ const DatePicker: FC<IDatePickerProps> = ({ years, selectedYear, setSelectedYear
       </div>
 
       <div className={s.day}>
-        {selectedYear && selectedMonth && <DayPicker year={selectedYear} month={String(selectedMonth)} day={selectedDay} setDay={setSelectedDay} />}
+        {selectedYear && selectedMonth && (
+          <DayPicker isLoading={isLoading} year={selectedYear} month={String(selectedMonth)} day={selectedDay} setDay={setSelectedDay} />
+        )}
       </div>
     </div>
   );

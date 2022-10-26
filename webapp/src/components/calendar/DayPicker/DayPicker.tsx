@@ -7,9 +7,10 @@ interface IDayPickerProps {
   month: string;
   day: number;
   setDay: (day: number) => void;
+  isLoading?: boolean;
 }
 
-const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay }) => {
+const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay, isLoading }) => {
   const [numberOfDays, setNumberOfDays] = useState<number>(0);
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay }) => {
         {buildMonthView().map((item, i) => (
           <tr key={i}>
             {item.map((value, j) => (
-              <td key={j} onClick={() => value !== " " && setDay(value)}>
+              <td key={j} onClick={() => !isLoading && value !== " " && setDay(value)}>
                 <span
                   className={`${
                     +new Date().getDate() === value ? "text-white font-semibold bg-blue" : day === value ? "font-semibold bg-sky-200" : ""

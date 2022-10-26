@@ -9,14 +9,17 @@ import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
+import { ContentLoading } from "src/components/common";
 
 interface ICurrentDayProps extends StateProps, DispatchProps {
   selectedYear: number;
   selectedMonth: string;
   selectedDay: number;
+  isLoading: boolean;
+  setIsLoading: (item: boolean) => void;
 }
 
-const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, selectedDay }) => {
+const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, selectedDay, isLoading, setIsLoading }) => {
   /**
    * Using the useForm hook from react-hook-form to setting up the appointment form.
    */
@@ -94,8 +97,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
    */
   const serializeAppointments = async (): Promise<void> => {
     if (auth.account?.uid) {
+      setIsLoading(true);
       const appointments = await getDocAppointments(auth.account?.uid);
-
       if (appointments?.length) {
         const filtered = appointments.filter(
           (appointment) =>
@@ -105,6 +108,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
         );
 
         setAppointmentSlots(filtered);
+        setIsLoading(false);
       } else {
         setAppointmentSlots(null);
       }
@@ -152,7 +156,9 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       );
 
       if (auth.account?.uid) {
+        setIsLoading(true);
         await addNewAppointment({ userId: auth.account?.uid, startDate: start, endDate: end });
+        setIsLoading(false);
       }
 
       setIsAppointmentModalOpen(false);
@@ -186,7 +192,9 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       );
 
       if (currentAppointmentSlot?.id) {
+        setIsLoading(true);
         await editDocAppointment({ id: currentAppointmentSlot.id, startDate: start, endDate: end });
+        setIsLoading(false);
       }
 
       setIsAppointmentModalOpen(false);
@@ -219,9 +227,11 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
   const deleteAppointment = async (id: string): Promise<void> => {
     try {
       if (currentAppointmentSlot) {
+        setIsLoading(true);
         await deleteDocAppointment(id);
         setIsDeleteModalOpen(false);
-        serializeAppointments();
+        await serializeAppointments();
+        setIsLoading(false);
       }
     } catch (err) {
       console.error(err);
@@ -290,99 +300,103 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
   return (
     <>
-      <div className={s.container}>
-        <button onClick={() => setIsAppointmentModalOpen(true)}>
-          <HiOutlinePlusSm className="h-5 w-5" />
-          &nbsp;Add
-        </button>
+      {isLoading ? (
+        <ContentLoading />
+      ) : (
+        <div className={s.container}>
+          <button onClick={() => setIsAppointmentModalOpen(true)}>
+            <HiOutlinePlusSm className="h-5 w-5" />
+            &nbsp;Add
+          </button>
 
-        <div className={s.timeSlotsContainer}>
-          {HOURSFORMAT.map((time, i) => (
-            <div key={i} className={s.timeSlot}>
-              <span>{time}</span>
-              {appointmentSlots
-                ?.filter((slot) => slot.startDate.getHours() === +time.split(":")[0])
-                ?.map((item, i) => (
-                  <div
-                    key={i}
-                    className={s.appointment}
-                    style={{
-                      top: item.startDate.getMinutes() + "px",
-                      height: calculateItemHeight(item),
-                    }}
-                  >
-                    <div className={s.content}>
-                      <HiOutlineClipboardList className="h-6 w-6" />
-                      <p>Empty Slot</p>
-                      <span>({renderTime(item)})</span>
-                    </div>
-
-                    <Menu as="div" className={s.menu}>
-                      <div>
-                        <Menu.Button className={s.menuButton}>
-                          <HiOutlineDotsVertical className="text-4xl ml-2 -mr-1 h-5 w-5 text-slate-400" aria-hidden="true" />
-                        </Menu.Button>
+          <div className={s.timeSlotsContainer}>
+            {HOURSFORMAT.map((time, i) => (
+              <div key={i} className={s.timeSlot}>
+                <span>{time}</span>
+                {appointmentSlots
+                  ?.filter((slot) => slot.startDate.getHours() === +time.split(":")[0])
+                  ?.map((item, i) => (
+                    <div
+                      key={i}
+                      className={s.appointment}
+                      style={{
+                        top: item.startDate.getMinutes() + "px",
+                        height: calculateItemHeight(item),
+                      }}
+                    >
+                      <div className={s.content}>
+                        <HiOutlineClipboardList className="h-6 w-6" />
+                        <p>Empty Slot</p>
+                        <span>({renderTime(item)})</span>
                       </div>
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <Menu.Items className={s.menuItems}>
-                          <div className="px-1 py-1">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  className={`${
-                                    active ? "bg-slate-100 text-primary" : "text-primary"
-                                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                                  onClick={() => handleEditModalOpen(item)}
-                                >
-                                  {active ? (
-                                    <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
-                                  ) : (
-                                    <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
-                                  )}
-                                  Edit
-                                </button>
-                              )}
-                            </Menu.Item>
 
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  className={`${
-                                    active ? "bg-slate-100 text-primary" : "text-primary"
-                                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                                  onClick={() => openDeleteAppointmentModal(item)}
-                                >
-                                  {active ? (
-                                    <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
-                                  ) : (
-                                    <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
-                                  )}
-                                  Delete
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </div>
-                        </Menu.Items>
-                      </Transition>
-                    </Menu>
-                  </div>
-                ))}
-              <div className={s.timeSlotsDividers}>
-                <span></span>
-                <span></span>
+                      <Menu as="div" className={s.menu}>
+                        <div>
+                          <Menu.Button className={s.menuButton}>
+                            <HiOutlineDotsVertical className="text-4xl ml-2 -mr-1 h-5 w-5 text-slate-400" aria-hidden="true" />
+                          </Menu.Button>
+                        </div>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className={s.menuItems}>
+                            <div className="px-1 py-1">
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button
+                                    className={`${
+                                      active ? "bg-slate-100 text-primary" : "text-primary"
+                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                    onClick={() => handleEditModalOpen(item)}
+                                  >
+                                    {active ? (
+                                      <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
+                                    ) : (
+                                      <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
+                                    )}
+                                    Edit
+                                  </button>
+                                )}
+                              </Menu.Item>
+
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button
+                                    className={`${
+                                      active ? "bg-slate-100 text-primary" : "text-primary"
+                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                    onClick={() => openDeleteAppointmentModal(item)}
+                                  >
+                                    {active ? (
+                                      <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
+                                    ) : (
+                                      <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
+                                    )}
+                                    Delete
+                                  </button>
+                                )}
+                              </Menu.Item>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </div>
+                  ))}
+                <div className={s.timeSlotsDividers}>
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       {isAppointmentModalOpen && (
         <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>
