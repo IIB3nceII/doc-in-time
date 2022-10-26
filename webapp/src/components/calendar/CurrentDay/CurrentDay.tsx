@@ -414,7 +414,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                     max: 23,
                     minLength: 0,
                     maxLength: 2,
-                    onChange: (e) => handleAppointmentChange(e.target.name, e.target.value),
+                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
                   })}
                   aria-invalid={errors.startHour ? "true" : "false"}
                 />
@@ -434,7 +434,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                     max: 59,
                     minLength: 0,
                     maxLength: 2,
-                    onChange: (e) => handleAppointmentChange(e.target.name, e.target.value),
+                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
                   })}
                   aria-invalid={errors.startMinutes ? "true" : "false"}
                 />
@@ -456,7 +456,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                     max: 23,
                     minLength: 0,
                     maxLength: 2,
-                    onChange: (e) => handleAppointmentChange(e.target.name, e.target.value),
+                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
                   })}
                   aria-invalid={errors.endHour ? "true" : "false"}
                 />
@@ -476,7 +476,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                     max: 59,
                     minLength: 0,
                     maxLength: 2,
-                    onChange: (e) => handleAppointmentChange(e.target.name, e.target.value),
+                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
                   })}
                   aria-invalid={errors.endMinutes ? "true" : "false"}
                 />

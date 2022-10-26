@@ -5,7 +5,7 @@ import s from "./Home.module.scss";
 
 const Home: FC = () => {
   return (
-    <div>
+    <div className={s.container}>
       <Hero />
       <Introduction />
       <Contact />

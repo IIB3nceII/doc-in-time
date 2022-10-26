@@ -8,6 +8,7 @@ import { IRootState } from "../../../shared/store";
 interface ISearchAreaProps extends StateProps, DispatchProps {}
 
 const SearchArea: FC<ISearchAreaProps> = ({ setIsSearchAreaOpen }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, startTransition] = useTransition();
   const [searchKeyword, setSearchKeyword] = useState<string>("");
 

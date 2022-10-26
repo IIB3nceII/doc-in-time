@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import s from "./Register.module.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Logo from "../../assets/images/logo.png";
 import { IRegisterFormData } from "src/models";
@@ -15,6 +15,7 @@ const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
   const navigate = useNavigate();
   const {
     register,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setValue,
     handleSubmit,
     formState: { errors },
@@ -24,6 +25,7 @@ const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
     if (auth.account?.uid) {
       navigate("/edit-profile");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   const onLoginSubmit = (data: IRegisterFormData): void => registerUserWithEmail(data);

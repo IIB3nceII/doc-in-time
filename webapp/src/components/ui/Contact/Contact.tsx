@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { FC } from "react";
 import s from "./Contact.module.scss";
 import ContactUsImg from "../../../assets/images/contact_us.svg";

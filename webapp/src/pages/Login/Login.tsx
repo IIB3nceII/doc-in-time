@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import s from "./Login.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,7 @@ const Login: FC<ILoginProps> = ({ auth, loginUserWithEmail }) => {
   const navigate = useNavigate();
   const {
     register,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setValue,
     handleSubmit,
     formState: { errors },
