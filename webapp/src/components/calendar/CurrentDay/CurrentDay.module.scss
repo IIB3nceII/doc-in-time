@@ -17,10 +17,26 @@
       }
 
       .appointment {
-        @apply flex justify-center items-center space-x-2 absolute left-14 w-3/4 p-4 text-slate-400 font-semibold bg-slate-200 border-2 border-slate-400 border-dashed rounded-xl z-10;
+        @apply flex items-center absolute left-14 w-3/4 z-10;
 
-        > span {
-          @apply font-bold tracking-tighter;
+        .content {
+          @apply flex justify-center items-center h-full w-full p-4 text-slate-400 font-semibold bg-slate-200 border-2 border-slate-400 border-dashed rounded-xl;
+
+          > span {
+            @apply font-bold tracking-tighter;
+          }
+        }
+
+        .menu {
+          @apply relative justify-self-end text-2xl inline-block text-left text-slate-400;
+
+          .menuButton {
+            @apply flex justify-center text-2xl font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75;
+          }
+
+          .menuItems {
+            @apply absolute left-0 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg focus:outline-none;
+          }
         }
       }
 
@@ -50,7 +66,7 @@ form {
     }
 
     > span {
-      @apply text-4xl font-bold;
+      @apply text-4xl text-primary font-bold;
     }
   }
 

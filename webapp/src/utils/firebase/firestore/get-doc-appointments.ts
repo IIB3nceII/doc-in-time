@@ -1,6 +1,6 @@
 import { collection, getDocs, query, Timestamp, where } from "firebase/firestore";
 import { IAppointmentSlot } from "src/models";
-import { auth, db } from "../firebase.config";
+import { db } from "../firebase.config";
 
 const getDocAppointments = async (userId: string): Promise<IAppointmentSlot[] | void> => {
   try {

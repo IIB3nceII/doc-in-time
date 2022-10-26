@@ -1,20 +1,14 @@
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
-import { HiOutlinePlusSm, HiOutlineClipboardList } from "react-icons/hi";
+import { HiOutlinePlusSm, HiOutlineClipboardList, HiOutlineDotsVertical, HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
 import { addNewAppointment } from "src/utils/firebase/firestore";
 import getDocAppointments from "src/utils/firebase/firestore/get-doc-appointments";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
-
-const dummyAppointment = {
-  hour: 8,
-  minutes: 13,
-  endHour: 9,
-  endMinutes: 25,
-};
+import { Menu, Transition } from "@headlessui/react";
 
 interface ICurrentDayProps extends StateProps, DispatchProps {
   selectedYear: number;
@@ -52,13 +46,16 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
    */
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false);
 
+  const [customErrorMessage, setCustomErrorMessage] = useState<string | null>(null);
+
   /**
    * It serializeAppointments on mount.
    * @lifecycleMethod
    */
   useEffect(() => {
     serializeAppointments();
-  }, [auth, selectedYear, selectedMonth, , selectedDay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth, selectedYear, selectedMonth, selectedDay]);
 
   /**
    * It gets the appointments from the database and sets the state of the appointments.
@@ -96,29 +93,35 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
   const onAddNewAppointment = async (data: ITimeSlotFormData): Promise<void> => {
     const { startHour, startMinutes, endHour, endMinutes } = data;
 
-    const start = new Date(
-      selectedYear,
-      MONTHS.findIndex((m) => m === selectedMonth),
-      selectedDay,
-      +startHour,
-      +startMinutes
-    );
+    if (startHour <= endHour) {
+      setCustomErrorMessage(null);
 
-    const end = new Date(
-      selectedYear,
-      MONTHS.findIndex((m) => m === selectedMonth),
-      selectedDay,
-      +endHour,
-      +endMinutes
-    );
+      const start = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +startHour,
+        +startMinutes
+      );
 
-    if (auth.account?.uid) {
-      await addNewAppointment({ userId: auth.account?.uid, startDate: start, endDate: end });
+      const end = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +endHour,
+        +endMinutes
+      );
+
+      if (auth.account?.uid) {
+        await addNewAppointment({ userId: auth.account?.uid, startDate: start, endDate: end });
+      }
+
+      setIsAppointmentModalOpen(false);
+
+      serializeAppointments();
+    } else {
+      setCustomErrorMessage(`End hour must be greater or equal to start hour.`);
     }
-
-    setIsAppointmentModalOpen(false);
-
-    serializeAppointments();
   };
 
   /**
@@ -199,9 +202,66 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                       height: calculateItemHeight(item),
                     }}
                   >
-                    <HiOutlineClipboardList className="h-6 w-6" />
-                    <p>Empty Slot</p>
-                    <span>({renderTime(item)})</span>
+                    <div className={s.content}>
+                      <HiOutlineClipboardList className="h-6 w-6" />
+                      <p>Empty Slot</p>
+                      <span>({renderTime(item)})</span>
+                    </div>
+
+                    <Menu as="div" className={s.menu}>
+                      <div>
+                        <Menu.Button className={s.menuButton}>
+                          <HiOutlineDotsVertical className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100" aria-hidden="true" />
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className={s.menuItems}>
+                          <div className="px-1 py-1">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                                    active ? "bg-violet-500" : "text-primary"
+                                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                >
+                                  {active ? (
+                                    <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
+                                  ) : (
+                                    <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
+                                  )}
+                                  Edit
+                                </button>
+                              )}
+                            </Menu.Item>
+
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                                    active ? "bg-violet-500" : "text-primary"
+                                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                >
+                                  {active ? (
+                                    <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
+                                  ) : (
+                                    <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
+                                  )}
+                                  Delete
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </div>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
                   </div>
                 ))}
               <div className={s.timeSlotsDividers}>
@@ -258,7 +318,9 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
               <div className={s.formFields}>
                 <input
-                  className={`${errors.endHour ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
+                  className={`${
+                    errors.endHour || customErrorMessage ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"
+                  }`}
                   type="number"
                   min={0}
                   minLength={0}
@@ -295,6 +357,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                 />
                 {errors.endMinutes?.type === "required" && <p>{errors.endMinutes?.message}</p>}
               </div>
+
+              {customErrorMessage && <p className="self-center text-sm text-rose-500 whitespace-nowrap">{customErrorMessage}</p>}
 
               <div className={s.buttons}>
                 <button onClick={(e) => handleCancelNewAppointment(e)}>Cancel</button>

@@ -1,5 +1,5 @@
-import React, { FC, useEffect } from "react";
-import { Fragment, useState } from "react";
+import React, { FC } from "react";
+import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { HiOutlineCheck, HiOutlineChevronDown } from "react-icons/hi";
 import s from "./DatePicker.module.scss";
