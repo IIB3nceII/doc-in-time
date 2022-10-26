@@ -4,11 +4,11 @@ import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
 import { HiOutlinePlusSm, HiOutlineClipboardList, HiOutlineDotsVertical, HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
-import { addNewAppointment } from "src/utils/firebase/firestore";
-import getDocAppointments from "src/utils/firebase/firestore/get-doc-appointments";
+import { addNewAppointment, deleteDocAppointment, getDocAppointments } from "src/utils/firebase/firestore";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
+import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
 
 interface ICurrentDayProps extends StateProps, DispatchProps {
   selectedYear: number;
@@ -40,11 +40,19 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
    */
   const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[] | null>(null);
 
+  const [currentAppointmentSlot, setCurrentAppointmentSlot] = useState<IAppointmentSlot | null>(null);
+
   /**
    * Setting the state of the appointment modal.
    * @state
    */
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false);
+
+  /**
+   * Setting the state of the confirm delete modal.
+   * @state
+   */
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const [customErrorMessage, setCustomErrorMessage] = useState<string | null>(null);
 
@@ -73,6 +81,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
         );
 
         setAppointmentSlots(filtered);
+      } else {
+        setAppointmentSlots(null);
       }
     }
   };
@@ -122,6 +132,25 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     } else {
       setCustomErrorMessage(`End hour must be greater or equal to start hour.`);
     }
+  };
+
+  const editAppointment = (appointment: IAppointmentSlot): void => {};
+
+  const deleteAppointment = async (id: string): Promise<void> => {
+    try {
+      if (currentAppointmentSlot) {
+        await deleteDocAppointment(id);
+        setIsDeleteModalOpen(false);
+        serializeAppointments();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const openDeleteAppointmentModal = (appointment: IAppointmentSlot): void => {
+    setIsDeleteModalOpen(true);
+    setCurrentAppointmentSlot(appointment);
   };
 
   /**
@@ -211,7 +240,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                     <Menu as="div" className={s.menu}>
                       <div>
                         <Menu.Button className={s.menuButton}>
-                          <HiOutlineDotsVertical className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100" aria-hidden="true" />
+                          <HiOutlineDotsVertical className="text-4xl ml-2 -mr-1 h-5 w-5 text-slate-400" aria-hidden="true" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -248,6 +277,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                                   className={`${
                                     active ? "bg-slate-100 text-primary" : "text-primary"
                                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                  onClick={() => openDeleteAppointmentModal(item)}
                                 >
                                   {active ? (
                                     <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
@@ -367,6 +397,16 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
             </form>
           </div>
         </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <ConfirmModal
+          text={"Are you sure you want to delete?"}
+          item={currentAppointmentSlot?.id}
+          submitButtonText={"Delete"}
+          cancel={setIsDeleteModalOpen}
+          submit={deleteAppointment}
+        />
       )}
     </>
   );
