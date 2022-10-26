@@ -6,6 +6,6 @@
   }
 
   .menuItems{
-    @apply absolute right-0 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg focus:outline-none;
+    @apply absolute -left-2 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg focus:outline-none;
   }
 }
