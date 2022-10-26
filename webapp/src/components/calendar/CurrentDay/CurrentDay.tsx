@@ -23,6 +23,9 @@ interface ICurrentDayProps extends StateProps, DispatchProps {
 }
 
 const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, selectedDay }) => {
+  /**
+   * Using the useForm hook from react-hook-form to setting up the appointment form.
+   */
   const {
     register,
     setValue,
@@ -36,7 +39,17 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       endMinutes: "00",
     },
   });
+
+  /**
+   * State of the appointment slots.
+   * @state
+   */
   const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[] | null>(null);
+
+  /**
+   * Setting the state of the appointment modal.
+   * @state
+   */
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false);
 
   /**
@@ -134,34 +147,33 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     }
   };
 
-  const renderAppointment = (time: string) => {
-    const arr: ReactNode[] = [];
-    if (appointmentSlots) {
-      const currentHour = appointmentSlots.filter((slot) => slot.startDate.getHours() === +time.split(":")[0]);
-
-      if (currentHour?.length) {
-        currentHour.forEach((item, i) => {
-          arr.push(
-            <div
-              key={i}
-              className={s.appointment}
-              style={{
-                top: item.startDate.getMinutes() + "px",
-                height:
-                  item.endDate.getHours() > item.startDate.getHours()
-                    ? item.endDate.getMinutes() - item.startDate.getMinutes() + (item.endDate.getHours() - item.startDate.getHours()) * 60 + "px"
-                    : item.endDate.getMinutes() - item.startDate.getMinutes() + "px",
-              }}
-            >
-              <HiOutlineClipboardList className="h-6 w-6" />
-              <p>Empty Slot</p>
-            </div>
-          );
-        });
-      }
+  /**
+   * If the end hour is greater than the start hour, then the height of the appointment slot is the difference between the end minutes and the start minutes plus the difference between the end hours and the start hours multiplied by 60.
+   * Otherwise, the height of the appointment slot is the difference between the end minutes and the start minutes.
+   * @param {IAppointmentSlot} item - IAppointmentSlot - this is the item that is being rendered.
+   * @returns The height of the appointment slot in pixels.
+   */
+  const calculateItemHeight = (item: IAppointmentSlot): string => {
+    if (item.endDate.getHours() > item.startDate.getHours()) {
+      return `${item.endDate.getMinutes() - item.startDate.getMinutes() + (item.endDate.getHours() - item.startDate.getHours()) * 60}px`;
+    } else {
+      return `${item.endDate.getMinutes() - item.startDate.getMinutes()}px`;
     }
+  };
 
-    return arr;
+  /**
+   * It takes an object of type IAppointmentSlot, and returns a time string.
+   * @param {IAppointmentSlot} item - IAppointmentSlot - this is the item that is being rendered.
+   * @returns A string with the start and end time of the appointment slot.
+   */
+  const renderTime = (item: IAppointmentSlot): string => {
+    const { startDate, endDate } = item;
+
+    return `${startDate.getHours() < 10 ? "0" + startDate.getHours() : startDate.getHours()}:${
+      startDate.getMinutes() < 10 ? "0" + startDate.getMinutes() : startDate.getMinutes()
+    } - ${endDate.getHours() < 10 ? "0" + endDate.getHours() : endDate.getHours()}:${
+      endDate.getMinutes() < 10 ? "0" + endDate.getMinutes() : endDate.getMinutes()
+    }`;
   };
 
   return (
@@ -176,7 +188,22 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
           {HOURSFORMAT.map((time, i) => (
             <div key={i} className={s.timeSlot}>
               <span>{time}</span>
-              {renderAppointment(time)}
+              {appointmentSlots
+                ?.filter((slot) => slot.startDate.getHours() === +time.split(":")[0])
+                ?.map((item, i) => (
+                  <div
+                    key={i}
+                    className={s.appointment}
+                    style={{
+                      top: item.startDate.getMinutes() + "px",
+                      height: calculateItemHeight(item),
+                    }}
+                  >
+                    <HiOutlineClipboardList className="h-6 w-6" />
+                    <p>Empty Slot</p>
+                    <span>({renderTime(item)})</span>
+                  </div>
+                ))}
               <div className={s.timeSlotsDividers}>
                 <span></span>
                 <span></span>
@@ -191,6 +218,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
             <form onSubmit={handleSubmit(onAddNewAppointment)}>
               <div className={s.formFields}>
                 <input
+                  className={`${errors.startHour ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
                   type="number"
                   min={0}
                   minLength={0}
@@ -210,6 +238,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                 <span>:</span>
 
                 <input
+                  className={`${errors.startMinutes ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
                   type="number"
                   min={0}
                   minLength={0}
@@ -229,6 +258,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
               <div className={s.formFields}>
                 <input
+                  className={`${errors.endHour ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
                   type="number"
                   min={0}
                   minLength={0}
@@ -248,6 +278,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                 <span>:</span>
 
                 <input
+                  className={`${errors.endMinutes ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
                   type="number"
                   min={0}
                   minLength={0}

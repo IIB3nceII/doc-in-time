@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CurrentDay, DatePicker } from "src/components/calendar";
 import { MONTHS } from "src/utils/constants";
 import s from "./Calendar.module.scss";
@@ -18,7 +18,7 @@ const Calendar = () => {
     const min = max - 50;
     let yrs = [];
 
-    for (var i = max; i >= min; i--) {
+    for (let i = max; i >= min; i--) {
       yrs.push(i);
     }
 
@@ -27,16 +27,18 @@ const Calendar = () => {
   };
 
   return (
-    <div>
-      <DatePicker
-        years={years}
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-        selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
-        selectedDay={selectedDay}
-        setSelectedDay={setSelectedDay}
-      />
+    <div className={s.container}>
+      <div className={`${s.picker} dark:bg-slate-900`}>
+        <DatePicker
+          years={years}
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+          selectedDay={selectedDay}
+          setSelectedDay={setSelectedDay}
+        />
+      </div>
       <CurrentDay selectedYear={selectedYear} selectedMonth={selectedMonth} selectedDay={selectedDay} />
     </div>
   );

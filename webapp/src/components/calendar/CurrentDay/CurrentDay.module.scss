@@ -2,7 +2,7 @@
   @apply flex flex-col w-full space-y-4 mt-4;
 
   > button {
-    @apply flex justify-center items-center self-end py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner;
+    @apply flex justify-center items-center self-end sticky top-72 mb-2 py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner z-50 md:self-start;
   }
 
   .timeSlotsContainer {
@@ -17,7 +17,11 @@
       }
 
       .appointment {
-        @apply flex justify-center items-center space-x-2 absolute left-14 w-3/4 p-4 text-slate-400 font-semibold bg-slate-200 border-2 border-slate-400 border-dashed rounded-md z-10;
+        @apply flex justify-center items-center space-x-2 absolute left-14 w-3/4 p-4 text-slate-400 font-semibold bg-slate-200 border-2 border-slate-400 border-dashed rounded-xl z-10;
+
+        > span {
+          @apply font-bold tracking-tighter;
+        }
       }
 
       .timeSlotsDividers {
@@ -42,7 +46,7 @@ form {
     @apply flex justify-center items-center space-x-12 w-full;
 
     > input {
-      @apply h-24 w-24 px-2 text-4xl rounded-lg border-2 border-slate-400 outline-none transition-all duration-100 focus:border-blue focus:border-4;
+      @apply h-24 w-24 px-2 text-primary text-4xl rounded-lg border-2 outline-none transition-all duration-100 focus:border-4;
     }
 
     > span {
