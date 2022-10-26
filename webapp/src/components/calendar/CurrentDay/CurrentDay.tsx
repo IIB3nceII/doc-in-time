@@ -283,6 +283,14 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     }
   };
 
+  const calculateTop = (item: IAppointmentSlot): string => {
+    if (item.startDate.getHours() === 0 && item.endDate.getHours() === 0 && item.startDate.getMinutes() === 0) {
+      return `${item.startDate.getMinutes() + 16}px`;
+    } else {
+      return `${item.startDate.getMinutes()}px`;
+    }
+  };
+
   /**
    * It takes an object of type IAppointmentSlot, and returns a time string.
    * @param {IAppointmentSlot} item - IAppointmentSlot - this is the item that is being rendered.
@@ -318,14 +326,20 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                   ?.map((item, i) => (
                     <div
                       key={i}
-                      className={s.appointment}
+                      className={`${s.appointment} ${
+                        +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 && "text-xs"
+                      }`}
                       style={{
                         top: item.startDate.getMinutes() + "px",
                         height: calculateItemHeight(item),
                       }}
                     >
                       <div className={s.content}>
-                        <HiOutlineClipboardList className="h-6 w-6" />
+                        <HiOutlineClipboardList
+                          className={`${
+                            +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
+                          }`}
+                        />
                         <p>Empty Slot</p>
                         <span>({renderTime(item)})</span>
                       </div>
