@@ -1,6 +1,7 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, Fragment, useEffect, useState } from "react";
 import s from "./DarkModeSwitcher.module.scss";
 import { HiOutlineSun } from "react-icons/hi";
+import { Menu, Transition } from "@headlessui/react";
 
 const DarkModeSwitcher: FC = () => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -37,18 +38,57 @@ const DarkModeSwitcher: FC = () => {
   };
 
   return (
-    <div className={s.container}>
-      <div className="icon-container" onClick={() => setShowOptions(!showOptions)}>
-        <HiOutlineSun />
+    <Menu as="div" className={s.container}>
+      <div>
+        <Menu.Button className={s.menuButton}>
+          <HiOutlineSun className="h-8 w-8 dark:text-white" aria-hidden="true" />
+        </Menu.Button>
       </div>
-      {showOptions && (
-        <ul>
-          <li onClick={() => changeTheme("system")}>System</li>
-          <li onClick={() => changeTheme("light")}>Light</li>
-          <li onClick={() => changeTheme("dark")}>Dark</li>
-        </ul>
-      )}
-    </div>
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className={s.menuItems}>
+          <div className="px-1 py-1 ">
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  onClick={() => changeTheme("system")}
+                >
+                  System
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  onClick={() => changeTheme("dark")}
+                >
+                  Dark
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  onClick={() => changeTheme("light")}
+                >
+                  Light
+                </button>
+              )}
+            </Menu.Item>
+          </div>
+        </Menu.Items>
+      </Transition>
+    </Menu>
   );
 };
 

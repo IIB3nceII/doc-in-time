@@ -1,4 +1,4 @@
-import React, { FC, memo, useState } from "react";
+import React, { FC, Fragment, memo, useState } from "react";
 import s from "./Navbar.module.scss";
 import { HiOutlineSearch, HiOutlineUserCircle, HiOutlineLogin } from "react-icons/hi";
 import { DarkModeSwitcher, SearchArea, Tooltip } from "../../ui";
@@ -8,6 +8,7 @@ import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
 import { logOutUser } from "../../../shared/store/actions/auth.action";
 import { Link } from "react-router-dom";
 import Logo from "../../../assets/images/logo.png";
+import { Menu, Transition } from "@headlessui/react";
 
 interface INavbarProps extends StateProps, DispatchProps {}
 
@@ -54,19 +55,46 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
           <DarkModeSwitcher />
 
           {account ? (
-            <div className={s.profile}>
-              <Tooltip text="Profile">
-                <div className="icon-container" onClick={() => setIsProfileOptionsOpen(!isProfileOptionsOpen)}>
-                  <HiOutlineUserCircle />
+              <Menu as="div" className={s.profileMenu}>
+                <div>
+                  <Menu.Button className={s.menuButton}>
+                    <HiOutlineUserCircle className="h-8 w-8 dark:text-white" aria-hidden="true" />
+                  </Menu.Button>
                 </div>
-              </Tooltip>
-              {isProfileOptionsOpen && (
-                <ul>
-                  <li>Edit Profile</li>
-                  <li onClick={() => logOutUser()}>Log out</li>
-                </ul>
-              )}
-            </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className={s.menuItems}>
+                    <div className="px-1 py-1 ">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          >
+                            Edit profile
+                          </button>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            onClick={() => logOutUser()}
+                          >
+                            Log out
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
           ) : (
             <Link to="/login">
               <p className={s.login}>Log in</p>

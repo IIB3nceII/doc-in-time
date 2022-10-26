@@ -1,15 +1,11 @@
 .container {
-  @apply relative transition-all duration-200 ease-in-out;
+  @apply relative inline-block text-left;
 
-  > ul {
-    @apply absolute bg-white rounded-lg shadow-lg translate-y-4 z-50;
+  .menuButton {
+    @apply flex w-full justify-center items-center mt-2 text-primary focus:outline-none;
+  }
 
-    > li {
-      @apply flex items-center p-4 pr-12 pb-2 rounded-lg border-b-[1px] border-slate-100 cursor-pointer hover:bg-slate-100;
-
-      &:last-child {
-        @apply border-none;
-      }
-    }
+  .menuItems{
+    @apply absolute right-0 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg focus:outline-none;
   }
 }
