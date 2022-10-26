@@ -75,7 +75,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
   /**
    * It serializeAppointments on mount.
-   * @lifecycleMethod
+   * @lifecycleHook
    */
   useEffect(() => {
     serializeAppointments();
@@ -84,7 +84,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
   /**
    * Sets isEditActive to false if isAppointmentModalOpen is false.
-   * @lifecycleMethod
+   * @lifecycleHook
    */
   useEffect(() => {
     if (!isAppointmentModalOpen) {
@@ -99,6 +99,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     if (auth.account?.uid) {
       setIsLoading(true);
       const appointments = await getDocAppointments(auth.account?.uid);
+      setIsLoading(false);
       if (appointments?.length) {
         const filtered = appointments.filter(
           (appointment) =>
@@ -108,7 +109,6 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
         );
 
         setAppointmentSlots(filtered);
-        setIsLoading(false);
       } else {
         setAppointmentSlots(null);
       }

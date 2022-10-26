@@ -1,3 +1,7 @@
+/**
+ * Array of months.
+ * @readonly
+ */
 export const MONTHS: ReadonlyArray<string> = [
   "January",
   "February",
@@ -13,8 +17,16 @@ export const MONTHS: ReadonlyArray<string> = [
   "December",
 ];
 
+/**
+ * Days of the week.
+ * @readonly
+ */
 export const DAYS: ReadonlyArray<string> = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+/**
+ * Times in AM/PM format.
+ * @readonly
+ */
 export const HOURSAMPMFORMAT: ReadonlyArray<string> = [
   "1:00 AM",
   "2:00 AM",
@@ -42,6 +54,10 @@ export const HOURSAMPMFORMAT: ReadonlyArray<string> = [
   "0:00 PM",
 ];
 
+/**
+ * Times in 24h format.
+ * @readonly
+ */
 export const HOURSFORMAT: ReadonlyArray<string> = [
   "00:00",
   "01:00",
