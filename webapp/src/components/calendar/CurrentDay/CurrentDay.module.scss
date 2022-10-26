@@ -2,7 +2,7 @@
   @apply flex flex-col w-full space-y-4 mt-4;
 
   > button {
-    @apply flex justify-center items-center self-end sticky top-72 mb-2 py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner z-50 md:self-start;
+    @apply flex justify-center items-center self-end sticky top-72 mb-2 py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner z-50;
   }
 
   .timeSlotsContainer {

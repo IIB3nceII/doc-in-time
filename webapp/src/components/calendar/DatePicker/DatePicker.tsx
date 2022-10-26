@@ -95,7 +95,9 @@ const DatePicker: FC<IDatePickerProps> = ({ years, selectedYear, setSelectedYear
         </div>
       </div>
 
-      {selectedYear && selectedMonth && <DayPicker year={selectedYear} month={String(selectedMonth)} day={selectedDay} setDay={setSelectedDay} />}
+      <div className={s.day}>
+        {selectedYear && selectedMonth && <DayPicker year={selectedYear} month={String(selectedMonth)} day={selectedDay} setDay={setSelectedDay} />}
+      </div>
     </div>
   );
 };
