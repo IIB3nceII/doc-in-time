@@ -1,11 +1,9 @@
-import React, { FC, Fragment, useEffect, useState } from "react";
+import React, { FC, Fragment, useEffect } from "react";
 import s from "./DarkModeSwitcher.module.scss";
 import { HiOutlineSun } from "react-icons/hi";
 import { Menu, Transition } from "@headlessui/react";
 
 const DarkModeSwitcher: FC = () => {
-  const [showOptions, setShowOptions] = useState<boolean>(false);
-
   useEffect(() => {
     if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
       document.documentElement.classList.remove("light");
@@ -40,7 +38,7 @@ const DarkModeSwitcher: FC = () => {
   return (
     <Menu as="div" className={s.container}>
       <div>
-        <Menu.Button className={s.menuButton}>
+        <Menu.Button className={s.menuButton} name="dark">
           <HiOutlineSun className="h-8 w-8 dark:text-white" aria-hidden="true" />
         </Menu.Button>
       </div>

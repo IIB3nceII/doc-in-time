@@ -6,7 +6,9 @@ header {
 
     > a {
       > img {
-        @apply w-12;
+        @apply object-cover;
+        height: 48px;
+        width: 48px;
       }
     }
 

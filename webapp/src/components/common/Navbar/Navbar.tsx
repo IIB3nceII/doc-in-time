@@ -13,8 +13,6 @@ import { Menu, Transition } from "@headlessui/react";
 interface INavbarProps extends StateProps, DispatchProps {}
 
 const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { account }, setIsSearchAreaOpen, logOutUser }) => {
-  const [isProfileOptionsOpen, setIsProfileOptionsOpen] = useState<boolean>(false);
-
   return (
     <>
       <header className="dark:bg-slate-900 dark:border-b-[1px] dark:border-slate-700">
@@ -57,7 +55,7 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
           {account ? (
               <Menu as="div" className={s.profileMenu}>
                 <div>
-                  <Menu.Button className={s.menuButton}>
+                  <Menu.Button className={s.menuButton} name="profile">
                     <HiOutlineUserCircle className="h-8 w-8 dark:text-white" aria-hidden="true" />
                   </Menu.Button>
                 </div>
