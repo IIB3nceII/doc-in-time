@@ -14,7 +14,9 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
       <div className={s.root}>
         <Navbar />
         <main>{children}</main>
-        <MobileNavbar />
+        <div className={s.mobileNav}>
+          <MobileNavbar />
+        </div>
       </div>
     </BrowserRouter>
   );
