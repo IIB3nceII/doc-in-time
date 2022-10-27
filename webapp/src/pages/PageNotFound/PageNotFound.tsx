@@ -7,9 +7,7 @@ const PageNotFound = () => {
   return (
     <div className={s.root}>
       <img src={Logo} alt="logo" />
-      <button>
-      <Link to="/">Return to the main page</Link>
-      </button>
+      <Link to="/" className={s.link}>Return to the main page</Link>
     </div>
   );
 };
