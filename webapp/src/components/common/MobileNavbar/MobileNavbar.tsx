@@ -21,10 +21,10 @@ const MobileNavbar = () => {
           </li>
         </Link>
 
-        <Link to="/">
+        <Link to="/calendar">
           <li>
             <HiOutlineCalendar className={s.icon} />
-            <p>item</p>
+            <p>Calendar</p>
           </li>
         </Link>
 

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
 import s from "./Hero.module.scss";
 import HeroImage from "../../../assets/images/hero_image.svg";

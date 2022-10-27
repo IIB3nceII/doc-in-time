@@ -1,0 +1,19 @@
+.container {
+  @apply space-y-4;
+
+  > p {
+    @apply text-xl text-primary;
+  }
+
+  .buttons {
+    @apply flex justify-between justify-self-end space-x-8;
+
+    > button {
+      @apply w-full py-1 px-4 text-rose-500 font-bold rounded-lg border-4 border-rose-500 transition-all duration-100 active:scale-95;
+    }
+
+    .submitButton {
+      @apply text-white bg-blue border-none;
+    }
+  }
+}
