@@ -16,6 +16,7 @@ const App: FC<IAppProps> = ({ setUserSession }) => {
         setUserSession(user as IUser);
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

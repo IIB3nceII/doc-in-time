@@ -26,8 +26,8 @@ const NavbarComponent: FC<INavbarProps> = ({ ui: { isSearchAreaOpen }, auth: { a
           </Link>
           <nav>
             <ul>
-              <Link to="#">
-                <li>item</li>
+              <Link to="calendar">
+                <li>calendar</li>
               </Link>
               <Link to="#">
                 <li>item</li>

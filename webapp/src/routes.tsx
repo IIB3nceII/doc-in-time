@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { EditProfile, Home, Login, PageNotFound, Register } from "./pages";
+import { Calendar, EditProfile, Home, Login, PageNotFound, Register } from "./pages";
 
 const AppRoutes: FC = () => {
   useEffect(() => {
@@ -14,6 +14,7 @@ const AppRoutes: FC = () => {
   }, []);
   return (
     <Routes>
+      <Route path="/calendar" element={<Calendar />}></Route>
       <Route path="/edit-profile" element={<EditProfile />}></Route>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/register" element={<Register />}></Route>
