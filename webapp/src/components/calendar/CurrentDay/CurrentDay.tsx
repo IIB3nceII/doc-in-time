@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useState } from "react";
+import { FC, Fragment, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
@@ -308,9 +308,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
   return (
     <>
-      {isLoading ? (
-        <ContentLoading />
-      ) : (
+      <Suspense fallback={<ContentLoading />}>
         <div className={s.container}>
           <button onClick={() => setIsAppointmentModalOpen(true)}>
             <HiOutlinePlusSm className="h-5 w-5" />
@@ -410,7 +408,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
             ))}
           </div>
         </div>
-      )}
+      </Suspense>
       {isAppointmentModalOpen && (
         <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>
