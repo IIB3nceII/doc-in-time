@@ -19,7 +19,7 @@ header {
         @apply flex space-x-4 list-none;
 
         > li {
-          @apply text-primary-3 transition-all duration-100 cursor-pointer hover:underline;
+          @apply transition-all duration-100 cursor-pointer hover:underline;
         }
       }
     }

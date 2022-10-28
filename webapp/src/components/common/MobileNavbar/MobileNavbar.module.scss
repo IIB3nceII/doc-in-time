@@ -5,15 +5,7 @@
     @apply flex justify-between h-full w-full mx-8 list-none;
 
     li {
-      @apply flex flex-col justify-center items-center h-full px-4 text-lg font-semibold transition-colors delay-100 cursor-pointer hover:text-slate-400 dark:text-white;
-
-      .icon {
-        @apply h-8 w-8;
-      }
-    }
-
-    .active {
-      @apply border-t-2 border-blue text-blue;
+      @apply flex flex-col justify-center items-center h-full px-4 text-lg font-semibold transition-colors duration-100 cursor-pointer hover:text-slate-400 dark:text-white;
     }
   }
 }
