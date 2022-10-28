@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";

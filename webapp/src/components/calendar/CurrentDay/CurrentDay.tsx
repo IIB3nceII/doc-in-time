@@ -283,14 +283,6 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     }
   };
 
-  const calculateTop = (item: IAppointmentSlot): string => {
-    if (item.startDate.getHours() === 0 && item.endDate.getHours() === 0 && item.startDate.getMinutes() === 0) {
-      return `${item.startDate.getMinutes() + 16}px`;
-    } else {
-      return `${item.startDate.getMinutes()}px`;
-    }
-  };
-
   /**
    * It takes an object of type IAppointmentSlot, and returns a time string.
    * @param {IAppointmentSlot} item - IAppointmentSlot - this is the item that is being rendered.

@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from "react";
 import s from "./MobileNavbar.module.scss";
 import { Link, useLocation } from "react-router-dom";
-import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
 import { INavBarItem } from "src/models";
 
 interface IMobileNavbarProps {
