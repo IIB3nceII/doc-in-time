@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useState } from "react";
+import { FC, Fragment, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
@@ -283,14 +283,6 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     }
   };
 
-  const calculateTop = (item: IAppointmentSlot): string => {
-    if (item.startDate.getHours() === 0 && item.endDate.getHours() === 0 && item.startDate.getMinutes() === 0) {
-      return `${item.startDate.getMinutes() + 16}px`;
-    } else {
-      return `${item.startDate.getMinutes()}px`;
-    }
-  };
-
   /**
    * It takes an object of type IAppointmentSlot, and returns a time string.
    * @param {IAppointmentSlot} item - IAppointmentSlot - this is the item that is being rendered.
@@ -308,9 +300,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
   return (
     <>
-      {isLoading ? (
-        <ContentLoading />
-      ) : (
+      <Suspense fallback={<ContentLoading />}>
         <div className={s.container}>
           <button onClick={() => setIsAppointmentModalOpen(true)}>
             <HiOutlinePlusSm className="h-5 w-5" />
@@ -410,7 +400,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
             ))}
           </div>
         </div>
-      )}
+      </Suspense>
       {isAppointmentModalOpen && (
         <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>

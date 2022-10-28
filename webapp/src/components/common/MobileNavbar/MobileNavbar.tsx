@@ -1,46 +1,32 @@
-import React from "react";
+import React, { FC, useEffect } from "react";
 import s from "./MobileNavbar.module.scss";
-import { Link } from "react-router-dom";
-import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
+import { Link, useLocation } from "react-router-dom";
+import { INavBarItem } from "src/models";
 
-const MobileNavbar = () => {
+interface IMobileNavbarProps {
+  items: ReadonlyArray<INavBarItem>;
+  setCurrentTab: (pathName: string) => void;
+}
+
+const MobileNavbar: FC<IMobileNavbarProps> = ({ items, setCurrentTab }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    setCurrentTab(location.pathname.split("/")[1]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <nav className={`${s.root} dark:bg-slate-900 dark:text-white dark:border-slate-700`}>
       <ul>
-        <Link to="/">
-          <li className={s.active}>
-            <HiOutlineHome className={s.icon} />
-            <p>item</p>
+        {items?.map(({ path, icon, title, isActive }, i) => (
+          <li key={i} className={`${isActive ? "border-t-2 border-blue text-blue" : ""}`} onClick={() => setCurrentTab(path)}>
+            <Link to={path} className=" flex flex-col justify-center items-center">
+              {icon}
+              <p>{title}</p>
+            </Link>
           </li>
-        </Link>
-
-        <Link to="/">
-          <li>
-            <HiOutlineUsers className={s.icon} />
-            <p>item</p>
-          </li>
-        </Link>
-
-        <Link to="/calendar">
-          <li>
-            <HiOutlineCalendar className={s.icon} />
-            <p>Calendar</p>
-          </li>
-        </Link>
-
-        <Link to="/">
-          <li>
-            <HiOutlineIdentification className={s.icon} />
-            <p>item</p>
-          </li>
-        </Link>
-
-        <Link to="/">
-          <li>
-            <HiOutlineCog className={s.icon} />
-            <p>item</p>
-          </li>
-        </Link>
+        ))}
       </ul>
     </nav>
   );
