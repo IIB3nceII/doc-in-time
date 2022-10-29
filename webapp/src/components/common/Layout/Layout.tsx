@@ -30,9 +30,9 @@ const navBarItems: INavBarItem[] = [
     isActive: false,
   },
   {
-    path: "/",
+    path: "appointment-finder",
     icon: <HiOutlineIdentification className="h-8 w-8" />,
-    title: "Home",
+    title: "Finder",
     isActive: false,
   },
   {
