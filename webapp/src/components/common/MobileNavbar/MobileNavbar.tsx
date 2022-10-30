@@ -11,7 +11,10 @@ interface IMobileNavbarProps {
 const MobileNavbar: FC<IMobileNavbarProps> = ({ items, setCurrentTab }) => {
   const location = useLocation();
 
-  // setCurrentTab(location.pathname.split("/")[1]);
+  useEffect(() => {
+    setCurrentTab(location.pathname.split("/")[1]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <nav className={`${s.root} dark:bg-slate-900 dark:text-white dark:border-slate-700`}>

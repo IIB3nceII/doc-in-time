@@ -5,6 +5,7 @@ export default interface IClinic {
   city: string;
   docs: IUser[];
   email: string;
+  name: string;
   imageUrl: string;
   phone: string;
   postalCode: number;

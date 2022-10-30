@@ -3,6 +3,7 @@ import React, { FC, Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
 import { HiOutlineChevronDown, HiOutlineCheck } from "react-icons/hi";
+import { IClinic } from "src/models";
 
 interface FinderFormProps {
   clinics: any;
@@ -17,13 +18,13 @@ const FinderForm: FC<FinderFormProps> = ({ clinics }) => {
     formState: { errors },
   } = useForm<any>();
 
-  const [selected, setSelected] = useState(clinics[0]);
+  const [selected, setSelected] = useState<IClinic>(clinics[0]);
   const [problemQuery, setProblemQuery] = useState<string>("");
 
   const filteredPeople =
     problemQuery === ""
       ? clinics
-      : clinics.filter((clinic: any) => clinic.name.toLowerCase().replace(/\s+/g, "").includes(problemQuery.toLowerCase().replace(/\s+/g, "")));
+      : clinics.filter((clinic: IClinic) => clinic.name.toLowerCase().replace(/\s+/g, "").includes(problemQuery.toLowerCase().replace(/\s+/g, "")));
 
   return (
     <div className={s.container}>
@@ -31,17 +32,17 @@ const FinderForm: FC<FinderFormProps> = ({ clinics }) => {
         <div className={s.formField}>
           <label>What's the problem?</label>
 
-          <div className="fixed top-16 w-72">
+          <div className="combobox-container">
             <Combobox value={selected} onChange={setSelected}>
-              <div className="relative mt-1">
-                <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+              <div className="combobox">
+                <div className="input-container">
                   <Combobox.Input
-                    className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                    // displayValue={(clinic) => clinic?.name || ""}
+                    className="combobox-input"
+                    displayValue={(clinic: IClinic) => clinic.name}
                     onChange={(event) => setProblemQuery(event.target.value)}
                   />
-                  <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                    <HiOutlineChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  <Combobox.Button className="combobox-button">
+                    <HiOutlineChevronDown className="combobox-button-icon" aria-hidden="true" />
                   </Combobox.Button>
                 </div>
                 <Transition
@@ -51,13 +52,13 @@ const FinderForm: FC<FinderFormProps> = ({ clinics }) => {
                   leaveTo="opacity-0"
                   afterLeave={() => setProblemQuery("")}
                 >
-                  <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <Combobox.Options className="combobox-options">
                     {filteredPeople.length === 0 && problemQuery !== "" ? (
-                      <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
+                      <div className="not-found">Nothing found.</div>
                     ) : (
-                      filteredPeople.map((clinic: any) => (
+                      filteredPeople.map((clinic: any, i: number) => (
                         <Combobox.Option
-                          key={clinic.id}
+                          key={i}
                           className={({ active }) =>
                             `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-teal-600 text-white" : "text-gray-900"}`
                           }
