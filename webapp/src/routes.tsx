@@ -1,6 +1,7 @@
 import { FC, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AppointmentFinder, Calendar, EditProfile, Home, Login, PageNotFound, Register } from "./pages";
+import { clientsLoader } from "./utils/loaders";
 
 const AppRoutes: FC = () => {
   useEffect(() => {
@@ -15,7 +16,7 @@ const AppRoutes: FC = () => {
   return (
     <Routes>
       <Route path="/calendar" element={<Calendar />}></Route>
-      <Route path="/appointment-finder" element={<AppointmentFinder />}></Route>
+      <Route path="/appointment-finder" element={<AppointmentFinder />} loader={clientsLoader}></Route>
       <Route path="/edit-profile" element={<EditProfile />}></Route>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/register" element={<Register />}></Route>
