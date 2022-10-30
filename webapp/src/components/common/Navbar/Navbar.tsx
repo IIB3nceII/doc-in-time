@@ -26,10 +26,7 @@ const NavbarComponent: FC<INavbarProps> = ({
 }) => {
   const location = useLocation();
 
-  useEffect(() => {
-    setCurrentTab(location.pathname.split("/")[1]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // setCurrentTab(location.pathname.split("/")[1]);
 
   return (
     <>

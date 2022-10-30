@@ -2,12 +2,12 @@ import React, { FC, ReactNode, useState } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";
-import { BrowserRouter } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
 import { INavBarItem } from "src/models";
 
 interface ILayoutProps {
-  children: ReactNode | ReactNode[];
+  children?: ReactNode | ReactNode[];
 }
 
 const navBarItems: INavBarItem[] = [
@@ -63,15 +63,15 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
   };
 
   return (
-    <BrowserRouter>
-      <div className={s.root}>
-        <Navbar items={items} setCurrentTab={setCurrentTab} />
-        <main>{children}</main>
-        <div className={s.mobileNav}>
-          <MobileNavbar items={items} setCurrentTab={setCurrentTab} />
-        </div>
+    <div className={s.root}>
+      <Navbar items={items} setCurrentTab={setCurrentTab} />
+      <main>
+        <Outlet />
+      </main>
+      <div className={s.mobileNav}>
+        <MobileNavbar items={items} setCurrentTab={setCurrentTab} />
       </div>
-    </BrowserRouter>
+    </div>
   );
 };
 
