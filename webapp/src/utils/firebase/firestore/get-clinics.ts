@@ -1,18 +1,18 @@
 import { db } from "../firebase.config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, DocumentData, getDocs, QuerySnapshot } from "firebase/firestore";
 import { IClinic } from "src/models";
 
-const getClinics = async (): Promise<IClinic[] | undefined> => {
+const getClinics = async (): Promise<IClinic[] | void> => {
   try {
-    const clinicsRef = await collection(db, "clinics");
-    const clinicsCollection = await getDocs(clinicsRef);
+    const clinicsRef = collection(db, "clinics");
+    const clinicsCollection: QuerySnapshot<DocumentData> = await getDocs(clinicsRef);
     const clinics: IClinic[] = [];
 
     clinicsCollection?.forEach((doc: any) => {
       clinics.push(doc.data());
     });
 
-    return clinics ?? [];
+    return clinics;
   } catch (err) {
     console.error(err);
   }

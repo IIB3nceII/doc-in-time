@@ -16,7 +16,6 @@ const App: FC<IAppProps> = ({ setUserSession }) => {
     {
       path: "/",
       element: <Layout />,
-      errorElement: <PageNotFound />,
       children: [
         { path: "/", element: <Home /> },
         { path: "/calendar", element: <Calendar /> },
@@ -24,6 +23,7 @@ const App: FC<IAppProps> = ({ setUserSession }) => {
         { path: "/edit-profile", element: <EditProfile /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+        { path: "*", element: <PageNotFound /> },
       ],
     },
   ]);
