@@ -3,7 +3,7 @@
     @apply flex flex-col w-full space-y-4;
 
     .formSection {
-      @apply flex items-center h-72 p-6 rounded-lg shadow-md;
+      @apply flex items-center h-96 p-8 rounded-lg shadow-md;
 
       .problemDescription {
         @apply w-full text-slate-400;
@@ -12,7 +12,8 @@
       .mapContainer {
         @apply flex flex-col justify-between h-full w-full p-4 rounded-lg border border-slate-400;
 
-        > span {
+        > a,
+        span {
           @apply inline-flex items-center text-primary -mx-4 pt-4 pl-4 border-t border-slate-400 font-semibold cursor-pointer;
         }
 

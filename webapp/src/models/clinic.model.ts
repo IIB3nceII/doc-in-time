@@ -9,4 +9,5 @@ export default interface IClinic {
   postalCode: number;
   street: string;
   exampleRef: any;
+  geoLocation: { lat: number; lng: number };
 }

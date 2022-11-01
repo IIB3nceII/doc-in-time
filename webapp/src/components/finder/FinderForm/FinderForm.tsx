@@ -4,7 +4,7 @@ import s from "./FinderForm.module.scss";
 import { IClinic, IUser } from "src/models";
 import { FormCombobox } from "src/components/ui";
 import { HiOutlineMap, HiOutlineLocationMarker } from "react-icons/hi";
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 
 interface FinderFormProps {
   clinics: IClinic[];
@@ -29,7 +29,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
   const [clinicQuery, setClinicQuery] = useState<string>("");
   const [doctorQuery, setDoctorQuery] = useState<string>("");
 
-  const center = useMemo(() => ({ lat: 44, lng: -80 }), []);
+  const center = useMemo(() => ({ lat: selectedClinic.geoLocation.lat, lng: selectedClinic.geoLocation.lng }), [selectedClinic]);
 
   const filteredProblems =
     problemQuery === ""
@@ -77,17 +77,24 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
 
           <div className={s.mapContainer}>
             {isLoaded ? (
-              <GoogleMap zoom={10} center={center} mapContainerClassName="flex h-full -mx-4 -mt-4 rounded-t-lg"></GoogleMap>
+              <GoogleMap
+                options={{ gestureHandling: "none", streetViewControl: false, fullscreenControl: false }}
+                zoom={16}
+                center={center}
+                mapContainerClassName="flex h-full -mx-4 -mt-4 rounded-t-lg"
+              >
+                <MarkerF position={center} />
+              </GoogleMap>
             ) : (
               <span className={s.mapPlaceholder}>
                 <HiOutlineMap className="h-5 w-5 text-primary" />
                 &nbsp; Map is loading...
               </span>
             )}
-            <span>
+            <a target="_blank" rel="noreferrer" href={`https://maps.google.com/?q=${center.lat},${center.lng}`}>
               <HiOutlineLocationMarker className="h-5 w-5 text-primary" />
               &nbsp; See on Google Maps
-            </span>
+            </a>
           </div>
         </div>
 
