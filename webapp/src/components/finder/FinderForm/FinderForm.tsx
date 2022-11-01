@@ -1,10 +1,10 @@
-import { Combobox, Transition } from "@headlessui/react";
-import React, { FC, Fragment, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
-import { HiOutlineChevronDown, HiOutlineCheck } from "react-icons/hi";
 import { IClinic, IUser } from "src/models";
 import { FormCombobox } from "src/components/ui";
+import { HiOutlineMap, HiOutlineLocationMarker } from "react-icons/hi";
+import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 
 interface FinderFormProps {
   clinics: IClinic[];
@@ -13,6 +13,7 @@ interface FinderFormProps {
 }
 
 const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
+  const { isLoaded } = useLoadScript({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY! });
   const {
     register,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,6 +28,8 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
   const [problemQuery, setProblemQuery] = useState<string>("");
   const [clinicQuery, setClinicQuery] = useState<string>("");
   const [doctorQuery, setDoctorQuery] = useState<string>("");
+
+  const center = useMemo(() => ({ lat: 44, lng: -80 }), []);
 
   const filteredProblems =
     problemQuery === ""
@@ -50,32 +53,54 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
   return (
     <div className={s.container}>
       <form>
-        <FormCombobox
-          state={selectedProblem}
-          setState={setSelectedProblem}
-          query={problemQuery}
-          setQuery={setProblemQuery}
-          items={filteredProblems}
-          label={"What's the problem?"}
-        />
+        <div className={s.formSection}>
+          <FormCombobox
+            state={selectedProblem}
+            setState={setSelectedProblem}
+            query={problemQuery}
+            setQuery={setProblemQuery}
+            items={filteredProblems}
+            label={"What's the problem?"}
+          />
+          <p className={s.problemDescription}>{selectedProblem}</p>
+        </div>
 
-        <FormCombobox
-          state={selectedClinic}
-          setState={setSelectedClinic}
-          query={clinicQuery}
-          setQuery={setClinicQuery}
-          items={filteredClinics}
-          label={"Choose a clinic"}
-        />
+        <div className={s.formSection}>
+          <FormCombobox
+            state={selectedClinic}
+            setState={setSelectedClinic}
+            query={clinicQuery}
+            setQuery={setClinicQuery}
+            items={filteredClinics}
+            label={"Choose a clinic"}
+          />
 
-        <FormCombobox
-          state={selectedDoctor}
-          setState={setSelectedDoctor}
-          query={doctorQuery}
-          setQuery={setDoctorQuery}
-          items={filteredDoctors}
-          label={"Choose your doctor"}
-        />
+          <div className={s.mapContainer}>
+            {isLoaded ? (
+              <GoogleMap zoom={10} center={center} mapContainerClassName="flex h-full -mx-4 -mt-4 rounded-t-lg"></GoogleMap>
+            ) : (
+              <span className={s.mapPlaceholder}>
+                <HiOutlineMap className="h-5 w-5 text-primary" />
+                &nbsp; Map is loading...
+              </span>
+            )}
+            <span>
+              <HiOutlineLocationMarker className="h-5 w-5 text-primary" />
+              &nbsp; See on Google Maps
+            </span>
+          </div>
+        </div>
+
+        <div className={s.formSection}>
+          <FormCombobox
+            state={selectedDoctor}
+            setState={setSelectedDoctor}
+            query={doctorQuery}
+            setQuery={setDoctorQuery}
+            items={filteredDoctors}
+            label={"Choose your doctor"}
+          />
+        </div>
       </form>
     </div>
   );
