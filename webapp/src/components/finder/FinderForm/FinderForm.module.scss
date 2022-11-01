@@ -16,6 +16,14 @@
           @apply flex h-full justify-center items-center m-0 p-0 border-none cursor-default;
         }
       }
+
+      .doctorCard {
+        @apply flex h-64 w-full justify-between items-center py-4 px-8 border rounded-lg;
+
+        > img {
+          @apply h-48 w-48 rounded-full;
+        }
+      }
     }
 
     > button {

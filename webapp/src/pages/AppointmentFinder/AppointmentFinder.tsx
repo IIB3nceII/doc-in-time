@@ -3,6 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import { ContentLoading } from "src/components/common";
 import { FinderForm } from "src/components/finder";
 import { IClinic, IIllness, IUser } from "src/models";
+import { getImageByURL } from "src/utils/firebase/storage";
 import s from "./AppointmentFinder.module.scss";
 
 const AppointmentFinder: FC = () => {

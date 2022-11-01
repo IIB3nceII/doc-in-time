@@ -1,10 +1,11 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
 import { IClinic, IIllness, IUser } from "src/models";
 import { FormCombobox } from "src/components/ui";
-import { HiOutlineMap, HiOutlineLocationMarker } from "react-icons/hi";
+import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineUser } from "react-icons/hi";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
+import { getImageByURL } from "src/utils/firebase/storage";
 
 interface FinderFormProps {
   clinics: IClinic[];
@@ -70,7 +71,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
                 className="text-primary transition-all duration-100 hover:text-darkpink dark:text-white dark:hover:text-darkpink"
                 target="_blank"
                 rel="noreferrer"
-                href={`https://maps.google.com/?q=${selectedProblem.queryWord}`}
+                href={`https://google.com/?q=${selectedProblem.queryWord}`}
               >
                 Read More...
               </a>
@@ -104,7 +105,9 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
                 &nbsp; Map is loading...
               </span>
             )} */}
-            <span className={`${s.mapPlaceholder} inline-flex items-center text-primary -mx-4 pt-4 pl-4 border-t border-slate-400 font-semibold cursor-pointer`}>
+            <span
+              className={`${s.mapPlaceholder} inline-flex items-center text-primary -mx-4 pt-4 pl-4 border-t border-slate-400 font-semibold cursor-pointer`}
+            >
               <HiOutlineMap className="h-5 w-5 text-primary dark:text-white" />
               &nbsp; Map is loading...
             </span>
@@ -131,6 +134,14 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
             items={filteredDoctors}
             label={"Choose your doctor"}
           />
+          <div className={s.doctorCard}>
+            <div className={s.data}>
+              <h3 className="text-4xl font-semibold text-primary dark:text-white">{selectedDoctor.fullName}</h3>
+              <p className="text-primary dark:text-white">{selectedDoctor.doc.fields.join(", ")}</p>
+            </div>
+
+            <img src={selectedDoctor.imageUrl && selectedDoctor.imageUrl !== "" ? selectedDoctor.imageUrl : HiOutlineUser} alt="doc" />
+          </div>
         </div>
       </form>
     </div>

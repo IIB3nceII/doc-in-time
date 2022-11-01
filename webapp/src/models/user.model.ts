@@ -6,7 +6,7 @@ export default interface IUser extends User {
   lastName: string;
   fullName?: string;
   email: string;
-  imageUrl: string;
+  imageUrl: any;
   isDoc: boolean;
   doc: IDoc;
 }
