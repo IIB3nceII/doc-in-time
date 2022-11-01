@@ -7,7 +7,7 @@ const getDoctor = async (userId: string): Promise<IUser | void> => {
     const docRef = doc(db, "users", userId.trim());
     const docSnap = await getDoc(docRef);
 
-    return docSnap.data() as IUser;
+    return { ...docSnap.data(), id: docSnap.id } as IUser;
   } catch (err) {
     console.error(err);
   }

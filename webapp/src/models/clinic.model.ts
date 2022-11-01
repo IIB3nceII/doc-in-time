@@ -1,4 +1,5 @@
 export default interface IClinic {
+  id: string;
   address: string;
   city: string;
   docs: any[];

@@ -9,7 +9,7 @@ const getClinics = async (): Promise<IClinic[] | void> => {
     const clinics: IClinic[] = [];
 
     clinicsCollection?.forEach((doc: any) => {
-      clinics.push(doc.data());
+      clinics.push({ ...doc.data(), id: doc.id });
     });
 
     return clinics;

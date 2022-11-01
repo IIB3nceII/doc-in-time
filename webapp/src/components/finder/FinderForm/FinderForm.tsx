@@ -3,9 +3,10 @@ import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
 import { IClinic, IIllness, IUser } from "src/models";
 import { FormCombobox } from "src/components/ui";
-import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineUser } from "react-icons/hi";
+import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineUser, HiOutlineInformationCircle } from "react-icons/hi";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import { getImageByURL } from "src/utils/firebase/storage";
+import { Link } from "react-router-dom";
 
 interface FinderFormProps {
   clinics: IClinic[];
@@ -90,7 +91,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
           />
 
           <div className={s.mapContainer}>
-            {/* {isLoaded ? (
+            {/*      {isLoaded ? (
               <GoogleMap
                 options={{ gestureHandling: "none", streetViewControl: false, fullscreenControl: false }}
                 zoom={16}
@@ -138,6 +139,13 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
             <div className={s.data}>
               <h3 className="text-4xl font-semibold text-primary dark:text-white">{selectedDoctor.fullName}</h3>
               <p className="text-primary dark:text-white">{selectedDoctor.doc.fields.join(", ")}</p>
+              <Link
+                className="flex items-center mt-4 text-primary font-semibold hover:text-darkpink dark:text-white dark:hover:text-darkpink"
+                to={`doctors/${selectedDoctor.id}`}
+              >
+                <HiOutlineInformationCircle className="h-5 w-5" />
+                &nbsp;Check Doctor's Profile
+              </Link>
             </div>
 
             <img src={selectedDoctor.imageUrl && selectedDoctor.imageUrl !== "" ? selectedDoctor.imageUrl : HiOutlineUser} alt="doc" />

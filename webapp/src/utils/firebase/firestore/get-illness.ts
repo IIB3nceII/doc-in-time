@@ -7,7 +7,7 @@ const getIllness = async (illnessId: string): Promise<IIllness | void> => {
     const illnessRef = doc(db, "illnesses", illnessId.trim());
     const illnessSnap = await getDoc(illnessRef);
 
-    return illnessSnap.data() as IIllness;
+    return { ...illnessSnap.data(), id: illnessSnap.id } as IIllness;
   } catch (err) {
     console.error(err);
   }

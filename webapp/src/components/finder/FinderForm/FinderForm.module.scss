@@ -18,10 +18,14 @@
       }
 
       .doctorCard {
-        @apply flex h-64 w-full justify-between items-center py-4 px-8 border rounded-lg;
+        @apply flex h-64 w-full justify-between items-center py-4 px-8 border border-slate-400 rounded-lg;
 
         > img {
           @apply h-48 w-48 rounded-full;
+        }
+
+        .data {
+          @apply flex flex-col;
         }
       }
     }
