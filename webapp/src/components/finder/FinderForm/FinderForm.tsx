@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
 import { HiOutlineChevronDown, HiOutlineCheck } from "react-icons/hi";
 import { IClinic, IUser } from "src/models";
+import { FormCombobox } from "src/components/ui";
 
 interface FinderFormProps {
   clinics: IClinic[];
@@ -49,172 +50,32 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
   return (
     <div className={s.container}>
       <form>
-        <div className={s.formField}>
-          <label>What's the problem?</label>
+        <FormCombobox
+          state={selectedProblem}
+          setState={setSelectedProblem}
+          query={problemQuery}
+          setQuery={setProblemQuery}
+          items={filteredProblems}
+          label={"What's the problem?"}
+        />
 
-          <div className="combobox-container">
-            <Combobox value={selectedProblem} onChange={setSelectedProblem}>
-              <div className="combobox">
-                <div className="input-container">
-                  <Combobox.Input
-                    className="combobox-input"
-                    displayValue={(knowledge: string) => knowledge}
-                    onChange={(event) => setProblemQuery(event.target.value)}
-                  />
-                  <Combobox.Button className="combobox-button">
-                    <HiOutlineChevronDown className="combobox-button-icon" aria-hidden="true" />
-                  </Combobox.Button>
-                </div>
-                <Transition
-                  as={Fragment}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                  afterLeave={() => setProblemQuery("")}
-                >
-                  <Combobox.Options className="combobox-options">
-                    {filteredProblems.length === 0 && problemQuery !== "" ? (
-                      <div className="not-found">Nothing found.</div>
-                    ) : (
-                      filteredProblems.map((problem: string, i: number) => (
-                        <Combobox.Option
-                          key={i}
-                          className={({ active }) =>
-                            `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-sky-400 text-white" : "text-primary"}`
-                          }
-                          value={problem}
-                        >
-                          {({ selected, active }) => (
-                            <>
-                              <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{problem}</span>
-                              {selected ? (
-                                <span className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? "text-white" : "text-blue"}`}>
-                                  <HiOutlineCheck className="h-5 w-5" aria-hidden="true" />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Combobox.Option>
-                      ))
-                    )}
-                  </Combobox.Options>
-                </Transition>
-              </div>
-            </Combobox>
-          </div>
-        </div>
+        <FormCombobox
+          state={selectedClinic}
+          setState={setSelectedClinic}
+          query={clinicQuery}
+          setQuery={setClinicQuery}
+          items={filteredClinics}
+          label={"Choose a clinic"}
+        />
 
-        <div className={s.formField}>
-          <label>Choose a clinic</label>
-
-          <div className="combobox-container">
-            <Combobox value={selectedClinic} onChange={setSelectedClinic}>
-              <div className="combobox">
-                <div className="input-container">
-                  <Combobox.Input
-                    className="combobox-input"
-                    displayValue={(clinic: IClinic) => clinic.name}
-                    onChange={(event) => setClinicQuery(event.target.value)}
-                  />
-                  <Combobox.Button className="combobox-button">
-                    <HiOutlineChevronDown className="combobox-button-icon" aria-hidden="true" />
-                  </Combobox.Button>
-                </div>
-                <Transition
-                  as={Fragment}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                  afterLeave={() => setClinicQuery("")}
-                >
-                  <Combobox.Options className="combobox-options">
-                    {filteredClinics.length === 0 && clinicQuery !== "" ? (
-                      <div className="not-found">Nothing found.</div>
-                    ) : (
-                      filteredClinics.map((clinic: any, i: number) => (
-                        <Combobox.Option
-                          key={i}
-                          className={({ active }) =>
-                            `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-sky-400 text-white" : "text-primary"}`
-                          }
-                          value={clinic}
-                        >
-                          {({ selected, active }) => (
-                            <>
-                              <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{clinic.name}</span>
-                              {selected ? (
-                                <span className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? "text-white" : "text-blue"}`}>
-                                  <HiOutlineCheck className="h-5 w-5" aria-hidden="true" />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Combobox.Option>
-                      ))
-                    )}
-                  </Combobox.Options>
-                </Transition>
-              </div>
-            </Combobox>
-          </div>
-        </div>
-
-        <div className={s.formField}>
-          <label>Choose a clinic</label>
-
-          <div className="combobox-container">
-            <Combobox value={selectedDoctor} onChange={setSelectedDoctor}>
-              <div className="combobox">
-                <div className="input-container">
-                  <Combobox.Input
-                    className="combobox-input"
-                    displayValue={(doctor: IUser) => `${doctor.firstName} ${doctor.lastName}`}
-                    onChange={(event) => setDoctorQuery(event.target.value)}
-                  />
-                  <Combobox.Button className="combobox-button">
-                    <HiOutlineChevronDown className="combobox-button-icon" aria-hidden="true" />
-                  </Combobox.Button>
-                </div>
-                <Transition
-                  as={Fragment}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                  afterLeave={() => setDoctorQuery("")}
-                >
-                  <Combobox.Options className="combobox-options">
-                    {filteredDoctors.length === 0 && doctorQuery !== "" ? (
-                      <div className="not-found">Nothing found.</div>
-                    ) : (
-                      filteredDoctors.map((doctor: IUser, i: number) => (
-                        <Combobox.Option
-                          key={i}
-                          className={({ active }) =>
-                            `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-blue-400 text-white" : "text-primary"}`
-                          }
-                          value={doctor}
-                        >
-                          {({ selected, active }) => (
-                            <>
-                              <span
-                                className={`block truncate ${selected ? "font-medium" : "font-normal"}`}
-                              >{`${doctor.firstName} ${doctor.lastName}`}</span>
-                              {selected ? (
-                                <span className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? "text-white" : "text-blue"}`}>
-                                  <HiOutlineCheck className="h-5 w-5" aria-hidden="true" />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Combobox.Option>
-                      ))
-                    )}
-                  </Combobox.Options>
-                </Transition>
-              </div>
-            </Combobox>
-          </div>
-        </div>
+        <FormCombobox
+          state={selectedDoctor}
+          setState={setSelectedDoctor}
+          query={doctorQuery}
+          setQuery={setDoctorQuery}
+          items={filteredDoctors}
+          label={"Choose your doctor"}
+        />
       </form>
     </div>
   );

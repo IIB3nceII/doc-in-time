@@ -17,8 +17,7 @@ const AppointmentFinder: FC = () => {
       const dArr: IUser[] = [];
       clinics.forEach((clinic: IClinic) => {
         clinic.docs.forEach((user: IUser) => {
-          console.log(user);
-          dArr.push(user);
+          dArr.push({ ...user, fullName: `${user.firstName} ${user.lastName}` });
           user.doc.knowledges.forEach((k) => {
             allKnowledges.push(k);
           });
@@ -26,7 +25,7 @@ const AppointmentFinder: FC = () => {
       });
 
       setDoctors(dArr);
-      setKnowledges(allKnowledges);
+      setKnowledges(Array.from(new Set(allKnowledges)));
     }
   }, [clinics]);
 
