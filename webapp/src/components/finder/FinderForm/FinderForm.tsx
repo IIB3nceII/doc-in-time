@@ -1,12 +1,16 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
-import { IClinic, IIllness, IUser } from "src/models";
-import { FormCombobox } from "src/components/ui";
+import { IAppointmentSlot, IClinic, IIllness, IUser } from "src/models";
+import { AppointmentCard, FormCombobox } from "src/components/ui";
 import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineUser, HiOutlineInformationCircle } from "react-icons/hi";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import { getImageByURL } from "src/utils/firebase/storage";
 import { Link } from "react-router-dom";
+import { useCalendar } from "src/shared/hooks";
+import { DatePicker } from "src/components/calendar";
+import { getAppointmentsByDate } from "src/utils/firebase/firestore";
+import { MONTHS } from "src/utils/constants";
 
 interface FinderFormProps {
   clinics: IClinic[];
@@ -24,14 +28,24 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
     formState: { errors },
   } = useForm<any>();
 
+  const { years, selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDay, setSelectedDay } = useCalendar();
+
   const [selectedProblem, setSelectedProblem] = useState<IIllness>(knowledges[0] || "Select a problem");
   const [selectedClinic, setSelectedClinic] = useState<IClinic>(clinics[0] || "Select a clinic");
   const [selectedDoctor, setSelectedDoctor] = useState<IUser>(doctors[0] || "Select a doctor");
+  const [availableAppointments, setAvailableAppointments] = useState<IAppointmentSlot[]>([]);
+  const [selectedAppointment, setSelectedAppointment] = useState<IAppointmentSlot | null>(null);
   const [problemQuery, setProblemQuery] = useState<string>("");
   const [clinicQuery, setClinicQuery] = useState<string>("");
   const [doctorQuery, setDoctorQuery] = useState<string>("");
 
   const center = useMemo(() => ({ lat: selectedClinic.geoLocation.lat, lng: selectedClinic.geoLocation.lng }), [selectedClinic]);
+
+  useEffect(() => {
+    getAppointmentsByDate(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay)
+      .then((res) => setAvailableAppointments(res as IAppointmentSlot[]))
+      .catch((err) => console.error(err));
+  }, [selectedYear, selectedMonth, selectedDay]);
 
   const filteredProblems =
     problemQuery === ""
@@ -127,6 +141,29 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
         </div>
 
         <div className={s.formSection}>
+          <DatePicker
+            years={years}
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+          />
+
+          <div className={s.availableAppointments}>
+            {availableAppointments?.length &&
+              availableAppointments.map((appointment: IAppointmentSlot, i: number) => (
+                <div key={i} onClick={() => setSelectedAppointment(appointment)}>
+                  <AppointmentCard
+                    startDate={appointment.startDate}
+                    endDate={appointment.endDate}
+                    doc={appointment.user}
+                    isSelected={appointment.id === selectedAppointment?.id}
+                  />
+                </div>
+              ))}
+          </div>
           {/* <FormCombobox
             state={selectedDoctor}
             setState={setSelectedDoctor}

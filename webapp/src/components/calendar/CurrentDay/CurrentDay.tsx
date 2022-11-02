@@ -104,7 +104,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
         const filtered = appointments.filter(
           (appointment) =>
             appointment.startDate.getFullYear() === selectedYear &&
-            MONTHS.findIndex((m) => m === selectedMonth) === appointment.startDate.getMonth() &&
+            MONTHS.findIndex((m) => m === selectedMonth) + 1 === appointment.startDate.getMonth() &&
             appointment.startDate.getDate() === selectedDay
         );
 
@@ -139,25 +139,20 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     if (startHour <= endHour) {
       setCustomErrorMessage(null);
 
-      const start = new Date(
-        selectedYear,
-        MONTHS.findIndex((m) => m === selectedMonth),
-        selectedDay,
-        +startHour,
-        +startMinutes
-      );
+      const start = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +startHour, +startMinutes);
 
-      const end = new Date(
-        selectedYear,
-        MONTHS.findIndex((m) => m === selectedMonth),
-        selectedDay,
-        +endHour,
-        +endMinutes
-      );
+      const end = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +endHour, +endMinutes);
 
       if (auth.account?.uid) {
         setIsLoading(true);
-        await addNewAppointment({ userId: auth.account?.uid, startDate: start, endDate: end });
+        await addNewAppointment({
+          userId: auth.account?.uid,
+          startYear: selectedYear,
+          startMonth: MONTHS.findIndex((m) => m === selectedMonth) + 1,
+          startDay: selectedDay,
+          startDate: start,
+          endDate: end,
+        });
         setIsLoading(false);
       }
 
@@ -175,25 +170,20 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     if (startHour <= endHour) {
       setCustomErrorMessage(null);
 
-      const start = new Date(
-        selectedYear,
-        MONTHS.findIndex((m) => m === selectedMonth),
-        selectedDay,
-        +startHour,
-        +startMinutes
-      );
+      const start = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +startHour, +startMinutes);
 
-      const end = new Date(
-        selectedYear,
-        MONTHS.findIndex((m) => m === selectedMonth),
-        selectedDay,
-        +endHour,
-        +endMinutes
-      );
+      const end = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +endHour, +endMinutes);
 
       if (currentAppointmentSlot?.id) {
         setIsLoading(true);
-        await editDocAppointment({ id: currentAppointmentSlot.id, startDate: start, endDate: end });
+        await editDocAppointment({
+          id: currentAppointmentSlot.id,
+          startYear: selectedYear,
+          startMonth: MONTHS.findIndex((m) => m === selectedMonth) + 1,
+          startDay: selectedDay,
+          startDate: start,
+          endDate: end,
+        });
         setIsLoading(false);
       }
 
