@@ -127,7 +127,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
         </div>
 
         <div className={s.formSection}>
-          <FormCombobox
+          {/* <FormCombobox
             state={selectedDoctor}
             setState={setSelectedDoctor}
             query={doctorQuery}
@@ -141,7 +141,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
               <p className="text-primary dark:text-white">{selectedDoctor.doc.fields.join(", ")}</p>
               <Link
                 className="flex items-center mt-4 text-primary font-semibold hover:text-darkpink dark:text-white dark:hover:text-darkpink"
-                to={`doctors/${selectedDoctor.id}`}
+                to={`doctors/${selectedDoctor.id.substring(0, 4)}`}
               >
                 <HiOutlineInformationCircle className="h-5 w-5" />
                 &nbsp;Check Doctor's Profile
@@ -149,7 +149,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
             </div>
 
             <img src={selectedDoctor.imageUrl && selectedDoctor.imageUrl !== "" ? selectedDoctor.imageUrl : HiOutlineUser} alt="doc" />
-          </div>
+          </div> */}
         </div>
       </form>
     </div>

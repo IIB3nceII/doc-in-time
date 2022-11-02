@@ -1,10 +1,11 @@
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, Suspense, useState } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";
 import { Outlet } from "react-router-dom";
 import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
 import { INavBarItem } from "src/models";
+import ContentLoading from "../ContentLoading";
 
 interface ILayoutProps {
   children?: ReactNode | ReactNode[];
@@ -63,15 +64,17 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className={s.root}>
-      <Navbar items={items} setCurrentTab={setCurrentTab} />
-      <main>
-        <Outlet />
-      </main>
-      <div className={s.mobileNav}>
-        <MobileNavbar items={items} setCurrentTab={setCurrentTab} />
+    <Suspense fallback={<ContentLoading />}>
+      <div className={s.root}>
+        <Navbar items={items} setCurrentTab={setCurrentTab} />
+        <main>
+          <Outlet />
+        </main>
+        <div className={s.mobileNav}>
+          <MobileNavbar items={items} setCurrentTab={setCurrentTab} />
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
