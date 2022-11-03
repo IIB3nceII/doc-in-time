@@ -1,6 +1,6 @@
 .container {
   > form {
-    @apply flex flex-col w-full space-y-4;
+    @apply flex flex-col w-full space-y-4 pb-16;
 
     .formSection {
       @apply flex flex-col space-y-8 p-8 rounded-lg shadow-md md:flex-row md:space-x-24;
@@ -20,22 +20,26 @@
       .availableAppointments {
         @apply grid grid-cols-2 gap-2 w-full max-h-96 overflow-y-scroll;
       }
+    }
 
-      .doctorCard {
-        @apply flex h-64 w-full justify-between items-center py-4 px-8 border border-slate-400 rounded-lg;
+    .formFields {
+      @apply flex flex-col items-center space-y-8 p-8 rounded-lg shadow-md md:grid md:grid-cols-2 md:gap-8 md:space-y-0;
 
-        > img {
-          @apply h-48 w-48 rounded-full;
+      .formField {
+        @apply flex flex-col space-y-2;
+
+        > label {
+          @apply text-primary-2 dark:text-white;
         }
 
-        .data {
-          @apply flex flex-col;
+        > input {
+          @apply h-12 px-2 rounded border-2 border-slate-400 outline-none transition-all duration-100 focus:border-blue focus:border-4;
         }
       }
     }
 
     > button {
-      @apply relative py-2 px-4 text-white font-bold bg-blue rounded-md;
+      @apply flex-1 relative max-w-lg py-2 px-4 text-white font-bold bg-blue rounded-md;
     }
   }
 }

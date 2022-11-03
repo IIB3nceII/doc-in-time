@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
 import { IAppointmentSlot, IClinic, IIllness, IUser } from "src/models";
 import { AppointmentCard, FormCombobox } from "src/components/ui";
-import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineUser, HiOutlineInformationCircle } from "react-icons/hi";
+import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineUser, HiOutlineInformationCircle, HiOutlineClipboardList } from "react-icons/hi";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import { getImageByURL } from "src/utils/firebase/storage";
 import { Link } from "react-router-dom";
@@ -152,7 +152,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
           />
 
           <div className={s.availableAppointments}>
-            {availableAppointments?.length &&
+            {availableAppointments?.length > 0 &&
               availableAppointments.map((appointment: IAppointmentSlot, i: number) => (
                 <div key={i} onClick={() => setSelectedAppointment(appointment)}>
                   <AppointmentCard
@@ -164,30 +164,48 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
                 </div>
               ))}
           </div>
-          {/* <FormCombobox
-            state={selectedDoctor}
-            setState={setSelectedDoctor}
-            query={doctorQuery}
-            setQuery={setDoctorQuery}
-            items={filteredDoctors}
-            label={"Choose your doctor"}
-          />
-          <div className={s.doctorCard}>
-            <div className={s.data}>
-              <h3 className="text-4xl font-semibold text-primary dark:text-white">{selectedDoctor.fullName}</h3>
-              <p className="text-primary dark:text-white">{selectedDoctor.doc.fields.join(", ")}</p>
-              <Link
-                className="flex items-center mt-4 text-primary font-semibold hover:text-darkpink dark:text-white dark:hover:text-darkpink"
-                to={`doctors/${selectedDoctor.id.substring(0, 4)}`}
-              >
-                <HiOutlineInformationCircle className="h-5 w-5" />
-                &nbsp;Check Doctor's Profile
-              </Link>
-            </div>
 
-            <img src={selectedDoctor.imageUrl && selectedDoctor.imageUrl !== "" ? selectedDoctor.imageUrl : HiOutlineUser} alt="doc" />
-          </div> */}
+          {!availableAppointments.length && (
+            <div className="flex h-full w-full justify-center items-center space-x-2">
+              <HiOutlineClipboardList className="h-6 w-6" />
+              <p className="text-lg font-semibold whitespace-nowrap">No available Appointments</p>
+            </div>
+          )}
         </div>
+
+        <div className={s.formFields}>
+          <div className={s.formField}>
+            <label>First Name</label>
+            <input type="text" {...register("firstName", { required: true })} aria-invalid={errors.firstName ? "true" : "false"} />
+            {errors.firstName?.type === "required" && <p>error</p>}
+          </div>
+
+          <div className={s.formField}>
+            <label>Last Name</label>
+            <input type="text" {...register("lastName", { required: true })} aria-invalid={errors.lastName ? "true" : "false"} />
+            {errors.lastName?.type === "required" && <p>error</p>}
+          </div>
+
+          <div className={s.formField}>
+            <label>Email</label>
+            <input type="text" {...register("email", { required: true })} aria-invalid={errors.email ? "true" : "false"} />
+            {errors.email?.type === "required" && <p>error</p>}
+          </div>
+
+          <div className={s.formField}>
+            <label>Phone (optional)</label>
+            <input type="text" {...register("phone", { required: false })} aria-invalid={errors.phone ? "true" : "false"} />
+            {errors.phone?.type === "required" && <p>error</p>}
+          </div>
+
+          <div className={s.formField}>
+            <label>TAJ Number</label>
+            <input type="text" {...register("taj", { required: true })} aria-invalid={errors.taj ? "true" : "false"} />
+            {errors.taj?.type === "required" && <p>error</p>}
+          </div>
+        </div>
+
+        <button type="submit">Submit</button>
       </form>
     </div>
   );
