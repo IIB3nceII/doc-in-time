@@ -6,3 +6,4 @@ export { default as getClinics } from "./get-clinics";
 export { default as getDoctor } from "./get-doctor";
 export { default as getIllness } from "./get-illness";
 export { default as getAppointmentsByDate } from "./get-appointments-by-date";
+export { default as reserveAppointment } from "./reserve-appointment";

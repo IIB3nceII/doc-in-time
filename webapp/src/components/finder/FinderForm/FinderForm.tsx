@@ -6,20 +6,23 @@ import { AppointmentCard, FormCombobox } from "src/components/ui";
 import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineUser, HiOutlineInformationCircle, HiOutlineClipboardList } from "react-icons/hi";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import { getImageByURL } from "src/utils/firebase/storage";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCalendar } from "src/shared/hooks";
 import { DatePicker } from "src/components/calendar";
-import { getAppointmentsByDate } from "src/utils/firebase/firestore";
+import { getAppointmentsByDate, reserveAppointment } from "src/utils/firebase/firestore";
 import { MONTHS } from "src/utils/constants";
 import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
+import { IRootState } from "src/shared/store";
+import { connect } from "react-redux";
 
-interface FinderFormProps {
+interface FinderFormProps extends StateProps, DispatchProps {
   clinics: IClinic[];
   knowledges: IIllness[];
   doctors: IUser[];
 }
 
-const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
+const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors, auth }) => {
+  const navigation = useNavigate();
   // const { isLoaded } = useLoadScript({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY! });
   const {
     register,
@@ -81,8 +84,16 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
     }
   };
 
-  const createNewReservation = (item: IAppointmentFormData): void => {
-    console.log(item);
+  const createNewReservation = async (item: IAppointmentFormData): Promise<void> => {
+    try {
+      if (item.selectedAppointment?.id && auth?.account?.uid) {
+        await reserveAppointment(item.selectedAppointment.id, auth?.account?.uid);
+
+        navigation("/appointment-reservation");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -178,7 +189,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
                     <AppointmentCard
                       startDate={appointment.startDate}
                       endDate={appointment.endDate}
-                      doc={appointment.user}
+                      doc={appointment.doc}
                       isSelected={appointment.id === selectedAppointment?.id}
                     />
                   </div>
@@ -241,4 +252,13 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
   );
 };
 
-export default FinderForm;
+const mapStateToProps = ({ auth }: IRootState) => ({
+  auth,
+});
+
+const mapDispatchToProps = {};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(FinderForm);

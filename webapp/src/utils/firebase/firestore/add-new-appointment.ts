@@ -10,12 +10,14 @@ import { db } from "../firebase.config";
 const addNewAppointment = async ({ userId, startYear, startMonth, startDay, startDate, endDate }: IAppointmentSlot): Promise<void> => {
   try {
     await addDoc(collection(db, "appointmentSlots"), {
-      userId,
+      doc: userId,
       startYear,
       startMonth,
       startDay,
       startDate,
       endDate,
+      iseReserved: false,
+      patient: null,
     });
   } catch (err) {
     console.error(err);

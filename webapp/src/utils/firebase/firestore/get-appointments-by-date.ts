@@ -17,20 +17,21 @@ const getAppointmentsByDate = async (startYear: number, startMonth: number, star
     querySnapShot?.forEach((doc) => {
       appointments.push({
         id: doc.id,
-        userId: doc.data().userId,
+        doc: doc.data().doc,
         startYear: doc.data().startYear,
         startMonth: doc.data().startMonth,
         startDay: doc.data().startDay,
         startDate: new Date((doc.data().startDate as Timestamp).toDate()),
         endDate: new Date((doc.data().endDate as Timestamp).toDate()),
+        isReserved: doc.data().isReserved,
       });
     });
 
     for (let i = 0; i < appointments.length; i++) {
-      const u = await getDoctor(appointments[i].userId!);
-      if (u) {
-        u.imageUrl = await getImageByURL(u.imageUrl);
-        appointments[i] = { ...appointments[i], user: u };
+      const d = await getDoctor(appointments[i].doc!);
+      if (d) {
+        d.imageUrl = await getImageByURL(d.imageUrl);
+        appointments[i] = { ...appointments[i], doc: d };
       }
     }
 
