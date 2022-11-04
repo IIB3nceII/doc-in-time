@@ -1,13 +1,14 @@
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, Suspense, useState } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";
-import { BrowserRouter } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
 import { INavBarItem } from "src/models";
+import ContentLoading from "../ContentLoading";
 
 interface ILayoutProps {
-  children: ReactNode | ReactNode[];
+  children?: ReactNode | ReactNode[];
 }
 
 const navBarItems: INavBarItem[] = [
@@ -30,9 +31,9 @@ const navBarItems: INavBarItem[] = [
     isActive: false,
   },
   {
-    path: "/",
+    path: "appointment-finder",
     icon: <HiOutlineIdentification className="h-8 w-8" />,
-    title: "Home",
+    title: "Finder",
     isActive: false,
   },
   {
@@ -63,15 +64,17 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
   };
 
   return (
-    <BrowserRouter>
+    <Suspense fallback={<ContentLoading />}>
       <div className={s.root}>
         <Navbar items={items} setCurrentTab={setCurrentTab} />
-        <main>{children}</main>
+        <main>
+          <Outlet />
+        </main>
         <div className={s.mobileNav}>
           <MobileNavbar items={items} setCurrentTab={setCurrentTab} />
         </div>
       </div>
-    </BrowserRouter>
+    </Suspense>
   );
 };
 

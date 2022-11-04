@@ -1,0 +1,39 @@
+.container {
+  @apply flex flex-col justify-between items-center space-y-4 max-w-xl p-4 bg-slate-900 rounded-xl shadow-sm cursor-pointer transition duration-100 active:scale-95 active:shadow-inner xl:flex-row xl:space-x-4 xl:space-y-0;
+
+  .date {
+    @apply flex flex-col;
+
+    > h3 {
+      @apply text-white text-2xl font-semibold whitespace-nowrap;
+    }
+
+    > p {
+      @apply text-white whitespace-nowrap;
+    }
+  }
+
+  .doc {
+    @apply hidden justify-center items-center lg:flex lg:flex-col;
+
+    > img {
+      @apply h-16 w-16 rounded-full;
+    }
+
+    > span {
+      @apply text-white text-sm font-semibold;
+    }
+  }
+}
+
+.selected {
+  @apply relative border-4 border-darkpink;
+
+  .overlay {
+    @apply flex justify-center items-center absolute -top-4 left-0 h-full w-full bg-slate-100 opacity-80 rounded-lg z-10 xl:top-0 xl:-left-4;
+
+    > p {
+      @apply text-xl text-darkpink font-bold opacity-100;
+    }
+  }
+}

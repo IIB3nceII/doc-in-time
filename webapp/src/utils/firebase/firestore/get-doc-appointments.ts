@@ -13,10 +13,13 @@ const getDocAppointments = async (userId: string): Promise<IAppointmentSlot[] | 
     const q = query(collection(db, "appointmentSlots"), where("userId", "==", userId));
     const querySnapShot = await getDocs(q);
     const appointments: IAppointmentSlot[] = [];
-    querySnapShot.forEach((doc) => {
+    querySnapShot?.forEach((doc) => {
       appointments.push({
         id: doc.id,
         userId: doc.data().userId,
+        startYear: doc.data().startYear,
+        startMonth: doc.data().startMonth,
+        startDay: doc.data().startDay,
         startDate: new Date((doc.data().startDate as Timestamp).toDate()),
         endDate: new Date((doc.data().endDate as Timestamp).toDate()),
       });

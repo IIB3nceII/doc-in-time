@@ -7,12 +7,17 @@ import { db } from "../firebase.config";
  * @param {IAppointmentSlot}  - IAppointmentSlot: This is the interface that we created earlier.
  * @firestore
  */
-const addNewAppointment = async ({ userId, startDate, endDate }: IAppointmentSlot): Promise<void> => {
+const addNewAppointment = async ({ userId, startYear, startMonth, startDay, startDate, endDate }: IAppointmentSlot): Promise<void> => {
   try {
     await addDoc(collection(db, "appointmentSlots"), {
-      userId,
+      doc: userId,
+      startYear,
+      startMonth,
+      startDay,
       startDate,
       endDate,
+      iseReserved: false,
+      patient: null,
     });
   } catch (err) {
     console.error(err);

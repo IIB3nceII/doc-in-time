@@ -44,7 +44,11 @@ const NavbarComponent: FC<INavbarProps> = ({
           <nav>
             <ul>
               {items?.map(({ isActive, path, title }, i) => (
-                <li id={`navbar_item_${i}`} key={i} className={`${isActive ? "text-blue" : "text-primary"}`} onClick={() => setCurrentTab(path)}>
+                <li
+                  key={i}
+                  className={`${isActive ? "text-blue" : "text-primary"} ${!isActive && "dark:text-white"}`}
+                  onClick={() => setCurrentTab(path)}
+                >
                   <Link to={path}>{title}</Link>
                 </li>
               ))}
