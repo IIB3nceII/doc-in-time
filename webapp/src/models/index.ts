@@ -7,3 +7,4 @@ export type { default as INavBarItem } from "./nav-bar-item.model";
 export type { default as IDoc } from "./doc.model";
 export type { default as IClinic } from "./clinic.model";
 export type { default as IIllness } from "./illness.model";
+export type { default as IAppointmentFormData } from "./appointment-form-data.model";

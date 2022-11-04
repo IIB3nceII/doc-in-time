@@ -6,8 +6,8 @@ interface IConfirmModalProps {
   item: any;
   cancelButtonText?: string;
   submitButtonText?: string;
-  cancel: (params: any) => void;
-  submit: (params: any) => void;
+  cancel: (params: any) => unknown;
+  submit: (params: any) => unknown;
 }
 
 const ConfirmModal: FC<IConfirmModalProps> = ({ text, item, cancelButtonText, submitButtonText, cancel, submit }) => {
