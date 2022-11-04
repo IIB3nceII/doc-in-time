@@ -1,5 +1,5 @@
-import { IClinic, IUser } from "src/models";
-import { getClinics, getDoctor } from "../firebase/firestore";
+import { IClinic, IIllness, IUser } from "src/models";
+import { getClinics, getDoctor, getIllness } from "../firebase/firestore";
 
 const clientsLoader = async (): Promise<IClinic[] | void> => {
   try {
@@ -11,7 +11,17 @@ const clientsLoader = async (): Promise<IClinic[] | void> => {
           const arr: IUser[] = [];
           for (let userId of clinic.docs) {
             const d: IUser = (await getDoctor(String(userId))) as IUser;
-            d && arr.push(d);
+            if (d) {
+              const ks: IIllness[] = [];
+              for (let knowledge of d.doc.knowledges) {
+                const k = (await getIllness(String(knowledge))) as IIllness;
+                if (k) {
+                  ks.push(k);
+                }
+              }
+              d.doc.knowledges = [...ks];
+              arr.push(d);
+            }
           }
           clinic.docs = [...arr];
         }

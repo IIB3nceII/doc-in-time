@@ -15,7 +15,7 @@ interface IFormComboboxProps {
 const FormCombobox: FC<IFormComboboxProps> = ({ state, setState, query, setQuery, items, label }) => {
   return (
     <div className={s.container}>
-      {label && <label>{label}</label>}
+      {label && <label className="text-xl text-primary dark:text-white">{label}</label>}
 
       <div className="combobox-container">
         <Combobox value={state} onChange={setState}>

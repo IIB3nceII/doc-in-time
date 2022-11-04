@@ -4,3 +4,4 @@ export { default as deleteDocAppointment } from "./delete-doc-appointment";
 export { default as editDocAppointment } from "./edit-doc-appointment";
 export { default as getClinics } from "./get-clinics";
 export { default as getDoctor } from "./get-doctor";
+export { default as getIllness } from "./get-illness";

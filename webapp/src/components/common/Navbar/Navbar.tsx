@@ -28,7 +28,7 @@ const NavbarComponent: FC<INavbarProps> = ({
 
   useEffect(() => {
     setCurrentTab(location.pathname.split("/")[1]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -44,7 +44,11 @@ const NavbarComponent: FC<INavbarProps> = ({
           <nav>
             <ul>
               {items?.map(({ isActive, path, title }, i) => (
-                <li id={`navbar_item_${i}`} key={i} className={`${isActive ? "text-blue" : "text-primary"}`} onClick={() => setCurrentTab(path)}>
+                <li
+                  key={i}
+                  className={`${isActive ? "text-blue" : "text-primary"} ${!isActive && "dark:text-white"}`}
+                  onClick={() => setCurrentTab(path)}
+                >
                   <Link to={path}>{title}</Link>
                 </li>
               ))}

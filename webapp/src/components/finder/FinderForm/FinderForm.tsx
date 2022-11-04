@@ -1,19 +1,19 @@
 import React, { FC, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
-import { IClinic, IUser } from "src/models";
+import { IClinic, IIllness, IUser } from "src/models";
 import { FormCombobox } from "src/components/ui";
 import { HiOutlineMap, HiOutlineLocationMarker } from "react-icons/hi";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 
 interface FinderFormProps {
   clinics: IClinic[];
-  knowledges: string[];
+  knowledges: IIllness[];
   doctors: IUser[];
 }
 
 const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
-  const { isLoaded } = useLoadScript({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY! });
+  // const { isLoaded } = useLoadScript({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY! });
   const {
     register,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,7 +22,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
     formState: { errors },
   } = useForm<any>();
 
-  const [selectedProblem, setSelectedProblem] = useState<string>(knowledges[0] || "Select a problem");
+  const [selectedProblem, setSelectedProblem] = useState<IIllness>(knowledges[0] || "Select a problem");
   const [selectedClinic, setSelectedClinic] = useState<IClinic>(clinics[0] || "Select a clinic");
   const [selectedDoctor, setSelectedDoctor] = useState<IUser>(doctors[0] || "Select a doctor");
   const [problemQuery, setProblemQuery] = useState<string>("");
@@ -34,8 +34,8 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
   const filteredProblems =
     problemQuery === ""
       ? knowledges
-      : knowledges.filter((knowledges: string) =>
-          knowledges.toLowerCase().replace(/\s+/g, "").includes(problemQuery.toLowerCase().replace(/\s+/g, ""))
+      : knowledges.filter((knowledge: IIllness) =>
+          knowledge.name.toLowerCase().replace(/\s+/g, "").includes(problemQuery.toLowerCase().replace(/\s+/g, ""))
         );
 
   const filteredClinics =
@@ -62,7 +62,20 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
             items={filteredProblems}
             label={"What's the problem?"}
           />
-          <p className={s.problemDescription}>{selectedProblem}</p>
+          <div className={s.descriptionContainer}>
+            <h3 className="text-2xl font-semibold text-primary dark:text-white">Problem Description</h3>
+            <p className="flex flex-wrap max-h-24 text-primary overflow-hidden dark:text-white">{selectedProblem.description}</p>
+            {selectedProblem.queryWord && selectedProblem.queryWord !== "" && (
+              <a
+                className="text-primary transition-all duration-100 hover:text-darkpink dark:text-white dark:hover:text-darkpink"
+                target="_blank"
+                rel="noreferrer"
+                href={`https://maps.google.com/?q=${selectedProblem.queryWord}`}
+              >
+                Read More...
+              </a>
+            )}
+          </div>
         </div>
 
         <div className={s.formSection}>
@@ -76,7 +89,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
           />
 
           <div className={s.mapContainer}>
-            {isLoaded ? (
+            {/* {isLoaded ? (
               <GoogleMap
                 options={{ gestureHandling: "none", streetViewControl: false, fullscreenControl: false }}
                 zoom={16}
@@ -90,9 +103,20 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors }) => {
                 <HiOutlineMap className="h-5 w-5 text-primary" />
                 &nbsp; Map is loading...
               </span>
-            )}
-            <a target="_blank" rel="noreferrer" href={`https://maps.google.com/?q=${center.lat},${center.lng}`}>
-              <HiOutlineLocationMarker className="h-5 w-5 text-primary" />
+            )} */}
+            <span className={`${s.mapPlaceholder} inline-flex items-center text-primary -mx-4 pt-4 pl-4 border-t border-slate-400 font-semibold cursor-pointer`}>
+              <HiOutlineMap className="h-5 w-5 text-primary dark:text-white" />
+              &nbsp; Map is loading...
+            </span>
+            <a
+              className="inline-flex items-center text-primary -mx-4 pt-4 pl-4 border-t border-slate-400 font-semibold cursor-pointer transition-all duration-100 hover:text-darkpink dark:text-white dark:hover:text-darkpink"
+              target="_blank"
+              rel="noreferrer"
+              href={`https://maps.google.com/?q=${
+                selectedClinic.geoLocation.addressLine !== "" ? selectedClinic.geoLocation.addressLine : center.lat + "," + center.lng
+              }`}
+            >
+              <HiOutlineLocationMarker className="h-5 w-5" />
               &nbsp; See on Google Maps
             </a>
           </div>

@@ -2,30 +2,32 @@ import React, { FC, Suspense, useMemo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { ContentLoading } from "src/components/common";
 import { FinderForm } from "src/components/finder";
-import { IClinic, IUser } from "src/models";
+import { IClinic, IIllness, IUser } from "src/models";
 import s from "./AppointmentFinder.module.scss";
 
 const AppointmentFinder: FC = () => {
   const clinics: IClinic[] = useLoaderData() as IClinic[];
 
-  const [knowledges, setKnowledges] = useState<string[]>([]);
+  const [knowledges, setKnowledges] = useState<IIllness[]>([]);
   const [doctors, setDoctors] = useState<IUser[]>([]);
 
   useMemo(() => {
     if (clinics && Array.isArray(clinics)) {
-      const allKnowledges: string[] = [];
+      const allKnowledges: IIllness[] = [];
       const dArr: IUser[] = [];
       clinics.forEach((clinic: IClinic) => {
         clinic.docs.forEach((user: IUser) => {
           dArr.push({ ...user, fullName: `${user.firstName} ${user.lastName}` });
           user.doc.knowledges.forEach((k) => {
-            allKnowledges.push(k);
+            if (!allKnowledges.some((q) => q.name === k.name)) {
+              allKnowledges.push(k);
+            }
           });
         });
       });
 
       setDoctors(dArr);
-      setKnowledges(Array.from(new Set(allKnowledges)));
+      setKnowledges(allKnowledges);
     }
   }, [clinics]);
 
