@@ -33,18 +33,18 @@ const NavbarComponent: FC<INavbarProps> = ({
 
   return (
     <>
-      <header className="dark:bg-slate-900 dark:border-b-[1px] dark:border-slate-700">
+      <header id="navbar" className="dark:bg-slate-900 dark:border-b-[1px] dark:border-slate-700">
         <div className="md:hidden">
           <DarkModeSwitcher />
         </div>
         <div className={s.navigationContainer}>
           <Link to="/" onClick={() => setCurrentTab("/")}>
-            <img src={Logo} alt="LOGO" />
+            <img src={Logo} alt="LOGO" id="navbar_logo" />
           </Link>
           <nav>
             <ul>
               {items?.map(({ isActive, path, title }, i) => (
-                <li key={i} className={`${isActive ? "text-blue" : "text-primary"}`} onClick={() => setCurrentTab(path)}>
+                <li id={`navbar_item_${i}`} key={i} className={`${isActive ? "text-blue" : "text-primary"}`} onClick={() => setCurrentTab(path)}>
                   <Link to={path}>{title}</Link>
                 </li>
               ))}
@@ -53,7 +53,7 @@ const NavbarComponent: FC<INavbarProps> = ({
         </div>
 
         <div className={s.sideNav}>
-          <div className={s.search} onClick={() => setIsSearchAreaOpen(true)}>
+          <div id="navbar_search" className={s.search} onClick={() => setIsSearchAreaOpen(true)}>
             <p>Search...</p>
             <HiOutlineSearch className={s.icon} />
           </div>
@@ -100,7 +100,7 @@ const NavbarComponent: FC<INavbarProps> = ({
               </Transition>
             </Menu>
           ) : (
-            <Link to="/login">
+            <Link id="navbar_login" to="/login">
               <p className={s.login}>Log in</p>
             </Link>
           )}

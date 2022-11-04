@@ -5,7 +5,7 @@ import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
 import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 
-interface ISearchAreaProps extends StateProps, DispatchProps {}
+interface ISearchAreaProps extends StateProps, DispatchProps { }
 
 const SearchArea: FC<ISearchAreaProps> = ({ setIsSearchAreaOpen }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,7 +23,7 @@ const SearchArea: FC<ISearchAreaProps> = ({ setIsSearchAreaOpen }) => {
   };
 
   return (
-    <div className={s.container} onClick={() => setIsSearchAreaOpen(false)}>
+    <div id="search_area" className={s.container} onClick={() => setIsSearchAreaOpen(false)}>
       <div className={s.searchContainer} onClick={(e) => e.stopPropagation()}>
         <div className={s.search}>
           <HiOutlineX className={s.icon} onClick={() => setSearchKeyword("")} />

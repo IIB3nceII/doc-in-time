@@ -31,6 +31,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -57,6 +58,7 @@
     "@types/redux-thunk": "^2.1.0",
     "autoprefixer": "^10.4.12",
     "eslint": "^8.25.0",
+    "jest-matchmedia-mock": "^1.1.0",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "tailwindcss": "^3.1.8"

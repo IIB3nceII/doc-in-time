@@ -36,7 +36,7 @@ const DarkModeSwitcher: FC = () => {
   };
 
   return (
-    <Menu as="div" className={s.container}>
+    <Menu id="darkmode_switcher" as="div" className={s.container}>
       <div>
         <Menu.Button className={s.menuButton} name="dark">
           <HiOutlineSun className="h-8 w-8 dark:text-white" aria-hidden="true" />
