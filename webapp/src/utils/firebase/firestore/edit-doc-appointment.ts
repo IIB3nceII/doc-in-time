@@ -10,7 +10,7 @@ import { db } from "../firebase.config";
 const editDocAppointment = async ({ id, startDate, endDate }: IAppointmentSlot): Promise<void> => {
   try {
     if (id) {
-      const appointmentsRef = doc(db, "appointmentSlots", id);
+      const appointmentsRef = await doc(db, "appointmentSlots", id);
       await updateDoc(appointmentsRef, {
         startDate,
         endDate,
