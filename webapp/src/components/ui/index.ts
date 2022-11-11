@@ -6,3 +6,4 @@ export { default as Introduction } from "./Introduction";
 export { default as Contact } from "./Contact";
 export { default as FormCombobox } from "./FormCombobox";
 export { default as AppointmentCard } from "./AppointmentCard";
+export { default as ProfileEditor } from "./ProfileEditor";

@@ -84,9 +84,12 @@ const NavbarComponent: FC<INavbarProps> = ({
                   <div className="px-1 py-1 ">
                     <Menu.Item>
                       {({ active }) => (
-                        <button className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}>
+                        <Link
+                          to={"/edit-profile"}
+                          className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
                           Edit profile
-                        </button>
+                        </Link>
                       )}
                     </Menu.Item>
                     <Menu.Item>
