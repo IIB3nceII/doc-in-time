@@ -10,4 +10,5 @@ export default interface IUser extends User {
   imageUrl: any;
   isDoc: boolean;
   doc: IDoc;
+  dateOfBirth: number;
 }
