@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { CurrentDay, DatePicker } from "src/components/calendar";
 import { useCalendar } from "src/shared/hooks";
 import s from "./Calendar.module.scss";

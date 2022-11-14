@@ -102,10 +102,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       setIsLoading(false);
       if (appointments?.length) {
         const filtered = appointments.filter(
-          (appointment) =>
-            appointment.startDate.getFullYear() === selectedYear &&
-            MONTHS.findIndex((m) => m === selectedMonth) + 1 === appointment.startDate.getMonth() &&
-            appointment.startDate.getDate() === selectedDay
+          ({ startYear, startMonth, startDay }) =>
+            startYear === selectedYear && MONTHS.findIndex((m) => m === selectedMonth) + 1 === startMonth && startDay === selectedDay
         );
 
         setAppointmentSlots(filtered);
@@ -139,9 +137,21 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     if (startHour <= endHour) {
       setCustomErrorMessage(null);
 
-      const start = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +startHour, +startMinutes);
+      const start = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +startHour,
+        +startMinutes
+      );
 
-      const end = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +endHour, +endMinutes);
+      const end = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +endHour,
+        +endMinutes
+      );
 
       if (auth.account?.uid) {
         setIsLoading(true);

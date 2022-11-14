@@ -10,7 +10,7 @@ import { db } from "../firebase.config";
  */
 const getDocAppointments = async (userId: string): Promise<IAppointmentSlot[] | void> => {
   try {
-    const q = query(collection(db, "appointmentSlots"), where("userId", "==", userId));
+    const q = query(collection(db, "appointmentSlots"), where("doc", "==", userId));
     const querySnapShot = await getDocs(q);
     const appointments: IAppointmentSlot[] = [];
     querySnapShot?.forEach((doc) => {
