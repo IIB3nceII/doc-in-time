@@ -5,4 +5,5 @@ export default interface IDoc {
   lastName: string;
   fields: string[];
   knowledges: IIllness[];
+  clinics?: { clinicId: string; clinicName: string; color: string }[];
 }

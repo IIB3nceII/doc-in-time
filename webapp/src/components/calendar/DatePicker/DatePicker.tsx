@@ -1,10 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { HiOutlineCheck, HiOutlineChevronDown } from "react-icons/hi";
 import s from "./DatePicker.module.scss";
 import { MONTHS } from "src/utils/constants";
 import DayPicker from "../DayPicker";
+import { IUser } from "src/models";
 
 interface IDatePickerProps {
   years: number[];
@@ -15,6 +16,7 @@ interface IDatePickerProps {
   selectedDay: number;
   setSelectedDay: (day: number) => void;
   isLoading?: boolean;
+  doc?: IUser;
 }
 
 const DatePicker: FC<IDatePickerProps> = ({
@@ -26,7 +28,12 @@ const DatePicker: FC<IDatePickerProps> = ({
   selectedDay,
   setSelectedDay,
   isLoading,
+  doc,
 }) => {
+  useEffect(() => {
+    console.log(doc);
+  }, [doc]);
+
   return (
     <div className={s.container}>
       <div className={s.listboxContainer}>
@@ -110,8 +117,17 @@ const DatePicker: FC<IDatePickerProps> = ({
           <DayPicker isLoading={isLoading} year={selectedYear} month={String(selectedMonth)} day={selectedDay} setDay={setSelectedDay} />
         )}
       </div>
+
+      {doc?.doc?.clinics?.length ? (
+        <div>
+          {doc?.doc?.clinics.map((clinic, i) => (
+            <div>{clinic.clinicName}</div>
+          ))}
+        </div>
+      ) : (
+        <div>No Clinics</div>
+      )}
     </div>
   );
 };
-
 export default DatePicker;

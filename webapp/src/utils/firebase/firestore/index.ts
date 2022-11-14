@@ -8,3 +8,4 @@ export { default as getIllness } from "./get-illness";
 export { default as getAppointmentsByDate } from "./get-appointments-by-date";
 export { default as reserveAppointment } from "./reserve-appointment";
 export { default as editUserName } from "./edit-user-name";
+export { default as getUserById } from "./get-user-by-id";
