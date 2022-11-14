@@ -2,14 +2,17 @@
 import React from "react";
 import s from "./Hero.module.scss";
 import HeroImage from "../../../assets/images/hero_image.svg";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
+  const { t } = useTranslation();
+
   return (
     <section className={s.container}>
       <h1>
-        Doc just in
+        {t("hero.title")}
         <br />
-        <span>Time</span>
+        <span>{t("hero.time")}</span>
       </h1>
       <img src={HeroImage} alt="hero image" />
     </section>

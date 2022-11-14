@@ -10,6 +10,7 @@ import { Link, useLocation } from "react-router-dom";
 import Logo from "../../../assets/images/logo.png";
 import { Menu, Transition } from "@headlessui/react";
 import { INavBarItem } from "src/models";
+import { useTranslation } from "react-i18next";
 
 interface INavbarProps extends StateProps, DispatchProps {
   items: INavBarItem[];
@@ -25,11 +26,17 @@ const NavbarComponent: FC<INavbarProps> = ({
   setCurrentTab,
 }) => {
   const location = useLocation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     setCurrentTab(location.pathname.split("/")[1]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const changeLang = (lang: string): void => {
+    i18n.changeLanguage(lang);
+    localStorage.lang = lang;
+  };
 
   return (
     <>
@@ -64,56 +71,66 @@ const NavbarComponent: FC<INavbarProps> = ({
 
           <DarkModeSwitcher />
 
-          {account ? (
-            <Menu as="div" className={s.profileMenu}>
-              <div>
-                <Menu.Button className={s.menuButton} name="profile">
-                  <HiOutlineUserCircle className="h-8 w-8 dark:text-white" aria-hidden="true" />
-                </Menu.Button>
-              </div>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className={s.menuItems}>
-                  <div className="px-1 py-1 ">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link
-                          to={"/edit-profile"}
-                          className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                        >
-                          Edit profile
-                        </Link>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                          onClick={() => logOutUser()}
-                        >
-                          Log out
-                        </button>
-                      )}
-                    </Menu.Item>
-                  </div>
-                </Menu.Items>
-              </Transition>
-            </Menu>
-          ) : (
-            <Link id="navbar_login" to="/login">
-              <p className={s.login}>Log in</p>
-            </Link>
-          )}
+          <div className="flex items-center space-x-2">
+            {account ? (
+              <Menu as="div" className={s.profileMenu}>
+                <div>
+                  <Menu.Button className={s.menuButton} name="profile">
+                    <HiOutlineUserCircle className="h-8 w-8 dark:text-white" aria-hidden="true" />
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className={s.menuItems}>
+                    <div className="px-1 py-1 ">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <Link
+                            to={"/edit-profile"}
+                            className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          >
+                            Edit profile
+                          </Link>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            onClick={() => logOutUser()}
+                          >
+                            Log out
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            ) : (
+              <Link id="navbar_login" to="/login">
+                <p className={s.login}>Log in</p>
+              </Link>
+            )}
+            <ul className="flex space-x-2 divide-x text-primary dark:text-white">
+              <li className="cursor-pointer" onClick={() => changeLang("en")}>
+                EN
+              </li>
+              <li className="pl-2 cursor-pointer" onClick={() => changeLang("hu")}>
+                HU
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="md:hidden">
+        <div className="flex items-center space-x-2 md:hidden">
           {account ? (
             <Tooltip text="Search">
               <div className="icon-container">
@@ -129,6 +146,15 @@ const NavbarComponent: FC<INavbarProps> = ({
               </Link>
             </Tooltip>
           )}
+
+          <ul className="flex space-x-2 divide-x text-primary dark:text-white">
+            <li className="cursor-pointer" onClick={() => changeLang("en")}>
+              EN
+            </li>
+            <li className="pl-2 cursor-pointer" onClick={() => changeLang("hu")}>
+              HU
+            </li>
+          </ul>
         </div>
       </header>
 
