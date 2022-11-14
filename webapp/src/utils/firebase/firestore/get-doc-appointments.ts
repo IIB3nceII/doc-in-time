@@ -22,6 +22,9 @@ const getDocAppointments = async (userId: string): Promise<IAppointmentSlot[] | 
         startDay: doc.data().startDay,
         startDate: new Date((doc.data().startDate as Timestamp).toDate()),
         endDate: new Date((doc.data().endDate as Timestamp).toDate()),
+        patient: doc.data().patient,
+        isReserved: doc.data().isReserved,
+        clinic: doc.data().clinic,
       });
     });
 

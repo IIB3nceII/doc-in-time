@@ -297,6 +297,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       endDate.getMinutes() < 10 ? "0" + endDate.getMinutes() : endDate.getMinutes()
     }`;
   };
+  const findClinicColor = (clinicName: string): string => `${auth.account?.doc?.clinics?.find((q) => q.clinicName === clinicName)?.color}`;
 
   return (
     <>
@@ -324,15 +325,22 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                         height: calculateItemHeight(item),
                       }}
                     >
-                      <div className={s.content}>
-                        <HiOutlineClipboardList
-                          className={`${
-                            +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
-                          }`}
-                        />
-                        <p>Empty Slot</p>
-                        <span>({renderTime(item)})</span>
-                      </div>
+                      {item.isReserved ? (
+                        <div className={s.reservedContent} style={{ color: findClinicColor(item.clinic.clinicName) }}>
+                          <p>{item.patient?.fullName}</p>
+                          <span>({renderTime(item)})</span>
+                        </div>
+                      ) : (
+                        <div className={s.content}>
+                          <HiOutlineClipboardList
+                            className={`${
+                              +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
+                            }`}
+                          />
+                          <p>Empty Slot</p>
+                          <span>({renderTime(item)})</span>
+                        </div>
+                      )}
 
                       <Menu as="div" className={s.menu}>
                         <div>

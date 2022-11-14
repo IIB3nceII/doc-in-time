@@ -27,6 +27,14 @@
           }
         }
 
+        .reservedContent {
+          @apply flex justify-center items-center h-full w-full font-semibold border-2 rounded-xl;
+
+          > span {
+            @apply font-bold tracking-tighter;
+          }
+        }
+
         .menu {
           @apply relative justify-self-end self-start text-2xl inline-block text-left text-slate-400;
 
@@ -35,7 +43,7 @@
           }
 
           .menuItems {
-            @apply absolute left-0 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg focus:outline-none;
+            @apply absolute left-0 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg z-50 focus:outline-none;
           }
         }
       }
