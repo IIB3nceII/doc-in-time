@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
 import { ContentLoading } from "src/components/common";
+import { useTranslation } from "react-i18next";
 
 interface ICurrentDayProps extends StateProps, DispatchProps {
   selectedYear: number;
@@ -20,6 +21,7 @@ interface ICurrentDayProps extends StateProps, DispatchProps {
 }
 
 const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, selectedDay, isLoading, setIsLoading }) => {
+  const { t } = useTranslation();
   /**
    * Using the useForm hook from react-hook-form to setting up the appointment form.
    */
@@ -281,11 +283,9 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
   const renderTime = (item: IAppointmentSlot): string => {
     const { startDate, endDate } = item;
 
-    return `${startDate.getHours() < 10 ? "0" + startDate.getHours() : startDate.getHours()}:${
-      startDate.getMinutes() < 10 ? "0" + startDate.getMinutes() : startDate.getMinutes()
-    } - ${endDate.getHours() < 10 ? "0" + endDate.getHours() : endDate.getHours()}:${
-      endDate.getMinutes() < 10 ? "0" + endDate.getMinutes() : endDate.getMinutes()
-    }`;
+    return `${startDate.getHours() < 10 ? "0" + startDate.getHours() : startDate.getHours()}:${startDate.getMinutes() < 10 ? "0" + startDate.getMinutes() : startDate.getMinutes()
+      } - ${endDate.getHours() < 10 ? "0" + endDate.getHours() : endDate.getHours()}:${endDate.getMinutes() < 10 ? "0" + endDate.getMinutes() : endDate.getMinutes()
+      }`;
   };
 
   return (
@@ -294,7 +294,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
         <div className={s.container}>
           <button onClick={() => setIsAppointmentModalOpen(true)}>
             <HiOutlinePlusSm className="h-5 w-5" />
-            &nbsp;Add
+            &nbsp;{t("current_day.add")}
           </button>
 
           <div className={s.timeSlotsContainer}>
@@ -306,9 +306,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                   ?.map((item, i) => (
                     <div
                       key={i}
-                      className={`${s.appointment} ${
-                        +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 && "text-xs"
-                      }`}
+                      className={`${s.appointment} ${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 && "text-xs"
+                        }`}
                       style={{
                         top: item.startDate.getMinutes() + "px",
                         height: calculateItemHeight(item),
@@ -316,11 +315,10 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                     >
                       <div className={s.content}>
                         <HiOutlineClipboardList
-                          className={`${
-                            +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
-                          }`}
+                          className={`${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
+                            }`}
                         />
-                        <p>Empty Slot</p>
+                        <p>{t("current_day.empty")}</p>
                         <span>({renderTime(item)})</span>
                       </div>
 
@@ -344,9 +342,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                               <Menu.Item>
                                 {({ active }) => (
                                   <button
-                                    className={`${
-                                      active ? "bg-slate-100 text-primary" : "text-primary"
-                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                    className={`${active ? "bg-slate-100 text-primary" : "text-primary"
+                                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                     onClick={() => handleEditModalOpen(item)}
                                   >
                                     {active ? (
@@ -362,9 +359,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                               <Menu.Item>
                                 {({ active }) => (
                                   <button
-                                    className={`${
-                                      active ? "bg-slate-100 text-primary" : "text-primary"
-                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                    className={`${active ? "bg-slate-100 text-primary" : "text-primary"
+                                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                     onClick={() => openDeleteAppointmentModal(item)}
                                   >
                                     {active ? (
@@ -437,9 +433,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
               <div className={s.formFields}>
                 <input
-                  className={`${
-                    errors.endHour || customErrorMessage ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"
-                  }`}
+                  className={`${errors.endHour || customErrorMessage ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"
+                    }`}
                   type="number"
                   min={0}
                   minLength={0}

@@ -2,8 +2,10 @@ import React, { FC, Fragment, useEffect } from "react";
 import s from "./DarkModeSwitcher.module.scss";
 import { HiOutlineSun } from "react-icons/hi";
 import { Menu, Transition } from "@headlessui/react";
+import { useTranslation } from "react-i18next";
 
 const DarkModeSwitcher: FC = () => {
+  const { t } = useTranslation();
   useEffect(() => {
     if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
       document.documentElement.classList.remove("light");
@@ -59,7 +61,7 @@ const DarkModeSwitcher: FC = () => {
                   className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   onClick={() => changeTheme("system")}
                 >
-                  System
+                  {t("dark_mode.system")}
                 </button>
               )}
             </Menu.Item>
@@ -69,7 +71,7 @@ const DarkModeSwitcher: FC = () => {
                   className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   onClick={() => changeTheme("dark")}
                 >
-                  Dark
+                  {t("dark_mode.dark")}
                 </button>
               )}
             </Menu.Item>
@@ -79,7 +81,7 @@ const DarkModeSwitcher: FC = () => {
                   className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   onClick={() => changeTheme("light")}
                 >
-                  Light
+                  {t("dark_mode.light")}
                 </button>
               )}
             </Menu.Item>
