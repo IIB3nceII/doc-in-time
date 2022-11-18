@@ -11,4 +11,5 @@ export default interface IUser extends User {
   isDoc: boolean;
   doc: IDoc;
   dateOfBirth: number;
+  clinics: any[];
 }
