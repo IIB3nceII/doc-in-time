@@ -8,10 +8,13 @@ import { IUser } from "./models";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppointmentFinder, Calendar, EditProfile, DocRegistration, Home, Login, PageNotFound, Register } from "./pages";
 import { clientsLoader } from "./utils/loaders";
+import { useTranslation } from "react-i18next";
 
 interface IAppProps extends StateProps, DispatchProps {}
 
 const App: FC<IAppProps> = ({ setUserSession }) => {
+  const { i18n } = useTranslation();
+
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -30,6 +33,14 @@ const App: FC<IAppProps> = ({ setUserSession }) => {
   ]);
 
   useEffect(() => {
+    const currentLang = localStorage.lang;
+
+    if (currentLang) {
+      i18n.changeLanguage(currentLang);
+    } else {
+      i18n.changeLanguage("en");
+    }
+
     auth.onAuthStateChanged((user) => {
       if (user) {
         setUserSession(user as IUser);

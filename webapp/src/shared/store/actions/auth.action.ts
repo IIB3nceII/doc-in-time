@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { ILoginFormData, IRegisterFormData, IUser } from "src/models";
 import { auth } from "src/utils/firebase/firebase.config";
+import { getImageByURL } from "src/utils/firebase/storage";
 
 /**
  * AUTH_ACTION_TYPE enum for auth actions.
@@ -64,10 +65,20 @@ export const setUserSession: (user: IUser) => void = (user: IUser) => async (dis
     localStorage.expirationTime = (user as any).stsTokenManager.expirationTime;
   }
 
-  dispatch({
-    type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
-    payload: user,
-  });
+  const img = null; // await getImageByURL("");
+
+  if (img) {
+    const acc = { ...user, imageUrl: img };
+    dispatch({
+      type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
+      payload: acc,
+    });
+  } else {
+    dispatch({
+      type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
+      payload: user,
+    });
+  }
 };
 
 /**
@@ -88,10 +99,20 @@ export const loginUserWithEmail: (data: ILoginFormData) => void = (data: ILoginF
     localStorage.accessToken = (user as any).stsTokenManager.accessToken;
     localStorage.expirationTime = (user as any).stsTokenManager.expirationTime;
 
-    dispatch({
-      type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
-      payload: user,
-    });
+    const img = null; // await getImageByURL("");
+
+    if (img) {
+      const acc = { ...user, imageUrl: img };
+      dispatch({
+        type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
+        payload: acc,
+      });
+    } else {
+      dispatch({
+        type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
+        payload: user,
+      });
+    }
   } catch (err) {
     dispatch({
       type: AUTH_ACTION_TYPE.LOGIN_FAIL,

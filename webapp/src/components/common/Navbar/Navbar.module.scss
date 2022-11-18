@@ -52,7 +52,7 @@ header {
       @apply relative inline-block text-left;
 
       .menuButton {
-        @apply flex w-full justify-center items-center mt-2 text-primary focus:outline-none;
+        @apply flex w-full justify-center items-center text-primary focus:outline-none;
       }
 
       .menuItems {
