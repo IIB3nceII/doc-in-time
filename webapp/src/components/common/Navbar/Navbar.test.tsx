@@ -163,13 +163,13 @@ describe('Render Navbar component with items', () => {
 		{
 			path: "/",
 			icon: <HiOutlineHome className="h-8 w-8" />,
-			title: "Home",
+			title_key: "navbar.home",
 			isActive: false,
 		},
 		{
 			path: "calendar",
 			icon: <HiOutlineCalendar className="h-8 w-8" />,
-			title: "Calendar",
+			title_key: "navbar.calendar",
 			isActive: false,
 		},
 	]

@@ -8,10 +8,12 @@ import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { registerUserWithEmail } from "../../shared/store/actions/auth.action";
 import LoadingDots from "../../components/ui/LoadingDots/LoadingDots";
+import { useTranslation } from "react-i18next";
 
-interface IRegisterProps extends StateProps, DispatchProps {}
+interface IRegisterProps extends StateProps, DispatchProps { }
 
 const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const {
     register,
@@ -25,7 +27,7 @@ const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
     if (auth.account?.uid) {
       navigate("/edit-profile");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   const onLoginSubmit = (data: IRegisterFormData): void => registerUserWithEmail(data);
@@ -35,30 +37,30 @@ const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail }) => {
       <img src={Logo} alt="logo" />
       <form onSubmit={handleSubmit(onLoginSubmit)}>
         <div className={s.formField}>
-          <label>First Name</label>
+          <label>{t("register.first_name")}</label>
           <input type="text" {...register("firstName", { required: true })} aria-invalid={errors.firstName ? "true" : "false"} />
           {errors.firstName?.type === "required" && <p>{errors.firstName?.message}</p>}
         </div>
 
         <div className={s.formField}>
-          <label>Last Name</label>
+          <label>{t("register.last_name")}</label>
           <input type="text" {...register("lastName", { required: true })} aria-invalid={errors.lastName ? "true" : "false"} />
           {errors.lastName?.type === "required" && <p>{errors.lastName?.message}</p>}
         </div>
 
         <div className={s.formField}>
-          <label>Email</label>
+          <label>{t("register.email")}</label>
           <input type="email" {...register("email", { required: true })} aria-invalid={errors.email ? "true" : "false"} />
           {errors.email?.type === "required" && <p>{errors.email?.message}</p>}
         </div>
 
         <div className={s.formField}>
-          <label>Password</label>
+          <label>{t("register.password")}</label>
           <input type="password" {...register("password", { required: true })} aria-invalid={errors.password ? "true" : "false"} />
           {errors.password?.type === "required" && <p>{errors.password?.message}</p>}
         </div>
         <button type="submit" disabled={auth.loading}>
-          Register
+          {t("register.register")}
           {auth.loading && <LoadingDots />}
         </button>
       </form>

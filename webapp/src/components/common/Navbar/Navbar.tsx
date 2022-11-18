@@ -50,13 +50,13 @@ const NavbarComponent: FC<INavbarProps> = ({
           </Link>
           <nav>
             <ul>
-              {items?.map(({ isActive, path, title }, i) => (
+              {items?.map(({ isActive, path, title_key }, i) => (
                 <li
                   key={i}
                   className={`${isActive ? "text-blue" : "text-primary"} ${!isActive && "dark:text-white"}`}
                   onClick={() => setCurrentTab(path)}
                 >
-                  <Link to={path}>{title}</Link>
+                  <Link to={path}>{t(title_key)}</Link>
                 </li>
               ))}
             </ul>
@@ -65,7 +65,7 @@ const NavbarComponent: FC<INavbarProps> = ({
 
         <div className={s.sideNav}>
           <div id="navbar_search" className={s.search} onClick={() => setIsSearchAreaOpen(true)}>
-            <p>Search...</p>
+            <p>{t('navbar.search')}</p>
             <HiOutlineSearch className={s.icon} />
           </div>
 
@@ -96,7 +96,7 @@ const NavbarComponent: FC<INavbarProps> = ({
                             to={"/edit-profile"}
                             className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                           >
-                            Edit profile
+                            {t('navbar.edit_profile')}
                           </Link>
                         )}
                       </Menu.Item>
@@ -106,7 +106,7 @@ const NavbarComponent: FC<INavbarProps> = ({
                             className={`${active ? "bg-slate-200" : "text-primary"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                             onClick={() => logOutUser()}
                           >
-                            Log out
+                            {t('navbar.logout')}
                           </button>
                         )}
                       </Menu.Item>
@@ -116,7 +116,7 @@ const NavbarComponent: FC<INavbarProps> = ({
               </Menu>
             ) : (
               <Link id="navbar_login" to="/login">
-                <p className={s.login}>Log in</p>
+                <p className={s.login}>{t('navbar.login')}</p>
               </Link>
             )}
             <ul className="flex space-x-2 divide-x text-primary dark:text-white">

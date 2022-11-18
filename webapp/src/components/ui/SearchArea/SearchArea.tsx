@@ -4,6 +4,7 @@ import { HiOutlineSearch, HiOutlineX } from "react-icons/hi";
 import { setIsSearchAreaOpen } from "../../../shared/store/actions/ui.action";
 import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
+import { useTranslation } from "react-i18next";
 
 interface ISearchAreaProps extends StateProps, DispatchProps { }
 
@@ -11,6 +12,7 @@ const SearchArea: FC<ISearchAreaProps> = ({ setIsSearchAreaOpen }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, startTransition] = useTransition();
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const { t } = useTranslation();
 
   const handleSearchInputChange = (input: string) => {
     startTransition(() => {
@@ -27,7 +29,7 @@ const SearchArea: FC<ISearchAreaProps> = ({ setIsSearchAreaOpen }) => {
       <div className={s.searchContainer} onClick={(e) => e.stopPropagation()}>
         <div className={s.search}>
           <HiOutlineX className={s.icon} onClick={() => setSearchKeyword("")} />
-          <input type="text" placeholder="Search..." value={searchKeyword} onChange={(e) => handleSearchInputChange(e.target.value)} />
+          <input type="text" placeholder={`${t('navbar.search')}`} value={searchKeyword} onChange={(e) => handleSearchInputChange(e.target.value)} />
           <HiOutlineSearch className={s.icon} onClick={() => handleSearch()} />
         </div>
       </div>

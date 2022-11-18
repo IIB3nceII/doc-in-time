@@ -2,5 +2,81 @@
   "hero": {
     "title": "Doc just in",
     "time": "Time"
+  },
+  "introduction": {
+    "title": "Our mission",
+    "card_1": {
+      "title": "All doctors, One site",
+      "description": "Does it also bother you that you can't book with <b>several</b> doctors on the <b>same</b> page? <br /> With <b>Doc in Time</b>, you can book an appointment at <b>any</b> hospital in the country, <b>conveniently</b>, even from your <b>home</b>."
+    },
+    "card_2": {
+      "title": "Quick reservations",
+      "description": "Just need a <b>prescription</b>? <br /> <br /> <b>Doc in Time</b> provides you numerous reservation type with each available doctor. <b>Book</b> an appointment with your GP in no time and <b>reduce</b> your <b>queue time</b>."
+    },
+    "card_3": {
+      "title": "User-friendly design",
+      "description": "Tired of useless, <b>unreadable</b> government <b>sites</b> where you can <b>never</b> find anything? <br />  <b>Doc in Time </b> is designed to be easy to use by anyone of any age. It only takes a few clicks to make a <b>reservation</b>, which can be easily <b>modified</b> later."
+    }
+  },
+  "contact": {
+    "title": "Contact us"
+  },
+  "navbar": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "finder": "Finder",
+    "search": "Search...",
+    "edit_profile": "Edit profile",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "current_day": {
+    "add": "Add",
+    "empty": "Empty slot"
+  },
+  "finder": {
+    "card_1": {
+      "title": "What's the problem?",
+      "description": {
+        "title": "Problem Description",
+        "link": "Read more"
+      }
+    },
+    "card_2": {
+      "title": "Problem Description",
+      "loading": "Map is loading...",
+      "maps": "See on Google Maps"
+    },
+    "card_3": {
+      "get_app": "Getting appointments...",
+      "no_app": "No available appointments"
+    },
+    "form": {
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "taj": "TAJ Number",
+      "submit": "Submit"
+    }
+  },
+  "dark_mode": {
+    "system": "System",
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "login": {
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "no_acc": "Do not have an account yet?",
+    "forgot_pass": "Forgot your password?"
+  },
+  "register": {
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email",
+    "password": "Password",
+    "register": "Register"
   }
 }
