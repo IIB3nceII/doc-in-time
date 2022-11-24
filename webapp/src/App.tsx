@@ -26,7 +26,7 @@ const App: FC<IAppProps> = ({ setUserSession }) => {
         { path: "/edit-profile", element: <EditProfile /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
-        { path: "/doc-form", element: <DocRegistration clinics={[]} /> },
+        { path: "/doc-form", element: <DocRegistration />,loader: clientsLoader },
         { path: "*", element: <PageNotFound /> },
       ],
     },
