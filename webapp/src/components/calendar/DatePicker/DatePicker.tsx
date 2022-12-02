@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useEffect } from "react";
+import React, { FC } from "react";
 import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { HiOutlineCheck, HiOutlineChevronDown } from "react-icons/hi";
