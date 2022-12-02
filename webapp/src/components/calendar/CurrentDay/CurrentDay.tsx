@@ -331,7 +331,13 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                           <span>({renderTime(item)})</span>
                         </div>
                       ) : (
-                        <div className={s.content}>
+                        <div
+                          className={s.content}
+                          style={{
+                            color: findClinicColor(item?.clinic?.clinicName),
+                            backgroundColor: item?.clinic?.clinicName ? "white" : "",
+                          }}
+                        >
                           <HiOutlineClipboardList
                             className={`${
                               +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
