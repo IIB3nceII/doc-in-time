@@ -11,4 +11,5 @@ export default interface IAppointmentSlot {
   endDate: Date;
   isReserved?: boolean;
   patient?: any;
+  clinic?: any;
 }

@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { ILoginFormData, IRegisterFormData, IUser } from "src/models";
 import { auth } from "src/utils/firebase/firebase.config";
+import { getUserById } from "src/utils/firebase/firestore";
 import { getImageByURL } from "src/utils/firebase/storage";
 
 /**
@@ -66,9 +67,10 @@ export const setUserSession: (user: IUser) => void = (user: IUser) => async (dis
   }
 
   const img = null; // await getImageByURL("");
+  const userDetails = await getUserById(user.uid);
 
-  if (img) {
-    const acc = { ...user, imageUrl: img };
+  if (userDetails) {
+    const acc = { ...user, imageUrl: img, ...userDetails };
     dispatch({
       type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
       payload: acc,

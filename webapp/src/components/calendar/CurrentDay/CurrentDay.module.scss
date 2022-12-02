@@ -17,7 +17,7 @@
       }
 
       .appointment {
-        @apply flex items-center absolute left-14 w-3/4 z-10;
+        @apply flex items-center absolute left-14 w-3/4;
 
         .content {
           @apply flex justify-center items-center h-full w-full text-slate-400 font-semibold bg-slate-200 border-2 border-slate-400 border-dashed rounded-xl;
@@ -27,15 +27,23 @@
           }
         }
 
+        .reservedContent {
+          @apply flex justify-center items-center h-full w-full font-semibold border-2 rounded-xl;
+
+          > span {
+            @apply font-bold tracking-tighter;
+          }
+        }
+
         .menu {
-          @apply relative justify-self-end text-2xl inline-block text-left text-slate-400;
+          @apply relative justify-self-end self-start text-2xl inline-block text-left text-slate-400;
 
           .menuButton {
             @apply flex justify-center text-2xl font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75;
           }
 
           .menuItems {
-            @apply absolute left-0 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg focus:outline-none;
+            @apply absolute left-0 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg z-50 focus:outline-none;
           }
         }
       }
