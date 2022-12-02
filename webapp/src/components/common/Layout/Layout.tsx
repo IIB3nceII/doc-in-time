@@ -15,33 +15,33 @@ const navBarItems: INavBarItem[] = [
   {
     path: "/",
     icon: <HiOutlineHome className="h-8 w-8" />,
-    title: "Home",
+    title_key: "navbar.home",
     isActive: false,
   },
-  {
+  /*{
     path: "/",
     icon: <HiOutlineUsers className="h-8 w-8" />,
-    title: "Home",
+    title_key: "navbar.home",
     isActive: false,
-  },
+  },*/
   {
     path: "calendar",
     icon: <HiOutlineCalendar className="h-8 w-8" />,
-    title: "Calendar",
+    title_key: "navbar.calendar",
     isActive: false,
   },
   {
     path: "appointment-finder",
     icon: <HiOutlineIdentification className="h-8 w-8" />,
-    title: "Finder",
+    title_key: "navbar.finder",
     isActive: false,
   },
-  {
+  /*{
     path: "/",
     icon: <HiOutlineCog className="h-8 w-8" />,
-    title: "Home",
+    title_key: "navbar.home",
     isActive: false,
-  },
+  },*/
 ];
 
 const Layout: FC<ILayoutProps> = ({ children }) => {
