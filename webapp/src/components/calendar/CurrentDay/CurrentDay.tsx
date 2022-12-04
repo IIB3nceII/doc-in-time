@@ -1,13 +1,21 @@
 import { FC, Fragment, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
+import { IAppointmentSlot, IClinic, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
-import { HiOutlinePlusSm, HiOutlineClipboardList, HiOutlineDotsVertical, HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
+import {
+  HiOutlinePlusSm,
+  HiOutlineClipboardList,
+  HiOutlineDotsVertical,
+  HiOutlinePencil,
+  HiOutlineTrash,
+  HiOutlineCheck,
+  HiOutlineChevronDown,
+} from "react-icons/hi";
 import { addNewAppointment, deleteDocAppointment, editDocAppointment, getDocAppointments } from "src/utils/firebase/firestore";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
-import { Menu, Transition } from "@headlessui/react";
+import { Listbox, Menu, Transition } from "@headlessui/react";
 import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
 import { ContentLoading } from "src/components/common";
 import { useTranslation } from "react-i18next";
@@ -75,6 +83,11 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
    */
   const [customErrorMessage, setCustomErrorMessage] = useState<string | null>(null);
 
+  const [clinics, setClinics] = useState<{ clinicId: string; clinicName: string; color: string }[]>(auth?.account?.doc?.clinics || []);
+  const [selectedClinic, setSelectedClinic] = useState<{ clinicId: string; clinicName: string; color: string } | null>(
+    auth?.account?.doc?.clinics?.length ? auth?.account?.doc?.clinics[0] : null
+  );
+
   /**
    * It serializeAppointments on mount.
    * @lifecycleHook
@@ -83,6 +96,11 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     serializeAppointments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth, selectedYear, selectedMonth, selectedDay]);
+
+  useEffect(() => {
+    setClinics(auth?.account?.doc?.clinics || []);
+    setSelectedClinic(auth?.account?.doc?.clinics?.length ? auth?.account?.doc?.clinics[0] : null);
+  }, [auth]);
 
   /**
    * Sets isEditActive to false if isAppointmentModalOpen is false.
@@ -104,10 +122,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       setIsLoading(false);
       if (appointments?.length) {
         const filtered = appointments.filter(
-          (appointment) =>
-            appointment.startDate.getFullYear() === selectedYear &&
-            MONTHS.findIndex((m) => m === selectedMonth) + 1 === appointment.startDate.getMonth() &&
-            appointment.startDate.getDate() === selectedDay
+          ({ startYear, startMonth, startDay }) =>
+            startYear === selectedYear && MONTHS.findIndex((m) => m === selectedMonth) + 1 === startMonth && startDay === selectedDay
         );
 
         setAppointmentSlots(filtered);
@@ -141,9 +157,21 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     if (startHour <= endHour) {
       setCustomErrorMessage(null);
 
-      const start = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +startHour, +startMinutes);
+      const start = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +startHour,
+        +startMinutes
+      );
 
-      const end = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +endHour, +endMinutes);
+      const end = new Date(
+        selectedYear,
+        MONTHS.findIndex((m) => m === selectedMonth),
+        selectedDay,
+        +endHour,
+        +endMinutes
+      );
 
       if (auth.account?.uid) {
         setIsLoading(true);
@@ -154,6 +182,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
           startDay: selectedDay,
           startDate: start,
           endDate: end,
+          clinic: selectedClinic,
         });
         setIsLoading(false);
       }
@@ -185,6 +214,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
           startDay: selectedDay,
           startDate: start,
           endDate: end,
+          clinic: selectedClinic,
         });
         setIsLoading(false);
       }
@@ -287,6 +317,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       } - ${endDate.getHours() < 10 ? "0" + endDate.getHours() : endDate.getHours()}:${endDate.getMinutes() < 10 ? "0" + endDate.getMinutes() : endDate.getMinutes()
       }`;
   };
+  const findClinicColor = (clinicName: string): string => `${auth.account?.doc?.clinics?.find((q) => q.clinicName === clinicName)?.color}`;
 
   return (
     <>
@@ -313,15 +344,28 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                         height: calculateItemHeight(item),
                       }}
                     >
-                      <div className={s.content}>
-                        <HiOutlineClipboardList
-                          className={`${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
+                      {item.isReserved ? (
+                        <div className={s.reservedContent} style={{ color: findClinicColor(item.clinic.clinicName) }}>
+                          <p>{item.patient?.fullName}</p>
+                          <span>({renderTime(item)})</span>
+                        </div>
+                      ) : (
+                        <div
+                          className={s.content}
+                          style={{
+                            color: findClinicColor(item?.clinic?.clinicName),
+                            backgroundColor: item?.clinic?.clinicName ? "white" : "",
+                          }}
+                        >
+                          <HiOutlineClipboardList
+                            className={`${
+                              +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
                             }`}
-                        />
-                        <p>{t("current_day.empty")}</p>
-                        <span>({renderTime(item)})</span>
-                      </div>
-
+                          />
+                          <p>Empty Slot</p>
+                          <span>({renderTime(item)})</span>
+                        </div>
+                      )}
                       <Menu as="div" className={s.menu}>
                         <div>
                           <Menu.Button className={s.menuButton}>
@@ -387,6 +431,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
           </div>
         </div>
       </Suspense>
+
       {isAppointmentModalOpen && (
         <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>
@@ -473,6 +518,45 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
               </div>
 
               {customErrorMessage && <p className="self-center text-sm text-rose-500 whitespace-nowrap">{customErrorMessage}</p>}
+
+              {!isEditActive && (
+                <div className={s.formFields}>
+                  <Listbox {...register("clinic")} value={selectedClinic} onChange={setSelectedClinic}>
+                    <div className="relative mt-1 w-full">
+                      <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                        <span className="block truncate">{selectedClinic?.clinicName || "Select a clinic"}</span>
+                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                          <HiOutlineChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </span>
+                      </Listbox.Button>
+                      <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                        <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                          {clinics.map((clinic: any, i: number) => (
+                            <Listbox.Option
+                              key={i}
+                              className={({ active }) =>
+                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-sky-300 text-white" : "text-gray-900"}`
+                              }
+                              value={clinic}
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{clinic?.clinicName}</span>
+                                  {selected ? (
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue">
+                                      <HiOutlineCheck className="h-5 w-5" aria-hidden="true" />
+                                    </span>
+                                  ) : null}
+                                </>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </Transition>
+                    </div>
+                  </Listbox>
+                </div>
+              )}
 
               <div className={s.buttons}>
                 <button onClick={(e) => handleCancelNewAppointment(e)}>Cancel</button>

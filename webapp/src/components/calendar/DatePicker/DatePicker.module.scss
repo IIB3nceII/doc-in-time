@@ -1,5 +1,5 @@
 .container {
-  @apply flex flex-col w-full;
+  @apply flex flex-col w-full lg:flex-row lg:space-x-4;
 
   .listboxContainer {
     @apply flex w-full space-x-4 mt-8 md:w-72;

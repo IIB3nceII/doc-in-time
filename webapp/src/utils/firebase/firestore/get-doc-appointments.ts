@@ -10,7 +10,7 @@ import { db } from "../firebase.config";
  */
 const getDocAppointments = async (userId: string): Promise<IAppointmentSlot[] | void> => {
   try {
-    const q = query(collection(db, "appointmentSlots"), where("userId", "==", userId));
+    const q = query(collection(db, "appointmentSlots"), where("doc", "==", userId));
     const querySnapShot = await getDocs(q);
     const appointments: IAppointmentSlot[] = [];
     querySnapShot?.forEach((doc) => {
@@ -22,6 +22,9 @@ const getDocAppointments = async (userId: string): Promise<IAppointmentSlot[] | 
         startDay: doc.data().startDay,
         startDate: new Date((doc.data().startDate as Timestamp).toDate()),
         endDate: new Date((doc.data().endDate as Timestamp).toDate()),
+        patient: doc.data().patient,
+        isReserved: doc.data().isReserved,
+        clinic: doc.data().clinic,
       });
     });
 
