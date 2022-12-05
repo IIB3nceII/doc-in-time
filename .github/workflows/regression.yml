@@ -2,7 +2,7 @@ name: Regression
 
 on:
   pull_request:
-    branches: [ develop, DIT06 ]
+    branches: [ develop ]
 
   workflow_dispatch:
 
