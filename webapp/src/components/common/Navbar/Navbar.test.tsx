@@ -223,7 +223,7 @@ describe('Render Navbar component with items', () => {
 		expect(element).not.toBe(null);
 	})
 
-	test("#navbar_item_0 rendered properly", () => {
+	/*test("#navbar_home rendered properly", () => {
 		const { container } = render(
 			<Provider store={store}>
 				<BrowserRouter>
@@ -232,11 +232,11 @@ describe('Render Navbar component with items', () => {
 			</Provider>
 		);
 
-		const element = container.querySelector('#navbar_item_0');
+		const element = container.querySelector('#navbar_home');
 		expect(element).not.toBe(null);
 	})
 
-	test("#navbar_item_1 rendered properly", () => {
+	test("#navbar_calendar rendered properly", () => {
 		const { container } = render(
 			<Provider store={store}>
 				<BrowserRouter>
@@ -245,9 +245,22 @@ describe('Render Navbar component with items', () => {
 			</Provider>
 		);
 
-		const element = container.querySelector('#navbar_item_1');
+		const element = container.querySelector('#navbar_calendar');
 		expect(element).not.toBe(null);
 	})
+
+	test("#navbar_finder rendered properly", () => {
+		const { container } = render(
+			<Provider store={store}>
+				<BrowserRouter>
+					<Navbar items={navbarItems} setCurrentTab={() => { }} />
+				</BrowserRouter>
+			</Provider>
+		);
+
+		const element = container.querySelector('#navbar_finder');
+		expect(element).not.toBe(null);
+	})*/
 
 	test("#navbar_search rendered properly", () => {
 		const { container } = render(
