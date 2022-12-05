@@ -21,9 +21,10 @@ jobs:
         run: cd webapp; CI=false npm run build
       - name: Run tests
         run: cd webapp; CI=false npm test
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: "webapp"
+        with:
+          env:
+            FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+            PROJECT_PATH: "webapp"
   
   runtests:
     name: Run tests
