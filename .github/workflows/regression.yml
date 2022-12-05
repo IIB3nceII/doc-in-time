@@ -19,6 +19,8 @@ jobs:
         run: cd webapp; npm ci
       - name: Build the project
         run: cd webapp; CI=false npm run build
+      - name: Run tests
+        run: cd webapp; CI=false npm test
   
   runtests:
     name: Run tests
@@ -28,5 +30,4 @@ jobs:
         uses: actions/checkout@master
         with:
             ref: ${{ github.ref }}
-      - name: Run tests
-        run: cd webapp; CI=false npm test a
+      
