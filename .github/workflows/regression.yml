@@ -2,7 +2,7 @@ name: Regression
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, DIT06 ]
 
   workflow_dispatch:
 
@@ -19,3 +19,11 @@ jobs:
         run: cd webapp; npm ci
       - name: Build the project
         run: cd webapp; CI=false npm run build
+  
+  runtests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run Jest
+        uses: stefanoeb/jest-action@1.0.3
