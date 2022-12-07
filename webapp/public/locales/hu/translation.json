@@ -70,20 +70,22 @@
     "password": "Jelszó",
     "login": "Belépés",
     "no_acc": "Nincs még fiókod?",
-    "forgot_pass": "Elfelejtetted a jelszavad?"
+    "forgot_pass": "Elfelejtetted a jelszavad?",
+    "taj_number": "Taj szám"
   },
   "register": {
     "first_name": "Keresztnév",
     "last_name": "Vezetéknév",
     "email": "Email",
     "password": "Jelszó",
-    "register": "Regisztráció"
+    "register": "Regisztráció",
+    "taj_number": "Taj szám"
   },
   "profile": {
-    "first_name": "Keresztnév",
-    "last_name": "Vezetéknév",
+    "first_name": "First name",
+    "last_name": "Last name",
     "email": "Email",
-    "phone": "Telefonszám",
-    "taj": "Taj szám"
+    "phone": "Phone number",
+    "taj": "Taj number"
   }
 }
