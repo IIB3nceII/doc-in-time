@@ -5,4 +5,5 @@ export default interface INavBarItem {
   icon: ReactNode;
   title_key: string;
   isActive: boolean;
+  isDoc: boolean | undefined;
 }

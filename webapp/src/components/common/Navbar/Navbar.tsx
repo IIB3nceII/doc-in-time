@@ -1,4 +1,4 @@
-import React, { FC, Fragment, memo, useEffect } from "react";
+import React, { FC, Fragment, memo, useEffect, useState } from "react";
 import s from "./Navbar.module.scss";
 import { HiOutlineSearch, HiOutlineUserCircle, HiOutlineLogin } from "react-icons/hi";
 import { DarkModeSwitcher, SearchArea, Tooltip } from "../../ui";
@@ -11,6 +11,9 @@ import Logo from "../../../assets/images/logo.png";
 import { Menu, Transition } from "@headlessui/react";
 import { INavBarItem } from "src/models";
 import { useTranslation } from "react-i18next";
+import { auth } from "src/utils/firebase/firebase.config";
+import { onAuthStateChanged } from "firebase/auth";
+import { getUserById } from "src/utils/firebase/firestore";
 
 interface INavbarProps extends StateProps, DispatchProps {
   items: INavBarItem[];
@@ -27,9 +30,18 @@ const NavbarComponent: FC<INavbarProps> = ({
 }) => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const [userIsDoc, setUserIsDoc] = useState<boolean>(false);
 
   useEffect(() => {
     setCurrentTab(location.pathname.split("/")[1]);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDoc = await getUserById(user.uid)
+        if (userDoc) {
+          setUserIsDoc(userDoc.isDoc)
+        }
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,16 +62,19 @@ const NavbarComponent: FC<INavbarProps> = ({
           </Link>
           <nav>
             <ul>
-              {items?.map(({ isActive, path, title_key }, i) => (
-                <li   
-                  key={i}
-                  className={`${isActive ? "text-blue" : "text-primary"} ${!isActive && "dark:text-white"}`}
-                  onClick={() => setCurrentTab(path)}
-                  id={"navbar_" + t(title_key).toLowerCase()}
-                >
-                  <Link to={path}>{t(title_key)}</Link>
-                </li>
-              ))}
+              {items?.map(({ isActive, path, title_key, isDoc }, i) => {
+                if (isDoc && !userIsDoc) { return null }
+                return (
+                  <li
+                    key={i}
+                    className={`${isActive ? "text-blue" : "text-primary"} ${!isActive && "dark:text-white"}`}
+                    onClick={() => setCurrentTab(path)}
+                    id={"navbar_" + t(title_key).toLowerCase()}
+                  >
+                    <Link to={path}>{t(title_key)}</Link>
+                  </li>
+                )
+              })}
             </ul>
           </nav>
         </div>
