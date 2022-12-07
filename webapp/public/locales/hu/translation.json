@@ -78,5 +78,12 @@
     "email": "Email",
     "password": "Jelszó",
     "register": "Regisztráció"
+  },
+  "profile": {
+    "first_name": "Keresztnév",
+    "last_name": "Vezetéknév",
+    "email": "Email",
+    "phone": "Telefonszám",
+    "taj": "Taj szám"
   }
 }
