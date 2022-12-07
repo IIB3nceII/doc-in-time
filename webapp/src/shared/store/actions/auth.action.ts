@@ -1,8 +1,10 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { ILoginFormData, IRegisterFormData, IUser } from "src/models";
-import { auth } from "src/utils/firebase/firebase.config";
+import ILoginTajFormData from "src/models/login-taj-form-data.model";
+import IRegisterTajFormData from "src/models/register-taj-form-data.model";
+import { auth, db } from "src/utils/firebase/firebase.config";
 import { getUserById } from "src/utils/firebase/firestore";
-import { getImageByURL } from "src/utils/firebase/storage";
 
 /**
  * AUTH_ACTION_TYPE enum for auth actions.
@@ -38,6 +40,22 @@ export const registerUserWithEmail: (data: IRegisterFormData) => void = (data: I
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, {
+        displayName: firstName + " " + lastName,
+      })
+
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: '',
+        tajNumber: '',
+        isDoc: false,
+        doc: {}
+      });
+    }
+
     localStorage.refreshToken = (user as any).stsTokenManager.refreshToken;
     localStorage.accessToken = (user as any).stsTokenManager.accessToken;
     localStorage.expirationTime = (user as any).stsTokenManager.expirationTime;
@@ -45,6 +63,45 @@ export const registerUserWithEmail: (data: IRegisterFormData) => void = (data: I
     dispatch({
       type: AUTH_ACTION_TYPE.REGISTER_SUCCESS,
       payload: { ...user, firstName, lastName },
+    });
+  } catch (err) {
+    dispatch({
+      type: AUTH_ACTION_TYPE.REGISTER_FAIL,
+      payload: `Registration failed with error: ${err}`,
+    });
+  }
+};
+
+
+export const registerUserWithTajNumber: (data: IRegisterTajFormData) => void = (data: IRegisterTajFormData) => async (dispatch: any) => {
+  const { taj_number } = data;
+
+  dispatch({
+    type: AUTH_ACTION_TYPE.REGISTER,
+  });
+
+  try {
+    const { user } = await createUserWithEmailAndPassword(auth, taj_number + '@dit.com', 'pass_' + taj_number + '_word');
+
+    if (auth.currentUser) {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        tajNumber: taj_number,
+        isDoc: false,
+        doc: {}
+      });
+    }
+
+    localStorage.refreshToken = (user as any).stsTokenManager.refreshToken;
+    localStorage.accessToken = (user as any).stsTokenManager.accessToken;
+    localStorage.expirationTime = (user as any).stsTokenManager.expirationTime;
+
+    dispatch({
+      type: AUTH_ACTION_TYPE.REGISTER_SUCCESS,
+      payload: { ...user },
     });
   } catch (err) {
     dispatch({
@@ -96,6 +153,42 @@ export const loginUserWithEmail: (data: ILoginFormData) => void = (data: ILoginF
 
   try {
     const { user } = await signInWithEmailAndPassword(auth, email, password);
+
+    localStorage.refreshToken = (user as any).stsTokenManager.refreshToken;
+    localStorage.accessToken = (user as any).stsTokenManager.accessToken;
+    localStorage.expirationTime = (user as any).stsTokenManager.expirationTime;
+
+    const img = null; // await getImageByURL("");
+
+    if (img) {
+      const acc = { ...user, imageUrl: img };
+      dispatch({
+        type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
+        payload: acc,
+      });
+    } else {
+      dispatch({
+        type: AUTH_ACTION_TYPE.LOGIN_SUCCESS,
+        payload: user,
+      });
+    }
+  } catch (err) {
+    dispatch({
+      type: AUTH_ACTION_TYPE.LOGIN_FAIL,
+      payload: `Loh in failed with error: ${err}`,
+    });
+  }
+};
+
+export const loginUserWithTaj: (data: ILoginTajFormData) => void = (data: ILoginTajFormData) => async (dispatch: any) => {
+  const { taj_number } = data;
+
+  dispatch({
+    type: AUTH_ACTION_TYPE.LOGIN,
+  });
+
+  try {
+    const { user } = await signInWithEmailAndPassword(auth, taj_number + '@dit.com', 'pass_' + taj_number + '_word');
 
     localStorage.refreshToken = (user as any).stsTokenManager.refreshToken;
     localStorage.accessToken = (user as any).stsTokenManager.accessToken;
