@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 
-const getUserById = async (userId: string): Promise<any> => {
+const getUserById = async (userId: string) => {
   try {
     if (userId) {
       const userRef = await doc(db, "users", userId.trim());

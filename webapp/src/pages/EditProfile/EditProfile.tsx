@@ -8,7 +8,7 @@ const EditProfile: FC = () => {
     <div className={s.container}>
       <ProfileEditor />
 
-      <section className={s.docForm}>
+      <section className={s.docForm} style={{textAlign: "center", paddingTop: "10em", fontSize : "14pt" }}>
         <Link className="text-primary hover:underline dark:text-white" to={"/doc-form"}>
           I am a doctor
         </Link>
