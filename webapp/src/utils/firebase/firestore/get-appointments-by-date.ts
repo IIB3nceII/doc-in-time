@@ -7,7 +7,7 @@ import getDoctor from "./get-doctor";
 const getAppointmentsByDate = async (startYear: number, startMonth: number, startDay: number): Promise<IAppointmentSlot[] | void> => {
   try {
     const q = query(
-      collection(db, "appointmentSlots"),
+      collection(db, "appointments"),
       where("startYear", "==", startYear),
       where("startMonth", "==", startMonth),
       where("startDay", "==", startDay)
@@ -16,14 +16,13 @@ const getAppointmentsByDate = async (startYear: number, startMonth: number, star
     const appointments: IAppointmentSlot[] = [];
     querySnapShot?.forEach((doc) => {
       appointments.push({
-        id: doc.id,
-        doc: doc.data().doc,
-        startYear: doc.data().startYear,
-        startMonth: doc.data().startMonth,
-        startDay: doc.data().startDay,
+        doc: doc.data().userId,
         startDate: new Date((doc.data().startDate as Timestamp).toDate()),
         endDate: new Date((doc.data().endDate as Timestamp).toDate()),
-        isReserved: doc.data().isReserved,
+        patient: doc.data().patient,
+        problem: doc.data().problem,
+        confirmed: doc.data().isReserved,
+        clinic: doc.data().clinic,
       });
     });
 

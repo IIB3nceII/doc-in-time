@@ -122,8 +122,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       setIsLoading(false);
       if (appointments?.length) {
         const filtered = appointments.filter(
-          ({ startYear, startMonth, startDay }) =>
-            startYear === selectedYear && MONTHS.findIndex((m) => m === selectedMonth) + 1 === startMonth && startDay === selectedDay
+          ({ startDate }) =>
+            startDate.getFullYear() === selectedYear && startDate.getMonth() === MONTHS.findIndex((m) => m === selectedMonth) + 1 && selectedDay === startDate.getDate()
         );
 
         setAppointmentSlots(filtered);
@@ -173,7 +173,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
         +endMinutes
       );
 
-      if (auth.account?.uid) {
+      /*if (auth.account?.uid) {
         setIsLoading(true);
         await addNewAppointment({
           userId: auth.account?.uid,
@@ -185,7 +185,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
           clinic: selectedClinic,
         });
         setIsLoading(false);
-      }
+      }*/
 
       setIsAppointmentModalOpen(false);
 
@@ -205,19 +205,16 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
       const end = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +endHour, +endMinutes);
 
-      if (currentAppointmentSlot?.id) {
+      /*if (currentAppointmentSlot?.id) {
         setIsLoading(true);
         await editDocAppointment({
           id: currentAppointmentSlot.id,
-          startYear: selectedYear,
-          startMonth: MONTHS.findIndex((m) => m === selectedMonth) + 1,
-          startDay: selectedDay,
           startDate: start,
           endDate: end,
           clinic: selectedClinic,
         });
         setIsLoading(false);
-      }
+      }*/
 
       setIsAppointmentModalOpen(false);
       setIsEditActive(false);
@@ -344,7 +341,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                         height: calculateItemHeight(item),
                       }}
                     >
-                      {item.isReserved ? (
+                      {item.confirmed ? (
                         <div className={s.reservedContent} style={{ color: findClinicColor(item.clinic.clinicName) }}>
                           <p>{item.patient?.fullName}</p>
                           <span>({renderTime(item)})</span>

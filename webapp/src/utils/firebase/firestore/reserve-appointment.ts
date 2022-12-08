@@ -9,7 +9,7 @@ import { db } from "../firebase.config";
 const reserveAppointment = async (id: string, patient: string): Promise<void> => {
   try {
     if (id) {
-      const appointmentsRef = doc(db, "appointmentSlots", id);
+      const appointmentsRef = doc(db, "appointments", id);
       await updateDoc(appointmentsRef, {
         patient,
         isReserved: true,

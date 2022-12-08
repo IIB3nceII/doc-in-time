@@ -7,15 +7,14 @@ import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineClipboardList } from "r
 import { useNavigate } from "react-router-dom";
 import { useCalendar } from "src/shared/hooks";
 import { DatePicker } from "src/components/calendar";
-import { getAppointmentsByDate, reserveAppointment } from "src/utils/firebase/firestore";
+import { addNewAppointment, getAppointmentsByDate } from "src/utils/firebase/firestore";
 import { MONTHS } from "src/utils/constants";
 import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "src/utils/firebase/firebase.config";
-import { getImageByURL } from "src/utils/firebase/storage";
 
 interface FinderFormProps extends StateProps, DispatchProps {
   clinics: IClinic[];
@@ -45,8 +44,8 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
   const { years, selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDay, setSelectedDay } = useCalendar();
 
   const [appointmentSlots, setAppointmentSlots] = useState<object[]>([])
-  const [selectedProblem, setSelectedProblem] = useState<IIllness>(knowledges[0] || "Select a problem");
-  const [selectedClinic, setSelectedClinic] = useState<IClinic>(clinics[0] || "Select a clinic");
+  const [selectedProblem, setSelectedProblem] = useState<IIllness>(knowledges[0]);
+  const [selectedClinic, setSelectedClinic] = useState<IClinic>(clinics[0]);
   const [unavailableAppointments, setUnavailableAppointments] = useState<IAppointmentSlot[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<IAppointmentSlot | null>(null);
   //const [customAppointmentError, setCustomAppointmentError] = useState<string | null>(null);
@@ -60,17 +59,70 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
   useEffect(() => {
     const getData = async () => {
       setLoading(true)
-      const res = await getDocs(query(collection(db, "defaultAppointmentSlots")))
+      const res = await getDocs(query(collection(db, "users")))
 
       const data: object[] = []
       res.forEach(async (item) => {
         const d = item.data()
-        const dc = await getDoc(doc(db, 'users', d.doc))
-        const doc_data = dc.data()
-        if (doc_data) {
-          doc_data['imageUrl'] = await getImageByURL(doc_data.imageUrl)
+        if (d.isDoc) {
+          if (d.doc.clinics && d.doc.clinics.filter((clinic: any) => clinic.clinicId === selectedClinic.id).length > 0) {
+            if (d.doc.knowledges && d.doc.knowledges.includes(selectedProblem.id)) {
+              const doc_ranges = d.doc.ranges
+              if (doc_ranges) {
+                const selected_date = new Date(selectedYear + "-" + selectedMonth + "-" + selectedDay)
+                let startTime = '00:00:00'
+                let endTime = '00:00:00'
+                switch (selected_date.getDay()) {
+                  case 1:
+                    startTime = doc_ranges.monday_startTime
+                    endTime = doc_ranges.monday_endTime
+                    break;
+                  case 2:
+                    startTime = doc_ranges.tuesday_startTime
+                    endTime = doc_ranges.tuesday_endTime
+                    break;
+                  case 3:
+                    startTime = doc_ranges.wednesday_startTime
+                    endTime = doc_ranges.wednesday_endTime
+                    break;
+                  case 4:
+                    startTime = doc_ranges.thursday_startTime
+                    endTime = doc_ranges.thursday_endTime
+                    break;
+                  case 5:
+                    startTime = doc_ranges.friday_startTime
+                    endTime = doc_ranges.friday_endTime
+                    break;
+                  default:
+                    break;
+                }
+                const startDate = new Date(selected_date)
+                startDate.setHours(+startTime.split(':')[0])
+                startDate.setMinutes(+startTime.split(':')[1])
+                startDate.setSeconds(+startTime.split(':')[2])
+                const endDate = new Date(selected_date)
+                endDate.setHours(+endTime.split(':')[0])
+                endDate.setMinutes(+endTime.split(':')[1])
+                endDate.setSeconds(+endTime.split(':')[2])
+
+                const range = (doc_ranges.range * 60 * 1000)
+                const slots_count = Math.floor((endDate.getTime() - startDate.getTime()) / range)
+
+                for (let i = 0; i < slots_count; i++) {
+                  data.push({
+                    id: item.id + i,
+                    startDate: new Date(startDate.getTime() + (range * i)),
+                    endDate: new Date(startDate.getTime() + (range * (i + 1))),
+                    doc: {
+                      ...d,
+                      uid: item.id
+                    }
+                  })
+                }
+              }
+            }
+          }
         }
-        data.push({ id: item.id, ...d, doc: doc_data })
       })
       setAppointmentSlots(data)
     }
@@ -78,14 +130,13 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
     setInterval(() => {
       setLoading(false)
     }, 2000)
-  }, [])
+  }, [selectedYear, selectedMonth, selectedDay, selectedClinic, selectedProblem])
 
   useEffect(() => {
     getAppointmentsByDate(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay)
       .then((res) => {
         if (res) {
-          const filtered_res = res.filter(item => item.isReserved)
-          setUnavailableAppointments(filtered_res as IAppointmentSlot[])
+          setUnavailableAppointments(res as IAppointmentSlot[])
         }
       })
       .catch((err) => console.error(err));
@@ -108,18 +159,25 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
     setValue("selectedAppointment", appointment);
   };
 
-  const onSubmitAppointmentForm = (): void => {
-    if (!selectedAppointment) {
-      //setCustomAppointmentError("An appointment must be selected!");
-    } else {
-      setSubmitModalOpen(true);
-    }
-  };
-
   const createNewReservation = async (item: IAppointmentFormData): Promise<void> => {
     try {
       if (item.selectedAppointment?.id && auth?.account?.uid) {
-        await reserveAppointment(item.selectedAppointment.id, auth?.account?.uid);
+        console.log(item)
+        await addNewAppointment({
+          doc: item.selectedAppointment.doc.uid,
+          startDate: item.selectedAppointment.startDate,
+          endDate: item.selectedAppointment.endDate,
+          confirmed: false,
+          problem: item.selectedProblem.id,
+          patient: {
+            email: item.email,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            phone: item.phone,
+            taj: item.taj
+          },
+          clinic: item.selectedClinic.id,
+        });
 
         navigation("/appointment-reservation");
       }
@@ -127,12 +185,11 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
       console.error(err);
     }
   };
-  console.log(loading)
 
   return (
     <>
       <div className={s.container}>
-        <form onSubmit={handleSubmit(onSubmitAppointmentForm)}>
+        <form onSubmit={handleSubmit(createNewReservation)}>
           <div className={s.formSection}>
             <FormCombobox
               state={selectedProblem}
@@ -215,58 +272,44 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
             />
 
             <div className={s.availableAppointments} style={{ margin: 0 }}>
-              {/*unavailableAppointments?.length > 0 ?
-                unavailableAppointments.map((appointment: IAppointmentSlot, i: number) => (
-                  <div key={i} onClick={() => handleAppointmentChange(appointment)}>
-                    <AppointmentCard
-                      startDate={appointment.startDate}
-                      endDate={appointment.endDate}
-                      doc={appointment.doc}
-                      isSelected={appointment.id === selectedAppointment?.id}
-                    />
-                  </div>
-                ))
-                :
-                (
-                  <div className="flex h-full w-full justify-center items-center space-x-2">
-                    <HiOutlineClipboardList className="h-6 w-6" />
-                    <p className="text-lg font-semibold whitespace-nowrap">{t("finder.card_3.no_app")}</p>
-                  </div>
-                )*/}
               {loading
                 ? (
                   <div className="flex h-full w-full justify-center items-center space-x-2">
-                    <HiOutlineClipboardList className="h-6 w-6" />
-                    <p className="text-lg font-semibold whitespace-nowrap">{t("finder.card_3.no_app")}</p>
+                    <p className="text-lg font-semibold whitespace-nowrap">{t("finder.card_3.get_app")}</p>
                   </div>
                 )
-                : (appointmentSlots.map((item: any, ind: number) => {
-                  let is_unavailable = false
-                  if (unavailableAppointments) {
-                    is_unavailable = unavailableAppointments.filter(subitem => {
-                      const date1 = subitem.startDate.getTime().toString()
-                      const date2 = new Date(selectedYear + '-' + (MONTHS.findIndex((m) => m === selectedMonth) + 1) + '-' + ((selectedDay < 10) ? '0' + selectedDay : selectedDay) + "T" + item.startTime).getTime().toString()
+                : appointmentSlots.length > 0
+                  ? (appointmentSlots.map((item: any, ind: number) => {
+                    let is_unavailable = false
+                    if (unavailableAppointments) {
+                      is_unavailable = unavailableAppointments.filter(subitem => {
+                        const date1 = subitem.startDate.getTime().toString()
+                        const date2 = item.startTime.getTime().toString()
 
-                      return date1.substring(0, date1.length - 3) === date2.substring(0, date2.length - 3)
-                    }).length > 0
-                  }
-                  if (is_unavailable) {
-                    return null
-                  }
+                        return date1.substring(0, date1.length - 3) === date2.substring(0, date2.length - 3)
+                      }).length > 0
+                    }
+                    if (is_unavailable) {
+                      return null
+                    }
 
-                  const month = MONTHS.findIndex((m) => m === selectedMonth) + 1
-
-                  return (
-                    <div key={ind} onClick={() => handleAppointmentChange(item)}>
-                      <AppointmentCard
-                        startDate={new Date(selectedYear + '-' + ((month < 10) ? '0' + month : month) + '-' + ((selectedDay < 10) ? '0' + selectedDay : selectedDay) + "T" + item.startTime)}
-                        endDate={new Date(selectedYear + '-' + ((month < 10) ? '0' + month : month) + '-' + ((selectedDay < 10) ? '0' + selectedDay : selectedDay) + "T" + item.endTime)}
-                        doc={item.doc}
-                        isSelected={item.id === selectedAppointment?.id}
-                      />
+                    return (
+                      <div key={ind} onClick={() => handleAppointmentChange(item)}>
+                        <AppointmentCard
+                          startDate={item.startDate}
+                          endDate={item.endDate}
+                          doc={item.doc}
+                          isSelected={item.id === selectedAppointment?.id}
+                        />
+                      </div>
+                    )
+                  }))
+                  : (
+                    <div className="flex h-full w-full justify-center items-center space-x-2">
+                      <HiOutlineClipboardList className="h-6 w-6" />
+                      <p className="text-lg font-semibold whitespace-nowrap">{t("finder.card_3.no_app")}</p>
                     </div>
                   )
-                }))
               }
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { HiOutlineUserCircle } from "react-icons/hi";
 import { IUser } from "src/models";
 import s from "./AppointmentCard.module.scss";
 
@@ -26,13 +27,16 @@ const AppointmentCard: FC<IAppointmentCardProps> = ({ startDate, endDate, doc, i
     <div className={`${s.container} ${isSelected && s.selected}`}>
       <div className={s.date}>
         <h3>{`${startDate.getFullYear()}. ${startDate.getMonth() + 1 < 10 ? "0" + (startDate.getMonth() + 1) : (startDate.getMonth() + 1)}. ${startDate.getDate() < 10 ? "0" + startDate.getDate() : startDate.getDate()
-          }`}</h3>
+          }`}.</h3>
         <p>{serializeAppointment()}</p>
       </div>
 
       <div className={s.doc}>
-        <img src={doc?.imageUrl} alt="doc" />
-        <span>{`${doc?.firstName} ${doc?.lastName}`}</span>
+        {doc?.imageUrl
+          ? <img src={doc?.imageUrl} alt="doc" />
+          : <HiOutlineUserCircle className="h-16 w-16 text-white" aria-hidden="true" />
+        }
+        <span>{`Dr. ${doc?.lastName} ${doc?.firstName}`}</span>
       </div>
       {isSelected && (
         <div className={s.overlay}>

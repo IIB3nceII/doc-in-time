@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import s from "./DocRegistration.module.scss";
 import { IClinic } from "src/models";
 import { FormCombobox } from "src/components/ui";
@@ -20,6 +20,7 @@ export interface ItemProps {
 }
 
 const DocRegistration: FC<DocRegistrationProps> = ({ auth }) => {
+  const navigation = useNavigate();
 
   const clinics: IClinic[] = useLoaderData() as IClinic[];
 
@@ -105,8 +106,8 @@ const DocRegistration: FC<DocRegistrationProps> = ({ auth }) => {
               ...item
             }
           }
-        });
-        window.location.href = "/edit-profile"
+        })
+        navigation("/edit-profile");
       }
     } catch (err) {
       console.error(err);
