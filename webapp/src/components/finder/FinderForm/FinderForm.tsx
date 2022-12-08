@@ -344,6 +344,12 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
               <input type="text" {...register("taj", { required: true })} aria-invalid={errors.taj ? "true" : "false"} />
               {errors.taj?.type === "required" && <p>error</p>}
             </div>
+
+            <div className={s.formField}>
+              <label>{t("finder.form.desc")}</label>
+              <input type="text" {...register("desc")} aria-invalid={errors.desc ? "true" : "false"} />
+              {errors.desc?.type === "required" && <p>error</p>}
+            </div>
           </div>
 
           <button type="submit">{t("finder.form.submit")}</button>

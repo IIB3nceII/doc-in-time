@@ -57,6 +57,7 @@
       "email": "Email",
       "phone": "Phone (optional)",
       "taj": "TAJ Number",
+      "desc": "Note",
       "submit": "Submit"
     }
   },

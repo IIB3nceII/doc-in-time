@@ -11,4 +11,5 @@ export default interface IAppointmentFormData {
   email: string;
   phone: string;
   taj: string;
+  desc: string;
 }

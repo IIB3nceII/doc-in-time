@@ -57,6 +57,7 @@
       "email": "Email",
       "phone": "Telefonszám (opcionális)",
       "taj": "TAJ Szám",
+      "desc": "Megjegyzés",
       "submit": "Beküldés"
     }
   },
