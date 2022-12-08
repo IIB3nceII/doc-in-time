@@ -12,7 +12,7 @@
   .selection{
     @apply flex flex-col justify-center items-center ;
 
-    > button {
+    > div > button {
       @apply relative py-2 px-4 text-white font-bold bg-blue rounded-md;
     }
 

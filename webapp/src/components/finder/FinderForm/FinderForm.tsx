@@ -23,106 +23,7 @@ interface FinderFormProps extends StateProps, DispatchProps {
   doctors: IUser[];
 }
 
-const appointmentSlots = [
-  {
-    id: 1,
-    startTime: "08:00:00",
-    endTime: "08:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 2,
-    startTime: "08:30:00",
-    endTime: "09:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 3,
-    startTime: "09:00:00",
-    endTime: "09:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 4,
-    startTime: "09:30:00",
-    endTime: "10:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 5,
-    startTime: "10:00:00",
-    endTime: "10:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 6,
-    startTime: "10:30:00",
-    endTime: "11:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 7,
-    startTime: "11:00:00",
-    endTime: "11:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 8,
-    startTime: "11:30:00",
-    endTime: "12:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 9,
-    startTime: "12:00:00",
-    endTime: "12:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 10,
-    startTime: "12:30:00",
-    endTime: "13:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 11,
-    startTime: "13:00:00",
-    endTime: "13:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 12,
-    startTime: "13:30:00",
-    endTime: "14:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 13,
-    startTime: "14:00:00",
-    endTime: "14:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 14,
-    startTime: "14:30:00",
-    endTime: "15:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 15,
-    startTime: "15:00:00",
-    endTime: "15:30:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-  {
-    id: 16,
-    startTime: "15:30:00",
-    endTime: "16:00:00",
-    doc: "FhKGFkGxvqZnrDEBSyGXe5gqZGI2"
-  },
-]
-
-const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors, auth }) => {
+const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
   const { t } = useTranslation();
   const navigation = useNavigate();
   // const { isLoaded } = useLoadScript({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY! });
@@ -148,7 +49,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors, auth })
   const [selectedClinic, setSelectedClinic] = useState<IClinic>(clinics[0] || "Select a clinic");
   const [unavailableAppointments, setUnavailableAppointments] = useState<IAppointmentSlot[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<IAppointmentSlot | null>(null);
-  const [customAppointmentError, setCustomAppointmentError] = useState<string | null>(null);
+  //const [customAppointmentError, setCustomAppointmentError] = useState<string | null>(null);
   const [problemQuery, setProblemQuery] = useState<string>("");
   const [clinicQuery, setClinicQuery] = useState<string>("");
   const [submitModalOpen, setSubmitModalOpen] = useState<boolean>(false);
@@ -209,7 +110,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, doctors, auth })
 
   const onSubmitAppointmentForm = (): void => {
     if (!selectedAppointment) {
-      setCustomAppointmentError("An appointment must be selected!");
+      //setCustomAppointmentError("An appointment must be selected!");
     } else {
       setSubmitModalOpen(true);
     }

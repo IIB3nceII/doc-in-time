@@ -15,7 +15,7 @@ interface IFormComboboxProps {
 const FormCombobox: FC<IFormComboboxProps> = ({ state, setState, query, setQuery, items, label }) => {
   return (
     <div className={s.container}>
-      {label && <label className="text-xl text-primary dark:text-white">{label}</label>}
+      {/*label && <label className="text-xl text-primary dark:text-white">{label}</label>*/}
 
       <div className="combobox-container">
         <Combobox value={state} onChange={setState}>
@@ -23,7 +23,8 @@ const FormCombobox: FC<IFormComboboxProps> = ({ state, setState, query, setQuery
             <div className="input-container">
               <Combobox.Input
                 className="combobox-input"
-                displayValue={(item: any) => item["name"] || item["fullName"] || item}
+                placeholder={label}
+                displayValue={(item: any) => (item) ? item["name"] || item["fullName"] || item : ""}
                 onChange={(event) => setQuery(event.target.value)}
               />
               <Combobox.Button className="combobox-button">

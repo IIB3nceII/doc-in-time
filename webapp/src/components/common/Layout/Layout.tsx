@@ -1,9 +1,9 @@
-import React, { FC, ReactNode, Suspense, useState } from "react";
+import { FC, ReactNode, Suspense, useState } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";
 import { Outlet } from "react-router-dom";
-import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
+import { HiOutlineHome, HiOutlineCalendar, HiOutlineIdentification } from "react-icons/hi";
 import { INavBarItem } from "src/models";
 import ContentLoading from "../ContentLoading";
 

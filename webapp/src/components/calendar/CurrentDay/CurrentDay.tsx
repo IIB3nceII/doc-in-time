@@ -1,6 +1,6 @@
 import { FC, Fragment, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IAppointmentSlot, IClinic, ITimeSlotFormData } from "src/models";
+import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
 import {
@@ -358,9 +358,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                           }}
                         >
                           <HiOutlineClipboardList
-                            className={`${
-                              +calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
-                            }`}
+                            className={`${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
+                              }`}
                           />
                           <p>Empty Slot</p>
                           <span>({renderTime(item)})</span>
