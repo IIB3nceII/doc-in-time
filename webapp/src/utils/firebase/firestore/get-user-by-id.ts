@@ -12,6 +12,7 @@ const getUserById = async (userId: string) => {
   } catch (err) {
     console.error(err);
   }
+  return {}
 };
 
 export default getUserById;
