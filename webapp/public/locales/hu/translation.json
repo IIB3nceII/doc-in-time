@@ -82,5 +82,12 @@
     "password": "Jelszó",
     "register": "Regisztráció",
     "taj_number": "Taj szám"
+  },
+  "profile": {
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email",
+    "phone": "Phone number",
+    "taj": "Taj number"
   }
 }

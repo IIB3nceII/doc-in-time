@@ -1,5 +1,5 @@
 .container {
-  @apply flex flex-col justify-center items-center space-y-8;
+  @apply flex flex-col h-48 justify-center items-center space-y-8;
 
   .profile {
     @apply h-24 w-24 p-1 border-2 border-slate-400 rounded-full;
