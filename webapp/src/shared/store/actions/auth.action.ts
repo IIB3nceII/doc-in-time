@@ -3,6 +3,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { ILoginFormData, IRegisterFormData, IUser } from "src/models";
 import ILoginTajFormData from "src/models/login-taj-form-data.model";
 import IRegisterTajFormData from "src/models/register-taj-form-data.model";
+import { IUserData } from "src/models/user.model";
 import { auth, db } from "src/utils/firebase/firebase.config";
 import { getUserById } from "src/utils/firebase/firestore";
 
@@ -74,7 +75,7 @@ export const registerUserWithEmail: (data: IRegisterFormData) => void = (data: I
 
 
 export const registerUserWithTajNumber: (data: IRegisterTajFormData) => void = (data: IRegisterTajFormData) => async (dispatch: any) => {
-  const { taj_number } = data;
+  const { taj_number, firstName, lastName } = data;
 
   dispatch({
     type: AUTH_ACTION_TYPE.REGISTER,
@@ -85,8 +86,8 @@ export const registerUserWithTajNumber: (data: IRegisterTajFormData) => void = (
 
     if (auth.currentUser) {
       await setDoc(doc(db, "users", auth.currentUser.uid), {
-        firstName: '',
-        lastName: '',
+        firstName: firstName,
+        lastName: lastName,
         email: '',
         phone: '',
         tajNumber: taj_number,
@@ -108,6 +109,41 @@ export const registerUserWithTajNumber: (data: IRegisterTajFormData) => void = (
       type: AUTH_ACTION_TYPE.REGISTER_FAIL,
       payload: `Registration failed with error: ${err}`,
     });
+  }
+};
+
+export const registerUserWithTajNumberWithoutSignin = async (data: IUserData) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    isDoc,
+    tajNumber,
+    phoneNumber
+  } = data;
+
+  try {
+    const admin = auth.currentUser
+    await createUserWithEmailAndPassword(auth, tajNumber + '@dit.com', 'pass_' + tajNumber + '_word');
+
+    if (auth.currentUser) {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phoneNumber,
+        tajNumber: tajNumber,
+        isDoc: isDoc,
+        doc: {}
+      });
+    }
+    const uid = auth.currentUser?.uid
+
+    auth.updateCurrentUser(admin)
+
+    return uid
+  } catch (err) {
+    console.warn(err)
   }
 };
 

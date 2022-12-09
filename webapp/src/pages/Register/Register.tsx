@@ -44,6 +44,19 @@ const Register: FC<IRegisterProps> = ({ auth, registerUserWithEmail, registerUse
           <input type="number" min={'100000000'} max={'999999999'} placeholder={'123456789'} {...tajRegister.register("taj_number", { required: true })} aria-invalid={tajRegister.formState.errors.taj_number ? "true" : "false"} />
           {tajRegister.formState.errors.taj_number?.type === "required" && <p>{tajRegister.formState.errors.taj_number?.message}</p>}
         </div>
+
+        <div className={s.formField}>
+          <label>{t("register.first_name")}</label>
+          <input type="text" placeholder={'John'} {...tajRegister.register("firstName", { required: false })} aria-invalid={tajRegister.formState.errors.firstName ? "true" : "false"} />
+          {tajRegister.formState.errors.firstName?.type === "required" && <p>{tajRegister.formState.errors.firstName?.message}</p>}
+        </div>
+
+        <div className={s.formField}>
+          <label>{t("register.last_name")}</label>
+          <input type="text" placeholder={'Doe'} {...tajRegister.register("lastName", { required: false })} aria-invalid={tajRegister.formState.errors.lastName ? "true" : "false"} />
+          {tajRegister.formState.errors.lastName?.type === "required" && <p>{tajRegister.formState.errors.lastName?.message}</p>}
+        </div>
+
         <button type="submit" disabled={auth.loading}>
           {t("register.register")}
           {auth.loading && <LoadingDots />}

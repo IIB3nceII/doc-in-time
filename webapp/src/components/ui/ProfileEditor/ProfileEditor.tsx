@@ -10,7 +10,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { editFirstName, editEmail, editLastName, editPhoneNumber } from "src/utils/firebase/firestore/edit-user-name";
 import { t } from "i18next";
 
-interface IProfileEditorProps extends StateProps, DispatchProps {}
+interface IProfileEditorProps extends StateProps, DispatchProps { }
 
 const ProfileEditor: FC<IProfileEditorProps> = ({ auth }) => {
   const [firstName, setFirstName] = useState<string>("");

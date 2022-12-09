@@ -24,10 +24,11 @@
   "navbar": {
     "home": "Főoldal",
     "calendar": "Naptár",
-    "finder": "Kereső",
+    "finder": "Időpont foglalás",
     "search": "Keresés...",
     "edit_profile": "Profil szerkesztése",
     "login": "Bejelentkezés",
+    "register": "Regisztráció",
     "logout": "Kijelentkezés"
   },
   "current_day": {
@@ -49,7 +50,7 @@
     },
     "card_3": {
       "get_app": "Foglalások lekérése...",
-      "no_app": "Nincs elérhető foglalás"
+      "no_app": "Nincs elérhető időpont"
     },
     "form": {
       "first_name": "Keresztnév",
@@ -57,6 +58,7 @@
       "email": "Email",
       "phone": "Telefonszám (opcionális)",
       "taj": "TAJ Szám",
+      "desc": "Megjegyzés",
       "submit": "Beküldés"
     }
   },

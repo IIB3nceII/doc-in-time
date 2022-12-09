@@ -1,9 +1,9 @@
-import React, { FC, ReactNode, Suspense, useState } from "react";
+import { FC, ReactNode, Suspense, useState } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";
 import { Outlet } from "react-router-dom";
-import { HiOutlineHome, HiOutlineUsers, HiOutlineCalendar, HiOutlineIdentification, HiOutlineCog } from "react-icons/hi";
+import { HiOutlineHome, HiOutlineCalendar, HiOutlineIdentification } from "react-icons/hi";
 import { INavBarItem } from "src/models";
 import ContentLoading from "../ContentLoading";
 
@@ -17,31 +17,33 @@ const navBarItems: INavBarItem[] = [
     icon: <HiOutlineHome className="h-8 w-8" />,
     title_key: "navbar.home",
     isActive: false,
+    isAuth: false,
+    isDoc: undefined
   },
-  /*{
-    path: "/",
-    icon: <HiOutlineUsers className="h-8 w-8" />,
-    title_key: "navbar.home",
+  {
+    path: "/register",
+    icon: null,
+    title_key: "navbar.register",
     isActive: false,
-  },*/
+    isAuth: false,
+    isDoc: undefined
+  },
   {
     path: "calendar",
     icon: <HiOutlineCalendar className="h-8 w-8" />,
     title_key: "navbar.calendar",
     isActive: false,
+    isAuth: true,
+    isDoc: true
   },
   {
     path: "appointment-finder",
     icon: <HiOutlineIdentification className="h-8 w-8" />,
     title_key: "navbar.finder",
     isActive: false,
+    isAuth: true,
+    isDoc: undefined
   },
-  /*{
-    path: "/",
-    icon: <HiOutlineCog className="h-8 w-8" />,
-    title_key: "navbar.home",
-    isActive: false,
-  },*/
 ];
 
 const Layout: FC<ILayoutProps> = ({ children }) => {

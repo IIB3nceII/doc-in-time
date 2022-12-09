@@ -117,7 +117,7 @@ const DatePicker: FC<IDatePickerProps> = ({
         </div>
       </div>
 
-      {doc?.doc?.clinics?.length ? (
+      {/*doc?.doc?.clinics?.length ? (
         <div className="flex flex-col space-y-2 h-48 w-full overflow-y-scroll lg:mt-10">
           {doc?.doc?.clinics.map((clinic, i) => (
             <div
@@ -131,7 +131,7 @@ const DatePicker: FC<IDatePickerProps> = ({
         </div>
       ) : (
         <div>No Clinics</div>
-      )}
+      )*/}
     </div>
   );
 };

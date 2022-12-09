@@ -29,9 +29,9 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay, isLoading })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [month]);
 
-/**
- * It gets the number of days in the current month and sets the state of numberOfDays to that number.
- */
+  /**
+   * It gets the number of days in the current month and sets the state of numberOfDays to that number.
+   */
   const getDaysInCurrentMonth = () => {
     const num = new Date(year, MONTHS.indexOf(month) + 1, 0).getDate();
 
@@ -40,10 +40,10 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay, isLoading })
     }
   };
 
-/**
- * It builds a calendar view for a given month.
- * @returns An array of arrays.
- */
+  /**
+   * It builds a calendar view for a given month.
+   * @returns An array of arrays.
+   */
   const buildMonthView = () => {
     let dy = 1;
     let idx = 0;
@@ -88,9 +88,8 @@ const DayPicker: FC<IDayPickerProps> = ({ year, month, day, setDay, isLoading })
             {item.map((value, j) => (
               <td key={j} onClick={() => !isLoading && value !== " " && setDay(value)}>
                 <span
-                  className={`${
-                    +new Date().getDate() === value ? "text-white font-semibold bg-blue" : day === value ? "font-semibold bg-sky-200" : ""
-                  } rounded-full m-2 p-1`}
+                  className={`${day === value ? "text-white font-semibold bg-blue" : +new Date().getDate() === value ? "font-semibold bg-sky-200" : ""
+                    } rounded-full m-2 p-1`}
                 >
                   {value}
                 </span>

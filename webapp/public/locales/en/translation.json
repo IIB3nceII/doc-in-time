@@ -28,6 +28,7 @@
     "search": "Search...",
     "edit_profile": "Edit profile",
     "login": "Login",
+    "register": "Register",
     "logout": "Logout"
   },
   "current_day": {
@@ -57,6 +58,7 @@
       "email": "Email",
       "phone": "Phone (optional)",
       "taj": "TAJ Number",
+      "desc": "Note",
       "submit": "Submit"
     }
   },

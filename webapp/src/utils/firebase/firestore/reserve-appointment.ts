@@ -1,4 +1,3 @@
-import { IUser } from "src/models";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 
@@ -10,7 +9,7 @@ import { db } from "../firebase.config";
 const reserveAppointment = async (id: string, patient: string): Promise<void> => {
   try {
     if (id) {
-      const appointmentsRef = doc(db, "appointmentSlots", id);
+      const appointmentsRef = doc(db, "appointments", id);
       await updateDoc(appointmentsRef, {
         patient,
         isReserved: true,

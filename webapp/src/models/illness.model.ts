@@ -6,4 +6,4 @@ export default interface IIllness {
   type: IllnessType;
 }
 
-type IllnessType = "Allergy" | "Cold" | "Flu" | "Diarrhea" | "Headache" | "Mononucleosis" | "Stomach Ache";
+export type IllnessType = "Allergy" | "Cold" | "Flu" | "Diarrhea" | "Headache" | "Mononucleosis" | "Stomach Ache";
