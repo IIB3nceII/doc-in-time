@@ -17,6 +17,15 @@ const navBarItems: INavBarItem[] = [
     icon: <HiOutlineHome className="h-8 w-8" />,
     title_key: "navbar.home",
     isActive: false,
+    isAuth: false,
+    isDoc: undefined
+  },
+  {
+    path: "/register",
+    icon: null,
+    title_key: "navbar.register",
+    isActive: false,
+    isAuth: false,
     isDoc: undefined
   },
   {
@@ -24,6 +33,7 @@ const navBarItems: INavBarItem[] = [
     icon: <HiOutlineCalendar className="h-8 w-8" />,
     title_key: "navbar.calendar",
     isActive: false,
+    isAuth: true,
     isDoc: true
   },
   {
@@ -31,6 +41,7 @@ const navBarItems: INavBarItem[] = [
     icon: <HiOutlineIdentification className="h-8 w-8" />,
     title_key: "navbar.finder",
     isActive: false,
+    isAuth: true,
     isDoc: undefined
   },
 ];

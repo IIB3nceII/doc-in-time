@@ -83,8 +83,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
    */
   const [customErrorMessage, setCustomErrorMessage] = useState<string | null>(null);
 
-  const [clinics, setClinics] = useState<{ clinicId: string; clinicName: string; color: string }[]>(auth?.account?.doc?.clinics || []);
-  const [selectedClinic, setSelectedClinic] = useState<{ clinicId: string; clinicName: string; color: string } | null>(
+  const [clinics, setClinics] = useState<{ clinicId: string; }[]>(auth?.account?.doc?.clinics || []);
+  const [selectedClinic, setSelectedClinic] = useState<{ clinicId: string; } | null>(
     auth?.account?.doc?.clinics?.length ? auth?.account?.doc?.clinics[0] : null
   );
 
@@ -314,7 +314,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
       } - ${endDate.getHours() < 10 ? "0" + endDate.getHours() : endDate.getHours()}:${endDate.getMinutes() < 10 ? "0" + endDate.getMinutes() : endDate.getMinutes()
       }`;
   };
-  const findClinicColor = (clinicName: string): string => `${auth.account?.doc?.clinics?.find((q) => q.clinicName === clinicName)?.color}`;
+  //const findClinicColor = (clinicName: string): string => `${auth.account?.doc?.clinics?.find((q) => q.clinicName === clinicName)?.color}`;
 
   return (
     <>
@@ -342,7 +342,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                       }}
                     >
                       {item.confirmed ? (
-                        <div className={s.reservedContent} style={{ color: findClinicColor(item.clinic.clinicName) }}>
+                        <div className={s.reservedContent} style={{ color: 'lightblue' }}>
                           <p>{item.patient?.fullName}</p>
                           <span>({renderTime(item)})</span>
                         </div>
@@ -350,7 +350,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                         <div
                           className={s.content}
                           style={{
-                            color: findClinicColor(item?.clinic?.clinicName),
+                            color: 'lightblue',
                             backgroundColor: item?.clinic?.clinicName ? "white" : "",
                           }}
                         >
@@ -520,7 +520,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                   <Listbox {...register("clinic")} value={selectedClinic} onChange={setSelectedClinic}>
                     <div className="relative mt-1 w-full">
                       <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                        <span className="block truncate">{selectedClinic?.clinicName || "Select a clinic"}</span>
+                        <span className="block truncate">{selectedClinic?.clinicId || "Select a clinic"}</span>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                           <HiOutlineChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </span>

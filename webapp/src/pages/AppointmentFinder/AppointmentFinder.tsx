@@ -1,23 +1,24 @@
-import React, { FC, Suspense, useMemo, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { FC, Suspense, useMemo, useState, useEffect } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { ContentLoading } from "src/components/common";
 import { FinderForm } from "src/components/finder";
-import { IClinic, IIllness, IUser } from "src/models";
+import { IClinic, IIllness } from "src/models";
+import IUser from "src/models/user.model";
 import s from "./AppointmentFinder.module.scss";
+import { auth } from "src/utils/firebase/firebase.config";
+import { onAuthStateChanged } from "firebase/auth";
 
 const AppointmentFinder: FC = () => {
+  const navigate = useNavigate()
   const clinics: IClinic[] = useLoaderData() as IClinic[];
 
   const [knowledges, setKnowledges] = useState<IIllness[]>([]);
-  const [doctors, setDoctors] = useState<IUser[]>([]);
 
   useMemo(() => {
     if (clinics && Array.isArray(clinics)) {
       const allKnowledges: IIllness[] = [];
-      const dArr: IUser[] = [];
       clinics.forEach((clinic: IClinic) => {
         clinic.docs.forEach((user: IUser) => {
-          dArr.push({ ...user, fullName: `${user.firstName} ${user.lastName}` });
           user.doc.knowledges.forEach((k) => {
             if (!allKnowledges.some((q) => q.name === k.name)) {
               allKnowledges.push(k);
@@ -26,15 +27,22 @@ const AppointmentFinder: FC = () => {
         });
       });
 
-      setDoctors(dArr);
       setKnowledges(allKnowledges);
     }
   }, [clinics]);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate('/')
+      }
+    })
+  }, [auth])
+
   return (
     <Suspense fallback={<ContentLoading />}>
       <div className={s.container}>
-        <FinderForm clinics={clinics} knowledges={knowledges} doctors={doctors} />
+        <FinderForm clinics={clinics} knowledges={knowledges} />
       </div>
     </Suspense>
   );

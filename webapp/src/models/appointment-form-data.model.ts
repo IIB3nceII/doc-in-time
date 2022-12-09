@@ -10,6 +10,6 @@ export default interface IAppointmentFormData {
   lastName: string;
   email: string;
   phone: string;
-  taj: string;
+  tajNumber: string;
   desc: string;
 }

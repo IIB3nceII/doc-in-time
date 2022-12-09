@@ -1,6 +1,6 @@
 import { IClinic, IIllness, IUser } from "src/models";
 import { getClinics, getDoctor, getIllness } from "../firebase/firestore";
-import { getImageByURL } from "../firebase/storage";
+//import { getImageByURL } from "../firebase/storage";
 
 const clientsLoader = async (): Promise<IClinic[] | void> => {
   try {
@@ -13,8 +13,8 @@ const clientsLoader = async (): Promise<IClinic[] | void> => {
           for (let userId of clinic.docs) {
             const d: IUser = (await getDoctor(String(userId))) as IUser;
             if (d) {
-              const oldUrl = d.imageUrl;
-              d.imageUrl = await getImageByURL(oldUrl);
+              //const oldUrl = d.imageUrl;
+              //d.imageUrl = await getImageByURL(oldUrl);
               const ks: IIllness[] = [];
               for (let knowledge of d.doc.knowledges) {
                 const k = (await getIllness(String(knowledge))) as IIllness;

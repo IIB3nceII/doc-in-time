@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import s from "./FinderForm.module.scss";
-import { IAppointmentFormData, IAppointmentSlot, IClinic, IIllness, IUser } from "src/models";
+import { IAppointmentFormData, IAppointmentSlot, IClinic, IIllness } from "src/models";
 import { AppointmentCard, FormCombobox } from "src/components/ui";
 import { HiOutlineMap, HiOutlineLocationMarker, HiOutlineClipboardList } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
@@ -13,13 +13,14 @@ import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
 import { db } from "src/utils/firebase/firebase.config";
+import { IUserData } from "src/models/user.model";
+import { registerUserWithTajNumberWithoutSignin } from "src/shared/store/actions/auth.action";
 
 interface FinderFormProps extends StateProps, DispatchProps {
   clinics: IClinic[];
   knowledges: IIllness[];
-  doctors: IUser[];
 }
 
 const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
@@ -43,6 +44,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
 
   const { years, selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDay, setSelectedDay } = useCalendar();
 
+  const [allPatients, setAllPatients] = useState<IUserData[]>([])
   const [appointmentSlots, setAppointmentSlots] = useState<object[]>([])
   const [selectedProblem, setSelectedProblem] = useState<IIllness>(knowledges[0]);
   const [selectedClinic, setSelectedClinic] = useState<IClinic>(clinics[0]);
@@ -60,8 +62,8 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
     const getData = async () => {
       setLoading(true)
       const res = await getDocs(query(collection(db, "users")))
-
       const data: object[] = []
+      const patient_data: IUserData[] = []
       res.forEach(async (item) => {
         const d = item.data()
         if (d.isDoc) {
@@ -123,17 +125,30 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
             }
           }
         }
+        else {
+          patient_data.push({
+            uid: item.id,
+            firstName: d.firstName,
+            lastName: d.lastName,
+            email: d.email,
+            isDoc: d.isDoc,
+            doc: d.doc,
+            tajNumber: d.tajNumber
+          })
+        }
       })
       setAppointmentSlots(data)
+      setAllPatients(patient_data)
     }
     getData()
     setInterval(() => {
       setLoading(false)
     }, 2000)
-  }, [selectedYear, selectedMonth, selectedDay, selectedClinic, selectedProblem])
+  }, [selectedYear, selectedMonth, selectedDay, selectedClinic, selectedProblem, setAllPatients])
 
   useEffect(() => {
-    getAppointmentsByDate(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay)
+    const month = MONTHS.findIndex((m) => m === selectedMonth) + 1
+    getAppointmentsByDate(selectedYear + '-' + ((month < 10) ? '0' + month : month) + '-' + ((selectedDay < 10) ? '0' + selectedDay : selectedDay))
       .then((res) => {
         if (res) {
           setUnavailableAppointments(res as IAppointmentSlot[])
@@ -141,6 +156,31 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
       })
       .catch((err) => console.error(err));
   }, [selectedYear, selectedMonth, selectedDay]);
+
+  const setDataByTajNumber = (taj_number: string) => {
+    const current = allPatients.filter((item) => item.tajNumber === taj_number)[0]
+
+    if (current) {
+      if (current.firstName) {
+        setValue('firstName', current.firstName)
+      }
+      if (current.lastName) {
+        setValue('lastName', current.lastName)
+      }
+      if (current.email) {
+        setValue('email', current.email)
+      }
+      if (current.phoneNumber) {
+        setValue('phone', current.phoneNumber)
+      }
+    }
+    else {
+      setValue('firstName', '')
+      setValue('lastName', '')
+      setValue('email', '')
+      setValue('phone', '')
+    }
+  }
 
   const filteredProblems =
     problemQuery === ""
@@ -162,24 +202,59 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
   const createNewReservation = async (item: IAppointmentFormData): Promise<void> => {
     try {
       if (item.selectedAppointment?.id && auth?.account?.uid) {
-        console.log(item)
+        let uid = ""
+        if (auth.account.isDoc) {
+          let current_user = allPatients.filter((subitem) => subitem.tajNumber === item.tajNumber)[0]
+          if (!current_user) {
+            uid = await registerUserWithTajNumberWithoutSignin({
+              firstName: item.firstName,
+              lastName: item.lastName,
+              email: item.email,
+              isDoc: false,
+              doc: {},
+              tajNumber: item.tajNumber,
+              phoneNumber: item.phone
+            }) || ""
+          }
+          else {
+            uid = current_user.uid || ""
+          }
+        }
+        else {
+          uid = auth.account.uid
+          if (!auth.account.firstName && auth.account.firstName === "") {
+            await updateDoc(doc(db, "users", auth.account.uid), {
+              firstName: item.firstName
+            });
+          }
+          if (!auth.account.lastName && auth.account.lastName === "") {
+            await updateDoc(doc(db, "users", auth.account.uid), {
+              lastName: item.lastName
+            });
+          }
+          if (!auth.account.email && auth.account.email === "") {
+            await updateDoc(doc(db, "users", auth.account.uid), {
+              email: item.email
+            });
+          }
+          if (!auth.account.phoneNumber && auth.account.phoneNumber === "") {
+            await updateDoc(doc(db, "users", auth.account.uid), {
+              phoneNumber: item.phone
+            });
+          }
+        }
         await addNewAppointment({
           doc: item.selectedAppointment.doc.uid,
           startDate: item.selectedAppointment.startDate,
           endDate: item.selectedAppointment.endDate,
           confirmed: false,
           problem: item.selectedProblem.id,
-          patient: {
-            email: item.email,
-            firstName: item.firstName,
-            lastName: item.lastName,
-            phone: item.phone,
-            taj: item.taj
-          },
+          patient: uid,
           clinic: item.selectedClinic.id,
         });
 
-        navigation("/appointment-reservation");
+        //navigation("/appointment-reservation");
+        alert('Sikeres foglalás')
       }
     } catch (err) {
       console.error(err);
@@ -284,7 +359,7 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
                     if (unavailableAppointments) {
                       is_unavailable = unavailableAppointments.filter(subitem => {
                         const date1 = subitem.startDate.getTime().toString()
-                        const date2 = item.startTime.getTime().toString()
+                        const date2 = item.startDate.getTime().toString()
 
                         return date1.substring(0, date1.length - 3) === date2.substring(0, date2.length - 3)
                       }).length > 0
@@ -314,43 +389,47 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
             </div>
           </div>
 
-          <div className={s.formFields}>
-            <div className={s.formField}>
-              <label>{t("finder.form.first_name")}</label>
-              <input type="text" {...register("firstName", { required: true })} aria-invalid={errors.firstName ? "true" : "false"} />
-              {errors.firstName?.type === "required" && <p>error</p>}
-            </div>
+          {(auth.account?.isDoc) ?
+            <>
+              <div className={s.formFields}>
+                <div className={s.formField}>
+                  <label>{t("finder.form.taj")}*</label>
+                  <input type="text" {...register("tajNumber", { required: true })} aria-invalid={errors.tajNumber ? "true" : "false"} onChange={(e) => { setDataByTajNumber(e.target.value) }} />
+                  {errors.tajNumber?.type === "required" && <p>error</p>}
+                </div>
 
-            <div className={s.formField}>
-              <label>{t("finder.form.last_name")}</label>
-              <input type="text" {...register("lastName", { required: true })} aria-invalid={errors.lastName ? "true" : "false"} />
-              {errors.lastName?.type === "required" && <p>error</p>}
-            </div>
+                <div className={s.formField}>
+                  <label>{t("finder.form.phone")}</label>
+                  <input type="text" {...register("phone", { required: false })} aria-invalid={errors.phone ? "true" : "false"} />
+                  {errors.phone?.type === "required" && <p>error</p>}
+                </div>
 
-            <div className={s.formField}>
-              <label>{t("finder.form.email")}</label>
-              <input type="text" {...register("email", { required: true })} aria-invalid={errors.email ? "true" : "false"} />
-              {errors.email?.type === "required" && <p>error</p>}
-            </div>
+                <div className={s.formField}>
+                  <label>{t("finder.form.first_name")}</label>
+                  <input type="text" {...register("firstName", { required: false })} aria-invalid={errors.firstName ? "true" : "false"} />
+                  {errors.firstName?.type === "required" && <p>error</p>}
+                </div>
 
-            <div className={s.formField}>
-              <label>{t("finder.form.phone")}</label>
-              <input type="text" {...register("phone", { required: false })} aria-invalid={errors.phone ? "true" : "false"} />
-              {errors.phone?.type === "required" && <p>error</p>}
-            </div>
+                <div className={s.formField}>
+                  <label>{t("finder.form.last_name")}</label>
+                  <input type="text" {...register("lastName", { required: false })} aria-invalid={errors.lastName ? "true" : "false"} />
+                  {errors.lastName?.type === "required" && <p>error</p>}
+                </div>
 
-            <div className={s.formField}>
-              <label>{t("finder.form.taj")}</label>
-              <input type="text" {...register("taj", { required: true })} aria-invalid={errors.taj ? "true" : "false"} />
-              {errors.taj?.type === "required" && <p>error</p>}
-            </div>
+                <div className={s.formField}>
+                  <label>{t("finder.form.email")}</label>
+                  <input type="text" {...register("email", { required: false })} aria-invalid={errors.email ? "true" : "false"} />
+                  {errors.email?.type === "required" && <p>error</p>}
+                </div>
 
-            <div className={s.formField}>
-              <label>{t("finder.form.desc")}</label>
-              <input type="text" {...register("desc")} aria-invalid={errors.desc ? "true" : "false"} />
-              {errors.desc?.type === "required" && <p>error</p>}
-            </div>
-          </div>
+                <div className={s.formField}>
+                  <label>{t("finder.form.desc")}</label>
+                  <input type="text" {...register("desc", { required: false })} aria-invalid={errors.desc ? "true" : "false"} />
+                  {errors.desc?.type === "required" && <p>error</p>}
+                </div>
+              </div>
+            </>
+            : null}
 
           <button type="submit">{t("finder.form.submit")}</button>
         </form>

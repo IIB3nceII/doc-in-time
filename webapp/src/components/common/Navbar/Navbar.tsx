@@ -30,12 +30,14 @@ const NavbarComponent: FC<INavbarProps> = ({
 }) => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const [user, setUser] = useState<boolean>(false);
   const [userIsDoc, setUserIsDoc] = useState<boolean>(false);
 
   useEffect(() => {
     setCurrentTab(location.pathname.split("/")[1]);
     onAuthStateChanged(auth, async (user) => {
       if (user) {
+        setUser(true)
         const userDoc = await getUserById(user.uid)
         if (userDoc) {
           setUserIsDoc(userDoc.isDoc)
@@ -62,8 +64,10 @@ const NavbarComponent: FC<INavbarProps> = ({
           </Link>
           <nav>
             <ul>
-              {items?.map(({ isActive, path, title_key, isDoc }, i) => {
+              {items?.map(({ isActive, icon, path, title_key, isAuth, isDoc }, i) => {
+                if (isAuth && !user) { return null }
                 if (isDoc && !userIsDoc) { return null }
+                if (icon === null && user) { return null }
                 return (
                   <li
                     key={i}

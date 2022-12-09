@@ -5,10 +5,10 @@ import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
 import { editUserName } from "src/utils/firebase/firestore";
 
-interface IProfileEditorProps extends StateProps, DispatchProps {}
+interface IProfileEditorProps extends StateProps, DispatchProps { }
 
 const ProfileEditor: FC<IProfileEditorProps> = ({ auth }) => {
-  const [name, setName] = useState<string>(auth.account?.fullName || "acc name");
+  const [name, setName] = useState<string>((auth.account?.firstName && auth.account?.lastName) ? auth.account?.firstName + auth.account?.lastName : "acc name");
 
   const [isContentEditable, setIsContentEditable] = useState<boolean>(false);
 
@@ -25,11 +25,7 @@ const ProfileEditor: FC<IProfileEditorProps> = ({ auth }) => {
 
   return (
     <section className={s.container}>
-      {auth.account?.imageUrl ? (
-        <img className={s.profile} src={auth.account?.imageUrl} alt="user" />
-      ) : (
-        <HiOutlineUser className={`${s.profile} text-slate-400`} />
-      )}
+      <HiOutlineUser className={`${s.profile} text-slate-400`} />
       <div className={s.edit}>
         {isContentEditable ? (
           <div className={s.editable}>

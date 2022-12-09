@@ -28,6 +28,7 @@
     "search": "Search...",
     "edit_profile": "Edit profile",
     "login": "Login",
+    "register": "Register",
     "logout": "Logout"
   },
   "current_day": {

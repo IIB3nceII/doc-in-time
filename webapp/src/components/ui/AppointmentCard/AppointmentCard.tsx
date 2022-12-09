@@ -32,10 +32,7 @@ const AppointmentCard: FC<IAppointmentCardProps> = ({ startDate, endDate, doc, i
       </div>
 
       <div className={s.doc}>
-        {doc?.imageUrl
-          ? <img src={doc?.imageUrl} alt="doc" />
-          : <HiOutlineUserCircle className="h-16 w-16 text-white" aria-hidden="true" />
-        }
+        <HiOutlineUserCircle className="h-16 w-16 text-white" aria-hidden="true" />
         <span>{`Dr. ${doc?.lastName} ${doc?.firstName}`}</span>
       </div>
       {isSelected && (
