@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { auth } from "./utils/firebase/firebase.config";
 import { IUser } from "./models";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AppointmentFinder, Calendar, EditProfile, DocRegistration, Home, Login, PageNotFound, Register } from "./pages";
+import { AppointmentFinder, Calendar, EditProfile, DocRegistration, Home, Login, PageNotFound, Register, MyAppointments } from "./pages";
 import { clientsLoader } from "./utils/loaders";
 import { useTranslation } from "react-i18next";
 
@@ -27,6 +27,7 @@ const App: FC<IAppProps> = ({ setUserSession }) => {
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
         { path: "/doc-form", element: <DocRegistration />,loader: clientsLoader },
+        { path: "/my-appointments", element: <MyAppointments />},
         { path: "*", element: <PageNotFound /> },
       ],
     },
