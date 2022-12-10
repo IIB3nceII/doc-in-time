@@ -62,6 +62,8 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
     if (i18n.language !== 'hu') {
       i18n.changeLanguage('hu')
       localStorage.setItem('i18nextLng', 'hu')
+      localStorage.setItem('lang', 'hu')
+      localStorage.setItem('theme', 'light')
     }
   }, []);
 
