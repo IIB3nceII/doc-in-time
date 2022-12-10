@@ -218,30 +218,30 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
           }
           else {
             uid = current_user.uid || ""
+            if (!auth.account.firstName && auth.account.firstName === "") {
+              await updateDoc(doc(db, "users", auth.account.uid), {
+                firstName: item.firstName
+              });
+            }
+            if (!auth.account.lastName && auth.account.lastName === "") {
+              await updateDoc(doc(db, "users", auth.account.uid), {
+                lastName: item.lastName
+              });
+            }
+            if (!auth.account.email && auth.account.email === "") {
+              await updateDoc(doc(db, "users", auth.account.uid), {
+                email: item.email
+              });
+            }
+            if (!auth.account.phoneNumber && auth.account.phoneNumber === "") {
+              await updateDoc(doc(db, "users", auth.account.uid), {
+                phoneNumber: item.phone
+              });
+            }
           }
         }
         else {
           uid = auth.account.uid
-          if (!auth.account.firstName && auth.account.firstName === "") {
-            await updateDoc(doc(db, "users", auth.account.uid), {
-              firstName: item.firstName
-            });
-          }
-          if (!auth.account.lastName && auth.account.lastName === "") {
-            await updateDoc(doc(db, "users", auth.account.uid), {
-              lastName: item.lastName
-            });
-          }
-          if (!auth.account.email && auth.account.email === "") {
-            await updateDoc(doc(db, "users", auth.account.uid), {
-              email: item.email
-            });
-          }
-          if (!auth.account.phoneNumber && auth.account.phoneNumber === "") {
-            await updateDoc(doc(db, "users", auth.account.uid), {
-              phoneNumber: item.phone
-            });
-          }
         }
         await addNewAppointment({
           doc: item.selectedAppointment.doc.uid,
@@ -253,8 +253,8 @@ const FinderForm: FC<FinderFormProps> = ({ clinics, knowledges, auth }) => {
           clinic: item.selectedClinic.id,
         });
 
-        //navigation("/appointment-reservation");
         alert('Sikeres foglalás')
+        navigation("/my-appointments");
       }
     } catch (err) {
       console.error(err);

@@ -47,11 +47,6 @@ const NavbarComponent: FC<INavbarProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const changeLang = (lang: string): void => {
-    i18n.changeLanguage(lang);
-    localStorage.lang = lang;
-  };
-
   return (
     <>
       <header id="navbar" className="dark:bg-slate-900 dark:border-b-[1px] dark:border-slate-700">
@@ -67,6 +62,7 @@ const NavbarComponent: FC<INavbarProps> = ({
               {items?.map(({ isActive, icon, path, title_key, isAuth, isDoc }, i) => {
                 if (isAuth && !user) { return null }
                 if (isDoc && !userIsDoc) { return null }
+                if (isDoc === false && userIsDoc) { return null }
                 if (icon === null && user) { return null }
                 return (
                   <li
@@ -139,14 +135,14 @@ const NavbarComponent: FC<INavbarProps> = ({
                 <p className={s.login}>{t('navbar.login')}</p>
               </Link>
             )}
-            <ul className="flex space-x-2 divide-x text-primary dark:text-white">
+            {/*<ul className="flex space-x-2 divide-x text-primary dark:text-white">
               <li className="cursor-pointer" onClick={() => changeLang("en")}>
                 EN
               </li>
               <li className="pl-2 cursor-pointer" onClick={() => changeLang("hu")}>
                 HU
               </li>
-            </ul>
+            </ul>*/}
           </div>
         </div>
 
@@ -167,14 +163,14 @@ const NavbarComponent: FC<INavbarProps> = ({
             </Tooltip>
           )}
 
-          <ul className="flex space-x-2 divide-x text-primary dark:text-white">
+          {/*<ul className="flex space-x-2 divide-x text-primary dark:text-white">
             <li className="cursor-pointer" onClick={() => changeLang("en")}>
               EN
             </li>
             <li className="pl-2 cursor-pointer" onClick={() => changeLang("hu")}>
               HU
             </li>
-          </ul>
+          </ul>*/}
         </div>
       </header>
 
