@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { FC, useState, useTransition } from "react";
 import s from "./SearchArea.module.scss";
 import { HiOutlineSearch, HiOutlineX } from "react-icons/hi";
