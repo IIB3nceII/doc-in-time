@@ -1,6 +1,10 @@
 .container {
   @apply flex justify-between items-center my-8 mx-4;
 
+  @media screen and (max-width: 800px) {
+    margin-bottom: 8rem;
+  }
+
   .content {
     @apply flex flex-col;
 
