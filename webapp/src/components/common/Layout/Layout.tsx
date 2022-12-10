@@ -1,4 +1,4 @@
-import { FC, ReactNode, Suspense, useState, useCallback } from "react";
+import { FC, ReactNode, Suspense, useState, useCallback, useEffect } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";
@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import { HiOutlineHome, HiOutlineCalendar, HiOutlineIdentification } from "react-icons/hi";
 import { INavBarItem } from "src/models";
 import ContentLoading from "../ContentLoading";
+import i18n from "src/i18n";
 
 interface ILayoutProps {
   children?: ReactNode | ReactNode[];
@@ -48,6 +49,13 @@ const navBarItems: INavBarItem[] = [
 
 const Layout: FC<ILayoutProps> = ({ children }) => {
   const [items, setItems] = useState<INavBarItem[]>(navBarItems);
+
+  useEffect(() => {
+    if (i18n.language !== 'hu') {
+      i18n.changeLanguage('hu')
+      localStorage.setItem('i18nextLng', 'hu')
+    }
+  }, []);
 
   const setCurrentTab = useCallback((pathName: string): void => {
     let copy = [...items];

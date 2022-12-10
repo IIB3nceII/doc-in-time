@@ -2,7 +2,7 @@
   @apply flex flex-col justify-between items-start space-y-8 my-8 md:min-h-[60vh] md:mb-0 md:flex-row;
 
   > h1 {
-    @apply lg:self-center dark:text-white;
+    @apply leading-[8rem] text-[8rem] md:leading-[10rem] md:text-[10rem] lg:self-center dark:text-white;
     font-size: 8rem;
 
     @media screen and (max-width: 800px) {
