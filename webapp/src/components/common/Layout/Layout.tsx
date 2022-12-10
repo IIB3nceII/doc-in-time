@@ -47,7 +47,7 @@ const navBarItems: INavBarItem[] = [
   {
     path: "/my-appointments",
     icon: <HiOutlineIdentification className="h-8 w-8" />,
-    title_key: "My appointments",
+    title_key: "navbar.my_appointments",
     isActive: false,
     isAuth: true,
     isDoc: false

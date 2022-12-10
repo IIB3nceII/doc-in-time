@@ -29,7 +29,8 @@
     "edit_profile": "Edit profile",
     "login": "Login",
     "register": "Register",
-    "logout": "Logout"
+    "logout": "Logout",
+    "my_appointments": "My appointments"
   },
   "current_day": {
     "add": "Add",
