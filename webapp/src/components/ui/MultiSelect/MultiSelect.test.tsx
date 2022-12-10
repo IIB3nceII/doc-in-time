@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Multiselect from './Multiselect.tsx';
 import Enzyme from 'enzyme';
 import Adapter from '@cfaester/enzyme-adapter-react-18';
+import Multiselect from './MultiSelect';
 
 Enzyme.configure({ adapter: new Adapter() });
 
