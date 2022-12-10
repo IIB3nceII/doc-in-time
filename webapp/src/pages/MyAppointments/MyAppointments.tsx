@@ -16,7 +16,7 @@ const MyAppointments: FC = () => {
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
           if (user) {
-            const userDoc = await getPatientAppointments("TRQUF6uWQzVsGbMuxV1ORpK3mgz2") // replace it with current uid
+            const userDoc = await getPatientAppointments(auth.currentUser?.uid!)
             if (userDoc)
             {
                 const appointments: IAppointmentWithDetails[] = [];
@@ -48,10 +48,26 @@ const MyAppointments: FC = () => {
       }, []);
       
 
-    console.log(appointments);
     return (
     <div>
-        
+        <div style={{ margin: 0 }}>
+            {
+              appointments.length > 0 ?
+              (
+                (appointments.map((item: any, ind: number) => {
+                  return (
+                    <div >
+                    Üdv
+                    </div>
+                  )
+                }
+              )))
+              :
+              (
+                <p>Üdv2</p>
+              )
+            }
+        </div>
     </div>
     );
 };
