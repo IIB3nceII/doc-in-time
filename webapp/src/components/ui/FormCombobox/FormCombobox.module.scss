@@ -1,0 +1,7 @@
+.container {
+  @apply flex flex-col space-y-2 w-full;
+
+  > input {
+    @apply h-12 px-2 rounded border-2 border-slate-400 outline-none transition-all duration-100 focus:border-blue focus:border-4;
+  }
+}

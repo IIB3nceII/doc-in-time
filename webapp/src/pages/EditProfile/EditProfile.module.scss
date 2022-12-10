@@ -1,0 +1,11 @@
+.doctor {
+    @apply flex space-x-4;
+
+    > a {
+      @apply text-slate-400 text-sm cursor-pointer hover:underline;
+    }
+
+    .divider {
+      @apply border-r-[1px] border-slate-200;
+    }
+  }

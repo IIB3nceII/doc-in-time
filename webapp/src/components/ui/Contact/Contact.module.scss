@@ -1,0 +1,23 @@
+.container {
+  @apply flex justify-between items-center my-8 mx-4;
+
+  @media screen and (max-width: 800px) {
+    margin-bottom: 8rem;
+  }
+
+  .content {
+    @apply flex flex-col;
+
+    > h2 {
+      @apply text-4xl text-blue md:text-[4rem] md:leading-[4rem] md:mb-4;
+    }
+
+    > span {
+      @apply font-semibold;
+    }
+  }
+
+  > img {
+    width: 24vw;
+  }
+}

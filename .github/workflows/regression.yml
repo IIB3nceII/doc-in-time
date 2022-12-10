@@ -1,0 +1,40 @@
+name: Regression
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+  workflow_dispatch:
+
+jobs:
+  regression:
+    name: Regression build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+        with:
+            ref: ${{ github.ref }}
+      - name: Install dependencies
+        run: cd webapp; npm ci
+      - name: Build the project
+        run: cd webapp; CI=false npm run build
+  
+  runtests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+        with:
+            ref: ${{ github.ref }}
+      - name: Install dependencies
+        run: cd webapp; npm ci
+      - name: Run tests
+        run: cd webapp; CI=false npm test
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
+          PROJECT_PATH: "webapp"
+
+      

@@ -1,0 +1,94 @@
+{
+  "hero": {
+    "title": "Orvosok",
+    "time": "Elérhetően"
+  },
+  "introduction": {
+    "title": "Küldetésünk",
+    "card_1": {
+      "title": "Minden Doktor, Egy helyen",
+      "description": "Téged is zavar, hogy nem tudsz <b>több</b> doktorhoz is időpontot foglalni <b>ugyanazon</b> az oldalon? <br /> Az <b>Orvosok Elérhetően</b> alkalmazással könnyedén foglalhatsz időpontot az ország <b>bármely</b> korházában <b>kényelmesen</b>, akár az <b>otthonodból</b> is."
+    },
+    "card_2": {
+      "title": "Gyors foglalás",
+      "description": "Csak egy <b>recept</b> kell? <br /> <br /> Az <b>Orvosok Elérhetően</b> alkalmazás számos időpont fajtát biztosít az összes elérhető orvoshoz. <b>Foglalj</b> időpontot egyszerűen a háziorvosodhoz és <b>csökkentsd</b> a sorbanállási idődet."
+    },
+    "card_3": {
+      "title": "Felhasználóbarát dizájn",
+      "description": "Eleged van a haszontalan, <b>átláthatatlan</b> állami oldalakból, ahol <b>soha</b> nem találsz meg semmit? <br /> Az <b>Orvosok Elérhetően</b> úgy lett megtervezve, hogy bármely korosztály számára könnyen használható legyen. Néhány kattintással lehet <b>foglalást</b> készíteni, amely a későbbiekben könnyedén <b>módosítható</b>."
+    }
+  },
+  "contact": {
+    "title": "Kapcsolat"
+  },
+  "navbar": {
+    "home": "Főoldal",
+    "calendar": "Naptár",
+    "finder": "Időpont foglalás",
+    "search": "Keresés...",
+    "edit_profile": "Profil szerkesztése",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
+    "logout": "Kijelentkezés",
+    "my_appointments": "Saját időpontfoglalásaim"
+  },
+  "current_day": {
+    "add": "Hozzáadás",
+    "empty": "Üres hely"
+  },
+  "finder": {
+    "card_1": {
+      "title": "Mi a probléma?",
+      "description": {
+        "title": "Probléma leírása",
+        "link": "Továbbiak"
+      }
+    },
+    "card_2": {
+      "title": "Válassz klinikát",
+      "loading": "A térkép töltődik...",
+      "maps": "Nézd meg a Google Maps-en"
+    },
+    "card_3": {
+      "get_app": "Foglalások lekérése...",
+      "no_app": "Nincs elérhető időpont"
+    },
+    "form": {
+      "first_name": "Keresztnév",
+      "last_name": "Vezetéknév",
+      "email": "Email",
+      "phone": "Telefonszám (opcionális)",
+      "taj": "TAJ Szám",
+      "desc": "Megjegyzés",
+      "submit": "Beküldés"
+    }
+  },
+  "dark_mode": {
+    "system": "Rendszer",
+    "dark": "Sötét",
+    "light": "Világos"
+  },
+  "login": {
+    "email": "Email",
+    "password": "Jelszó",
+    "login": "Belépés",
+    "no_acc": "Nincs még fiókod?",
+    "forgot_pass": "Elfelejtetted a jelszavad?",
+    "taj_number": "Taj szám"
+  },
+  "register": {
+    "first_name": "Keresztnév",
+    "last_name": "Vezetéknév",
+    "email": "Email",
+    "password": "Jelszó",
+    "register": "Regisztráció",
+    "taj_number": "Taj szám"
+  },
+  "profile": {
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email",
+    "phone": "Phone number",
+    "taj": "Taj number"
+  }
+}

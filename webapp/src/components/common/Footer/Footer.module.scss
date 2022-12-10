@@ -1,0 +1,15 @@
+.container {
+  @apply grid grid-cols-5 -mx-4 p-4 bg-darkblue text-slate-400;
+
+  > span {
+    @apply justify-self-center w-[1px] border-r-[1px] border-slate-700;
+  }
+
+  > ul {
+    @apply flex flex-col justify-center items-center space-y-4 list-none;
+
+    > li {
+      @apply hover:text-slate-100 hover:underline;
+    }
+  }
+}

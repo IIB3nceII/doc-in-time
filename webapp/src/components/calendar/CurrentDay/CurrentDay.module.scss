@@ -1,0 +1,127 @@
+.container {
+  @apply flex flex-col w-full space-y-4 mt-4;
+
+  > button {
+    @apply flex justify-center items-center self-end sticky top-72 mb-2 py-2 px-4 text-white font-bold bg-darkpink rounded-lg transition-all cursor-pointer active:scale-95 active:shadow-inner z-50;
+  }
+
+  .timeSlotsContainer {
+    @apply flex flex-col w-full;
+
+    .timeSlot {
+      @apply flex relative;
+      height: 60px;
+
+      > span {
+        @apply mr-2 text-sm text-slate-500 font-semibold transition-all duration-100;
+        margin-top: -0.625rem;
+      }
+
+      .appointment {
+        @apply flex items-center bg-amber-100 border-2 border-amber-900 border-dashed rounded-xl px-4 absolute ml-10;
+        width: calc(100% - 40px);
+
+        .content {
+          @apply flex justify-center items-center h-full w-full text-amber-900 font-semibold;
+
+          > span {
+            @apply font-bold tracking-tighter;
+          }
+        }
+
+        .reservedContent {
+          @apply flex justify-center items-center h-full w-full font-semibold border-2 rounded-xl;
+
+          > span {
+            @apply font-bold tracking-tighter;
+          }
+        }
+
+        .menu {
+          @apply relative justify-self-center self-center text-2xl inline-block text-left text-slate-400;
+
+          .menuButton {
+            @apply flex justify-center text-2xl font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75;
+          }
+
+          .menuItems {
+            @apply absolute right-0 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg z-50 focus:outline-none;
+          }
+        }
+      }
+
+      .appointmentConfirmed {
+        @apply flex items-center bg-teal-100 border-2 border-teal-700 border-dashed rounded-xl px-4 absolute ml-10;
+        width: calc(100% - 40px);
+
+        .content {
+          @apply flex justify-center items-center h-full w-full text-teal-700 font-semibold;
+
+          > span {
+            @apply font-bold tracking-tighter;
+          }
+        }
+
+        .reservedContent {
+          @apply flex justify-center items-center h-full w-full font-semibold border-2 rounded-xl;
+
+          > span {
+            @apply font-bold tracking-tighter;
+          }
+        }
+
+        .menu {
+          @apply relative justify-self-center self-center text-2xl inline-block text-left text-slate-400;
+
+          .menuButton {
+            @apply flex justify-center text-2xl font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75;
+          }
+
+          .menuItems {
+            @apply absolute right-0 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg z-50 focus:outline-none;
+          }
+        }
+      }
+
+      .timeSlotsDividers {
+        @apply flex flex-col w-full;
+
+        > span {
+          @apply w-full border-b-[1px] border-slate-300;
+
+          &:last-child {
+            @apply mt-7;
+          }
+        }
+      }
+    }
+  }
+}
+
+form {
+  @apply flex flex-col justify-between h-full space-y-4;
+
+  .formFields {
+    @apply flex justify-center items-center space-x-12 w-full;
+
+    > input {
+      @apply h-24 w-24 px-2 text-primary text-4xl rounded-lg border-2 outline-none transition-all duration-100 focus:border-4;
+    }
+
+    > span {
+      @apply text-4xl text-primary font-bold;
+    }
+  }
+
+  .buttons {
+    @apply flex justify-between justify-self-end space-x-8;
+
+    > button {
+      @apply w-full py-1 px-4 text-rose-500 font-bold rounded-lg border-4 border-rose-500 transition-all duration-100 active:scale-95;
+    }
+
+    > button[type="submit"] {
+      @apply text-white bg-blue border-none;
+    }
+  }
+}
