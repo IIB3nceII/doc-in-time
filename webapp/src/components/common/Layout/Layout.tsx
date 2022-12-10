@@ -1,4 +1,4 @@
-import { FC, ReactNode, Suspense, useState } from "react";
+import { FC, ReactNode, Suspense, useState, useCallback } from "react";
 import MobileNavbar from "../MobileNavbar";
 import Navbar from "../Navbar";
 import s from "./Layout.module.scss";
@@ -49,7 +49,7 @@ const navBarItems: INavBarItem[] = [
 const Layout: FC<ILayoutProps> = ({ children }) => {
   const [items, setItems] = useState<INavBarItem[]>(navBarItems);
 
-  const setCurrentTab = (pathName: string): void => {
+  const setCurrentTab = useCallback((pathName: string): void => {
     let copy = [...items];
     const idx = copy.findIndex((q) => q.path.toLowerCase() === pathName.toLowerCase());
     if (idx > -1) {
@@ -63,7 +63,8 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
       setItems(copy);
       localStorage.currentTab = copy[0].path;
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Suspense fallback={<ContentLoading />}>
