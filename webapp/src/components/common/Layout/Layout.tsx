@@ -45,6 +45,14 @@ const navBarItems: INavBarItem[] = [
     isAuth: true,
     isDoc: undefined
   },
+  {
+    path: "/my-appointments",
+    icon: <HiOutlineIdentification className="h-8 w-8" />,
+    title_key: "navbar.my_appointments",
+    isActive: false,
+    isAuth: true,
+    isDoc: false
+  },
 ];
 
 const Layout: FC<ILayoutProps> = ({ children }) => {

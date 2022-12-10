@@ -61,6 +61,7 @@ const NavbarComponent: FC<INavbarProps> = ({
               {items?.map(({ isActive, icon, path, title_key, isAuth, isDoc }, i) => {
                 if (isAuth && !user) { return null }
                 if (isDoc && !userIsDoc) { return null }
+                if (isDoc === false && userIsDoc) { return null }
                 if (icon === null && user) { return null }
                 return (
                   <li

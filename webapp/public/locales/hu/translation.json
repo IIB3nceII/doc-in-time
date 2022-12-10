@@ -29,7 +29,8 @@
     "edit_profile": "Profil szerkesztése",
     "login": "Bejelentkezés",
     "register": "Regisztráció",
-    "logout": "Kijelentkezés"
+    "logout": "Kijelentkezés",
+    "my_appointments": "Saját időpontfoglalásaim"
   },
   "current_day": {
     "add": "Hozzáadás",
