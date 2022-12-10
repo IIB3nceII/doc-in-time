@@ -29,7 +29,7 @@ const NavbarComponent: FC<INavbarProps> = ({
   setCurrentTab,
 }) => {
   const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [user, setUser] = useState<boolean>(false);
   const [userIsDoc, setUserIsDoc] = useState<boolean>(false);
 
@@ -44,8 +44,7 @@ const NavbarComponent: FC<INavbarProps> = ({
         }
       }
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location.pathname, setCurrentTab]);
 
   return (
     <>

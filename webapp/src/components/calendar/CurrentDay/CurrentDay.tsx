@@ -1,24 +1,16 @@
-import { FC, Fragment, Suspense, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { IAppointmentSlot, ITimeSlotFormData } from "src/models";
+import { FC, Fragment, Suspense, useCallback, useEffect, useState } from "react";
+import { IAppointmentSlot } from "src/models";
 import { HOURSFORMAT, MONTHS } from "src/utils/constants";
 import s from "./CurrentDay.module.scss";
-import {
-  HiOutlinePlusSm,
-  HiOutlineClipboardList,
-  HiOutlineDotsVertical,
-  HiOutlinePencil,
-  HiOutlineTrash,
-  HiOutlineCheck,
-  HiOutlineChevronDown,
-} from "react-icons/hi";
-import { addNewAppointment, deleteDocAppointment, editDocAppointment, getDocAppointments } from "src/utils/firebase/firestore";
+import { HiOutlineClipboardList, HiOutlineDotsVertical, HiOutlineTrash, HiOutlineCheck } from "react-icons/hi";
+import { deleteDocAppointment, getDocAppointments, getUserById } from "src/utils/firebase/firestore";
 import { IRootState } from "src/shared/store";
 import { connect } from "react-redux";
-import { Listbox, Menu, Transition } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import ConfirmModal from "src/components/ui/ConfirmModal/ConfirmModal";
 import { ContentLoading } from "src/components/common";
-import { useTranslation } from "react-i18next";
+//import { useTranslation } from "react-i18next";
+import confirmDocAppointment from "src/utils/firebase/firestore/confirm-doc-appointment";
 
 interface ICurrentDayProps extends StateProps, DispatchProps {
   selectedYear: number;
@@ -28,221 +20,61 @@ interface ICurrentDayProps extends StateProps, DispatchProps {
   setIsLoading: (item: boolean) => void;
 }
 
-const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, selectedDay, isLoading, setIsLoading }) => {
-  const { t } = useTranslation();
-  /**
-   * Using the useForm hook from react-hook-form to setting up the appointment form.
-   */
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ITimeSlotFormData>({
-    defaultValues: {
-      startHour: "00",
-      startMinutes: "00",
-      endHour: "00",
-      endMinutes: "00",
-    },
-  });
+const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, selectedDay, setIsLoading }) => {
+  //const { t } = useTranslation();
 
-  /**
-   * State of the appointment slots.
-   * @state
-   */
   const [appointmentSlots, setAppointmentSlots] = useState<IAppointmentSlot[] | null>(null);
-
-  /**
-   * Setting the state of the current appointment.
-   * @state
-   */
   const [currentAppointmentSlot, setCurrentAppointmentSlot] = useState<IAppointmentSlot | null>(null);
-
-  /**
-   * Setting the state of the appointment modal.
-   * @state
-   */
-  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState<boolean>(false);
-
-  /**
-   * Setting the state of the confirm delete modal.
-   * @state
-   */
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
 
-  /**
-   * Setting the state of the active edit.
-   * @state
-   */
-  const [isEditActive, setIsEditActive] = useState<boolean>(false);
-
-  /**
-   * Setting the state of the error message.
-   * @state
-   */
-  const [customErrorMessage, setCustomErrorMessage] = useState<string | null>(null);
-
-  const [clinics, setClinics] = useState<{ clinicId: string; }[]>(auth?.account?.doc?.clinics || []);
-  const [selectedClinic, setSelectedClinic] = useState<{ clinicId: string; } | null>(
-    auth?.account?.doc?.clinics?.length ? auth?.account?.doc?.clinics[0] : null
-  );
-
-  /**
-   * It serializeAppointments on mount.
-   * @lifecycleHook
-   */
-  useEffect(() => {
-    serializeAppointments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth, selectedYear, selectedMonth, selectedDay]);
-
-  useEffect(() => {
-    setClinics(auth?.account?.doc?.clinics || []);
-    setSelectedClinic(auth?.account?.doc?.clinics?.length ? auth?.account?.doc?.clinics[0] : null);
-  }, [auth]);
-
-  /**
-   * Sets isEditActive to false if isAppointmentModalOpen is false.
-   * @lifecycleHook
-   */
-  useEffect(() => {
-    if (!isAppointmentModalOpen) {
-      setIsEditActive(false);
-    }
-  }, [isAppointmentModalOpen]);
-
-  /**
-   * It gets the appointments from the database and sets the state of the appointments.
-   */
-  const serializeAppointments = async (): Promise<void> => {
+  const serializeAppointments = useCallback(async (): Promise<void> => {
     if (auth.account?.uid) {
       setIsLoading(true);
       const appointments = await getDocAppointments(auth.account?.uid);
-      setIsLoading(false);
       if (appointments?.length) {
         const filtered = appointments.filter(
-          ({ startDate }) =>
-            startDate.getFullYear() === selectedYear && startDate.getMonth() === MONTHS.findIndex((m) => m === selectedMonth) + 1 && selectedDay === startDate.getDate()
-        );
+          ({ startDate }) => {
+            return startDate.getFullYear() === selectedYear && startDate.getMonth() === MONTHS.findIndex((m) => m === selectedMonth) && startDate.getDate() === selectedDay
+          });
 
-        setAppointmentSlots(filtered);
+        const appended = await Promise.all(filtered.map(async (item) => {
+          const patient_data = await getUserById(item.patient)
+          return {
+            ...item,
+            patient: {
+              id: item.patient,
+              ...patient_data
+            }
+          }
+        }))
+
+        setAppointmentSlots(appended);
       } else {
         setAppointmentSlots(null);
       }
+      setIsLoading(false);
     }
-  };
+  }, [auth, selectedDay, selectedMonth, selectedYear, setIsLoading]);
 
-  /**
-   * It closes the modal.
-   * @param {any} e - any - this is the event that is triggered when the user clicks the cancel button.
-   */
-  const handleCancelNewAppointment = (e: any) => {
-    e.preventDefault();
-    setIsAppointmentModalOpen(false);
+  useEffect(() => {
+    serializeAppointments();
+  }, [serializeAppointments]);
 
-    setValue("startHour", "00");
-    setValue("startMinutes", "00");
-    setValue("endHour", "00");
-    setValue("endMinutes", "00");
-  };
-
-  /**
-   * It takes in a form data object, converts the start and end times to Date objects, and then add the appointment to the database.
-   * @param {ITimeSlotFormData} data - ITimeSlotFormData
-   */
-  const onAddNewAppointment = async (data: ITimeSlotFormData): Promise<void> => {
-    const { startHour, startMinutes, endHour, endMinutes } = data;
-
-    if (startHour <= endHour) {
-      setCustomErrorMessage(null);
-
-      const start = new Date(
-        selectedYear,
-        MONTHS.findIndex((m) => m === selectedMonth),
-        selectedDay,
-        +startHour,
-        +startMinutes
-      );
-
-      const end = new Date(
-        selectedYear,
-        MONTHS.findIndex((m) => m === selectedMonth),
-        selectedDay,
-        +endHour,
-        +endMinutes
-      );
-
-      /*if (auth.account?.uid) {
+  const confirmAppointment = async (id: string): Promise<void> => {
+    try {
+      if (currentAppointmentSlot) {
         setIsLoading(true);
-        await addNewAppointment({
-          userId: auth.account?.uid,
-          startYear: selectedYear,
-          startMonth: MONTHS.findIndex((m) => m === selectedMonth) + 1,
-          startDay: selectedDay,
-          startDate: start,
-          endDate: end,
-          clinic: selectedClinic,
-        });
+        await confirmDocAppointment(id);
+        setIsConfirmModalOpen(false);
+        await serializeAppointments();
         setIsLoading(false);
-      }*/
-
-      setIsAppointmentModalOpen(false);
-
-      serializeAppointments();
-    } else {
-      setCustomErrorMessage(`End hour must be greater or equal to start hour.`);
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const onEditAppointment = async (data: ITimeSlotFormData): Promise<void> => {
-    const { startHour, startMinutes, endHour, endMinutes } = data;
-
-    if (startHour <= endHour) {
-      setCustomErrorMessage(null);
-
-      const start = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +startHour, +startMinutes);
-
-      const end = new Date(selectedYear, MONTHS.findIndex((m) => m === selectedMonth) + 1, selectedDay, +endHour, +endMinutes);
-
-      /*if (currentAppointmentSlot?.id) {
-        setIsLoading(true);
-        await editDocAppointment({
-          id: currentAppointmentSlot.id,
-          startDate: start,
-          endDate: end,
-          clinic: selectedClinic,
-        });
-        setIsLoading(false);
-      }*/
-
-      setIsAppointmentModalOpen(false);
-      setIsEditActive(false);
-      serializeAppointments();
-    } else {
-      setCustomErrorMessage(`End hour must be greater or equal to start hour.`);
-    }
-  };
-
-  const handleEditModalOpen = (item: IAppointmentSlot): void => {
-    setIsEditActive(true);
-    setCurrentAppointmentSlot(item);
-    setIsAppointmentModalOpen(true);
-    const startHourValue = item.startDate.getHours() < 10 ? `0${item.startDate.getHours()}` : `${item.startDate.getHours()}`;
-    const startMinutesValue = item.startDate.getMinutes() < 10 ? `0${item.startDate.getMinutes()}` : `${item.startDate.getMinutes()}`;
-    const endHourValue = item.endDate.getHours() < 10 ? `0${item.endDate.getHours()}` : `${item.endDate.getHours()}`;
-    const endMinutesValue = item.endDate.getMinutes() < 10 ? `0${item.endDate.getMinutes()}` : `${item.endDate.getMinutes()}`;
-
-    setValue("startHour", startHourValue);
-    setValue("startMinutes", startMinutesValue);
-    setValue("endHour", endHourValue);
-    setValue("endMinutes", endMinutesValue);
-  };
-
-  /**
-   * It takes an id as an argument, and if the currentAppointmentSlot is truthy, it calls the deleteDocAppointment function, which is imported from the firebase.
-   * @param {string} id - The id of the appointment to be deleted.
-   */
   const deleteAppointment = async (id: string): Promise<void> => {
     try {
       if (currentAppointmentSlot) {
@@ -259,33 +91,13 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
 
   const openDeleteAppointmentModal = (appointment: IAppointmentSlot): void => {
     setIsDeleteModalOpen(true);
+    console.log(appointment)
     setCurrentAppointmentSlot(appointment);
   };
 
-  /**
-   * If the user enters a single digit number, we add a zero to the beginning of the number.
-   * @param {string} name - The name of the input field.
-   * @param {string} value - The value of the input
-   */
-  const handleAppointmentChange = (name: string, value: string) => {
-    if (value.length === 1) {
-      switch (name) {
-        case "startHour":
-          setValue("startHour", `0${value}`);
-          break;
-        case "startMinutes":
-          setValue("startMinutes", `0${value}`);
-          break;
-        case "endHour":
-          setValue("endHour", `0${value}`);
-          break;
-        case "endMinutes":
-          setValue("endMinutes", `0${value}`);
-          break;
-        default:
-          break;
-      }
-    }
+  const openConfirmAppointmentModal = (appointment: IAppointmentSlot): void => {
+    setIsConfirmModalOpen(true);
+    setCurrentAppointmentSlot(appointment);
   };
 
   /**
@@ -320,13 +132,13 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
     <>
       <Suspense fallback={<ContentLoading />}>
         <div className={s.container}>
-          <button onClick={() => setIsAppointmentModalOpen(true)}>
+          {/*<button onClick={() => setIsAppointmentModalOpen(true)}>
             <HiOutlinePlusSm className="h-5 w-5" />
             &nbsp;{t("current_day.add")}
-          </button>
+          </button>*/}
 
           <div className={s.timeSlotsContainer}>
-            {HOURSFORMAT.map((time, i) => (
+            {HOURSFORMAT.slice(8, 17).map((time, i) => (
               <div key={i} className={s.timeSlot}>
                 <span>{time}</span>
                 {appointmentSlots
@@ -334,38 +146,27 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                   ?.map((item, i) => (
                     <div
                       key={i}
-                      className={`${s.appointment} ${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 && "text-xs"
+                      className={`${(item.confirmed) ? s.appointmentConfirmed : s.appointment} ${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 && "text-xs"
                         }`}
                       style={{
                         top: item.startDate.getMinutes() + "px",
                         height: calculateItemHeight(item),
                       }}
                     >
-                      {item.confirmed ? (
-                        <div className={s.reservedContent} style={{ color: 'lightblue' }}>
-                          <p>{item.patient?.fullName}</p>
-                          <span>({renderTime(item)})</span>
-                        </div>
-                      ) : (
-                        <div
-                          className={s.content}
-                          style={{
-                            color: 'lightblue',
-                            backgroundColor: item?.clinic?.clinicName ? "white" : "",
-                          }}
-                        >
-                          <HiOutlineClipboardList
-                            className={`${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
-                              }`}
-                          />
-                          <p>Empty Slot</p>
-                          <span>({renderTime(item)})</span>
-                        </div>
-                      )}
+                      <div
+                        className={s.content}
+                      >
+                        <HiOutlineClipboardList
+                          className={`${+calculateItemHeight(item).substring(0, calculateItemHeight(item).length - 2) < 30 ? "hidden" : "block h-6 w-6"
+                            }`}
+                        />
+                        <p>&nbsp;{(item.patient && item.patient.firstName && item.patient.lastName) ? item.patient.firstName + " " + item.patient.lastName : item.patient.id}</p>
+                        <span>&nbsp;&nbsp;({renderTime(item)})</span>
+                      </div>
                       <Menu as="div" className={s.menu}>
                         <div>
                           <Menu.Button className={s.menuButton}>
-                            <HiOutlineDotsVertical className="text-4xl ml-2 -mr-1 h-5 w-5 text-slate-400" aria-hidden="true" />
+                            <HiOutlineDotsVertical className={"text-4xl ml-2 -mr-1 h-5 w-5 " + (item.confirmed ? "text-teal-700" : "text-amber-900")} aria-hidden="true" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -379,22 +180,18 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                         >
                           <Menu.Items className={s.menuItems}>
                             <div className="px-1 py-1">
-                              <Menu.Item>
+                              {!item.confirmed && <Menu.Item>
                                 {({ active }) => (
                                   <button
                                     className={`${active ? "bg-slate-100 text-primary" : "text-primary"
                                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                                    onClick={() => handleEditModalOpen(item)}
+                                    onClick={() => openConfirmAppointmentModal(item)}
                                   >
-                                    {active ? (
-                                      <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
-                                    ) : (
-                                      <HiOutlinePencil className="mr-2 h-5 w-5" aria-hidden="true" />
-                                    )}
-                                    Edit
+                                    <HiOutlineCheck className="mr-2 h-5 w-5" aria-hidden="true" />
+                                    Elfogadás
                                   </button>
                                 )}
-                              </Menu.Item>
+                              </Menu.Item>}
 
                               <Menu.Item>
                                 {({ active }) => (
@@ -403,12 +200,8 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                     onClick={() => openDeleteAppointmentModal(item)}
                                   >
-                                    {active ? (
-                                      <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
-                                    ) : (
-                                      <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
-                                    )}
-                                    Delete
+                                    <HiOutlineTrash className="mr-2 h-5 w-5" aria-hidden="true" />
+                                    Törlés
                                   </button>
                                 )}
                               </Menu.Item>
@@ -420,7 +213,7 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
                   ))}
                 <div className={s.timeSlotsDividers}>
                   <span></span>
-                  <span></span>
+                  <span style={(i === 8) ? { borderColor: 'transparent' } : {}}></span>
                 </div>
               </div>
             ))}
@@ -428,146 +221,23 @@ const CurrentDay: FC<ICurrentDayProps> = ({ auth, selectedYear, selectedMonth, s
         </div>
       </Suspense>
 
-      {isAppointmentModalOpen && (
-        <div className="modal" onClick={() => setIsAppointmentModalOpen(false)}>
-          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-            <form onSubmit={handleSubmit(isEditActive ? onEditAppointment : onAddNewAppointment)}>
-              <div className={s.formFields}>
-                <input
-                  className={`${errors.startHour ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
-                  type="number"
-                  min={0}
-                  minLength={0}
-                  maxLength={2}
-                  {...register("startHour", {
-                    required: true,
-                    min: 0,
-                    max: 23,
-                    minLength: 0,
-                    maxLength: 2,
-                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
-                  })}
-                  aria-invalid={errors.startHour ? "true" : "false"}
-                />
-                {errors.startHour?.type === "required" && <p>{errors.startHour?.message}</p>}
-
-                <span>:</span>
-
-                <input
-                  className={`${errors.startMinutes ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
-                  type="number"
-                  min={0}
-                  minLength={0}
-                  maxLength={2}
-                  {...register("startMinutes", {
-                    required: true,
-                    min: 0,
-                    max: 59,
-                    minLength: 0,
-                    maxLength: 2,
-                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
-                  })}
-                  aria-invalid={errors.startMinutes ? "true" : "false"}
-                />
-                {errors.startMinutes?.type === "required" && <p>{errors.startMinutes?.message}</p>}
-              </div>
-
-              <div className={s.formFields}>
-                <input
-                  className={`${errors.endHour || customErrorMessage ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"
-                    }`}
-                  type="number"
-                  min={0}
-                  minLength={0}
-                  maxLength={2}
-                  {...register("endHour", {
-                    required: true,
-                    min: 0,
-                    max: 23,
-                    minLength: 0,
-                    maxLength: 2,
-                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
-                  })}
-                  aria-invalid={errors.endHour ? "true" : "false"}
-                />
-                {errors.endHour?.type === "required" && <p>{errors.endHour?.message}</p>}
-
-                <span>:</span>
-
-                <input
-                  className={`${errors.endMinutes ? "border-rose-500 focus:border-rose-500" : "border-slate-400 focus:border-blue"}`}
-                  type="number"
-                  min={0}
-                  minLength={0}
-                  maxLength={2}
-                  {...register("endMinutes", {
-                    required: true,
-                    min: 0,
-                    max: 59,
-                    minLength: 0,
-                    maxLength: 2,
-                    onBlur: (e) => handleAppointmentChange(e.target.name, e.target.value),
-                  })}
-                  aria-invalid={errors.endMinutes ? "true" : "false"}
-                />
-                {errors.endMinutes?.type === "required" && <p>{errors.endMinutes?.message}</p>}
-              </div>
-
-              {customErrorMessage && <p className="self-center text-sm text-rose-500 whitespace-nowrap">{customErrorMessage}</p>}
-
-              {!isEditActive && (
-                <div className={s.formFields}>
-                  <Listbox {...register("clinic")} value={selectedClinic} onChange={setSelectedClinic}>
-                    <div className="relative mt-1 w-full">
-                      <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                        <span className="block truncate">{selectedClinic?.clinicId || "Select a clinic"}</span>
-                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                          <HiOutlineChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                        </span>
-                      </Listbox.Button>
-                      <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-                        <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                          {clinics.map((clinic: any, i: number) => (
-                            <Listbox.Option
-                              key={i}
-                              className={({ active }) =>
-                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-sky-300 text-white" : "text-gray-900"}`
-                              }
-                              value={clinic}
-                            >
-                              {({ selected }) => (
-                                <>
-                                  <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{clinic?.clinicName}</span>
-                                  {selected ? (
-                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue">
-                                      <HiOutlineCheck className="h-5 w-5" aria-hidden="true" />
-                                    </span>
-                                  ) : null}
-                                </>
-                              )}
-                            </Listbox.Option>
-                          ))}
-                        </Listbox.Options>
-                      </Transition>
-                    </div>
-                  </Listbox>
-                </div>
-              )}
-
-              <div className={s.buttons}>
-                <button onClick={(e) => handleCancelNewAppointment(e)}>Cancel</button>
-                <button type="submit">Submit</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          text={"Biztosan megerősíti a foglalást?"}
+          item={currentAppointmentSlot?.id}
+          submitButtonText={"Igen"}
+          cancelButtonText={"Mégsem"}
+          cancel={setIsConfirmModalOpen}
+          submit={confirmAppointment}
+        />
       )}
 
       {isDeleteModalOpen && (
         <ConfirmModal
-          text={"Are you sure you want to delete?"}
+          text={"Biztosan törli a foglalást?"}
           item={currentAppointmentSlot?.id}
-          submitButtonText={"Delete"}
+          submitButtonText={"Igen"}
+          cancelButtonText={"Mégsem"}
           cancel={setIsDeleteModalOpen}
           submit={deleteAppointment}
         />
