@@ -22,7 +22,7 @@ test("EditModal renders correctly with default props", () => {
   expect(getByText("Ear infection")).toBeInTheDocument();
 
   // Check start date input
-  expect(getByLabelText("Kezdő időpont:")).toHaveValue("2022. 10. 10. 2:00:00");
+  expect(getByLabelText("Kezdő időpont:")).toHaveValue("10/10/2022, 12:00:00 AM");
 
   // Check end date input
   expect(getByLabelText("Záró időpont:")).toHaveValue("2022. 10. 20. 2:00:00");
@@ -58,7 +58,7 @@ test("EditModal renders correctly with custom props", () => {
   expect(getByText("Ear infection")).toBeInTheDocument();
 
   // Check start date input
-  expect(getByLabelText("Kezdő időpont:")).toHaveValue("2022. 10. 10. 2:00:00");
+  expect(getByLabelText("Kezdő időpont:")).toHaveValue("10/10/2022, 12:00:00 AM");
 
   // Check end date input
   expect(getByLabelText("Záró időpont:")).toHaveValue("2022. 10. 20. 2:00:00");
