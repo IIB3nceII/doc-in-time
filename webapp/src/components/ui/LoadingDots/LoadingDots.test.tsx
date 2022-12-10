@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import LoadingDots from './LoadingDots';
 import { render, cleanup } from '@testing-library/react';

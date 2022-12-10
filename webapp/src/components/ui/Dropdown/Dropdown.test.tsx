@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import Dropdown from './Dropdown';
 import { render, fireEvent, screen } from '@testing-library/react';

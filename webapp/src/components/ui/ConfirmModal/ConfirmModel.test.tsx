@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import ConfirmModal from './ConfirmModal';
 import { render } from '@testing-library/react';

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import FormCombobox from './FormCombobox';
 import { render, fireEvent, cleanup } from '@testing-library/react';

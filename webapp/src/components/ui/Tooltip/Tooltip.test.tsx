@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import ReactTestRenderer from "react-test-renderer";
 import { act } from "react-dom/test-utils";
